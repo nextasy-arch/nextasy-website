@@ -165,14 +165,14 @@ nav.primary a:hover::after{ transform:scaleX(1); }
   overflow:hidden;
 }
 .hero-plane{
-  position:absolute; top:6%; right:-6%; width:42%; max-width:560px;
+  position:absolute; top:6%; right:2%; width:40%; max-width:540px;
   opacity:0.92; pointer-events:none; z-index:0;
   filter:drop-shadow(0 25px 45px rgba(0,0,0,0.55));
-  -webkit-mask-image:linear-gradient(to left, black 55%, transparent 96%);
-  mask-image:linear-gradient(to left, black 55%, transparent 96%);
+  -webkit-mask-image:linear-gradient(to right, black 70%, transparent 100%);
+  mask-image:linear-gradient(to right, black 70%, transparent 100%);
 }
 .hero-plane img{ width:100%; height:auto; display:block; }
-@media (max-width:960px){ .hero-plane{ width:65%; right:-18%; top:5%; opacity:0.45; } }
+@media (max-width:960px){ .hero-plane{ width:62%; right:0%; top:5%; opacity:0.45; } }
 .hero-grid{ position:relative; z-index:1; }
 .hero-grid{
   display:grid; grid-template-columns:1fr; gap:40px; align-items:center;
