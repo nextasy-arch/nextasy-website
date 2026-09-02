@@ -876,16 +876,7 @@ footer{ background:var(--ink); border-top:1px solid var(--hairline); padding:70p
       <h4>Enter your details to join</h4>
       <form id="join-form" action="https://formspree.io/f/xwlkboly" method="POST">
         <input type="hidden" name="Form" value="Membership Signup">
-        <div class="form-row">
-          <div class="field"><label for="j-name">Name</label><input id="j-name" name="Name" type="text" required></div>
-          <div class="field">
-            <label for="j-scheme">Scheme</label>
-            <select id="j-scheme" name="Scheme">
-              <option>Scheme A — ₹2,500 (Non-Refundable)</option>
-              <option>Scheme B — ₹5,000 (Refundable)</option>
-            </select>
-          </div>
-        </div>
+        <div class="field" style="margin-bottom:20px;"><label for="j-name">Name</label><input id="j-name" name="Name" type="text" required></div>
         <div class="form-row">
           <div class="field"><label for="j-phone">Phone Number</label><input id="j-phone" name="Phone" type="tel" required></div>
           <div class="field"><label for="j-email">Email</label><input id="j-email" name="Email" type="email" required></div>
