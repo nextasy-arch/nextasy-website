@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NEXTASY Aviation Consulting — Enrollment Form</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0B2447;
+    --navy-deep:#071831;
+    --sky:#1E88E5;
+    --sky-soft:#E8F2FD;
+    --gold:#D79B1F;
+    --gold-soft:#FBF0DA;
+    --bg:#F3F6FA;
+    --surface:#FFFFFF;
+    --border:#DCE4EE;
+    --text:#152743;
+    --text-muted:#5C6B84;
+    --danger:#C0392B;
+    --danger-soft:#FCEAE8;
+    --success:#1E8E5A;
+    --radius:10px;
+    --shadow: 0 1px 2px rgba(11,36,71,0.06), 0 6px 18px rgba(11,36,71,0.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    font-size:15px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{font-family:'Poppins',system-ui,sans-serif;margin:0;}
+  img{max-width:100%;}
+  ::selection{background:var(--gold-soft);}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    background:linear-gradient(135deg,var(--navy) 0%, var(--navy-deep) 100%);
+    color:#fff;
+    padding:28px 20px 24px;
+  }
+  .topbar-inner{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .brand-mark{
+    width:52px;height:52px;border-radius:12px;flex:0 0 auto;
+    background:linear-gradient(135deg,var(--gold) 0%, #C07E13 100%);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Poppins',sans-serif;font-weight:800;font-size:20px;color:var(--navy-deep);
+    box-shadow:var(--shadow);
+  }
+  .brand-text h1{font-size:22px;letter-spacing:0.5px;font-weight:800;}
+  .brand-text p{margin:2px 0 0;color:#C9D8EE;font-size:13px;}
+  .program-chip{
+    margin-left:auto;background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.18);
+    padding:8px 14px;border-radius:999px;font-size:12.5px;color:#EAF1FB;
+    display:flex;align-items:center;gap:8px;
+  }
+  .program-chip strong{color:#fff;font-family:'Poppins',sans-serif;font-weight:700;}
+
+  /* ---------- Layout ---------- */
+  .wrap{max-width:980px;margin:0 auto;padding:22px 20px 60px;}
+
+  /* ---------- Stepper ---------- */
+  .stepper{
+    display:flex;gap:6px;overflow-x:auto;padding:4px 2px 14px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .step-btn{
+    flex:0 0 auto;display:flex;align-items:center;gap:8px;
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:999px;padding:8px 14px 8px 8px;cursor:pointer;
+    font-size:12.5px;font-weight:600;color:var(--text-muted);
+    transition:all .15s ease;white-space:nowrap;
+  }
+  .step-btn .num{
+    width:22px;height:22px;border-radius:50%;background:var(--bg);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:700;color:var(--text-muted);flex:0 0 auto;
+  }
+  .step-btn.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+  .step-btn.active .num{background:var(--gold);color:var(--navy-deep);}
+  .step-btn.done .num{background:var(--success);color:#fff;}
+  .step-btn.done:not(.active){color:var(--success);}
+
+  .progress-track{height:5px;background:var(--border);border-radius:999px;overflow:hidden;margin-bottom:22px;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--sky),var(--gold));width:14.28%;transition:width .25s ease;}
+
+  /* ---------- Card / panel ---------- */
+  .panel{display:none;}
+  .panel.active{display:block;animation:fadein .2s ease;}
+  @keyframes fadein{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+  .card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:26px 26px 22px;margin-bottom:16px;
+  }
+  .card h2{font-size:18px;color:var(--navy);margin-bottom:4px;}
+  .card .sub{color:var(--text-muted);font-size:13px;margin-bottom:18px;}
+  .section-divider{border:none;border-top:1px solid var(--border);margin:20px 0;}
+  .subhead{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sky);margin:0 0 12px;}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .grid.cols-3{grid-template-columns:1fr 1fr 1fr;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field.full{grid-column:1 / -1;}
+  label{font-size:12.5px;font-weight:600;color:var(--text);}
+  label .opt{font-weight:500;color:var(--text-muted);text-transform:none;letter-spacing:0;}
+  label .req{color:var(--danger);}
+
+  input[type=text],input[type=tel],input[type=email],input[type=date],input[type=number],select,textarea{
+    width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;
+    font-family:inherit;font-size:14px;color:var(--text);background:#fff;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  input:focus,select:focus,textarea:focus{
+    outline:none;border-color:var(--sky);box-shadow:0 0 0 3px var(--sky-soft);
+  }
+  textarea{resize:vertical;min-height:90px;}
+  input.err,select.err,textarea.err{border-color:var(--danger);background:var(--danger-soft);}
+  .hint{font-size:11.5px;color:var(--text-muted);}
+
+  .checkline{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--text);}
+  .checkline input{margin-top:3px;flex:0 0 auto;width:16px;height:16px;}
+
+  /* ---------- Pills (radio-as-buttons) ---------- */
+  .pill-group{display:flex;gap:10px;flex-wrap:wrap;}
+  .pill{
+    position:relative;
+  }
+  .pill input{position:absolute;opacity:0;width:0;height:0;}
+  .pill label{
+    display:flex;align-items:center;gap:8px;cursor:pointer;
+    padding:12px 18px;border:1.5px solid var(--border);border-radius:10px;
+    font-size:14px;font-weight:600;color:var(--text-muted);background:#fff;
+    transition:all .15s ease;
+  }
+  .pill input:checked + label{
+    border-color:var(--navy);background:var(--navy);color:#fff;
+  }
+  .pill label .dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex:0 0 auto;}
+  .pill input:checked + label .dot{background:var(--gold);}
+
+  #roleGroup{display:none;}
+  #roleGroup.show{display:block;}
+
+  /* ---------- Upload boxes ---------- */
+  .upload-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .upload-box{
+    border:1.5px dashed var(--border);border-radius:12px;padding:18px;text-align:center;
+    background:#FAFCFF;
+  }
+  .upload-box h4{font-size:13.5px;color:var(--navy);margin-bottom:4px;}
+  .upload-box p{font-size:11.5px;color:var(--text-muted);margin:0 0 12px;}
+  .preview{
+    width:100%;height:150px;border-radius:8px;background:#fff;border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:12px;
+  }
+  .preview img{max-width:100%;max-height:100%;object-fit:contain;}
+  .preview .placeholder{color:var(--text-muted);font-size:12px;}
+  .file-btn{
+    display:inline-block;background:var(--sky-soft);color:var(--sky);
+    border:1px solid #BFDCF8;padding:8px 14px;border-radius:8px;font-size:12.5px;font-weight:600;
+    cursor:pointer;
+  }
+  .file-btn input{display:none;}
+
+  /* ---------- Nav buttons ---------- */
+  .panel-nav{display:flex;justify-content:space-between;gap:10px;margin-top:4px;}
+  button{font-family:inherit;cursor:pointer;border:none;}
+  .btn{
+    padding:11px 20px;border-radius:9px;font-size:13.5px;font-weight:700;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-primary{background:var(--navy);color:#fff;}
+  .btn-primary:hover{background:var(--navy-deep);}
+  .btn-ghost{background:transparent;color:var(--text-muted);border:1px solid var(--border);}
+  .btn-ghost:hover{border-color:var(--sky);color:var(--sky);}
+  .btn-gold{background:linear-gradient(135deg,var(--gold),#C07E13);color:#fff;}
+  .btn-gold:hover{filter:brightness(1.05);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+
+  /* ---------- Add reference button ---------- */
+  .ref-card{border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px;background:#FAFCFF;}
+  .ref-card .subhead{margin-bottom:10px;}
+
+  /* ---------- Error banner ---------- */
+  .banner{
+    display:none;border-radius:10px;padding:14px 16px;margin-bottom:16px;
+    background:var(--danger-soft);border:1px solid #F2C2BC;color:#8A2E22;font-size:13.5px;
+  }
+  .banner.show{display:block;}
+  .banner ul{margin:6px 0 0;padding-left:18px;}
+  .banner li{cursor:pointer;text-decoration:underline;margin-bottom:2px;}
+
+  .banner.success{background:#E7F6EE;border-color:#BEE6CF;color:#1B6B45;}
+
+  /* ---------- Review tab ---------- */
+  .review-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .review-block{border:1px solid var(--border);border-radius:10px;padding:16px;background:#FAFCFF;}
+  .review-block h3{font-size:13px;color:var(--sky);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;}
+  .review-line{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px dashed var(--border);font-size:13px;}
+  .review-line:last-child{border-bottom:none;}
+  .review-line .k{color:var(--text-muted);}
+  .review-line .v{font-weight:600;text-align:right;}
+  .review-photos{display:flex;gap:14px;margin-top:14px;}
+  .review-photos div{flex:1;text-align:center;}
+  .review-photos img{width:100%;height:120px;object-fit:contain;border:1px solid var(--border);border-radius:8px;background:#fff;}
+  .review-photos p{font-size:11px;color:var(--text-muted);margin:6px 0 0;}
+
+  .download-cta{
+    background:linear-gradient(135deg,var(--navy),var(--navy-deep));
+    border-radius:14px;padding:26px;text-align:center;color:#fff;margin-top:10px;
+  }
+  .download-cta h3{font-size:18px;margin-bottom:6px;}
+  .download-cta p{color:#C9D8EE;font-size:13px;margin:0 0 16px;max-width:480px;margin-left:auto;margin-right:auto;}
+
+  footer{text-align:center;color:var(--text-muted);font-size:12px;padding:20px 0 40px;}
+
+  @media(max-width:640px){
+    .grid,.grid.cols-3,.upload-row,.review-grid{grid-template-columns:1fr;}
+    .topbar-inner{gap:12px;}
+    .program-chip{margin-left:0;}
+    .card{padding:20px 16px;}
+  }
+
+  /* ---------- Print / PDF view ---------- */
+  #printArea{display:none;}
+  @media print{
+    @page{margin:16mm;}
+    body *{visibility:hidden;}
+    #printArea,#printArea *{visibility:visible;}
+    #printArea{display:block !important;position:absolute;left:0;top:0;width:100%;font-family:'Inter',system-ui,sans-serif;color:#111;}
+    .p-header{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #0B2447;padding-bottom:10px;margin-bottom:16px;}
+    .p-header h1{font-family:'Poppins',sans-serif;font-size:20px;color:#0B2447;margin:0;}
+    .p-header p{margin:2px 0 0;font-size:11px;color:#555;}
+    .p-idbox{text-align:right;font-size:11px;color:#333;}
+    .p-idbox strong{color:#0B2447;}
+    .p-section{margin-bottom:14px;page-break-inside:avoid;}
+    .p-section h2{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#0B2447;border-bottom:1px solid #ccc;padding-bottom:4px;margin-bottom:8px;}
+    .p-row{display:flex;flex-wrap:wrap;gap:0;}
+    .p-item{width:33.33%;padding:3px 10px 3px 0;font-size:11.5px;box-sizing:border-box;}
+    .p-item.full{width:100%;}
+    .p-item .k{color:#666;display:block;font-size:10px;text-transform:uppercase;letter-spacing:.03em;}
+    .p-item .v{font-weight:600;color:#111;}
+    .p-photos{display:flex;gap:20px;margin-top:6px;}
+    .p-photos div{text-align:center;}
+    .p-photos img{width:110px;height:130px;object-fit:contain;border:1px solid #ccc;}
+    .p-sigrow{display:flex;justify-content:space-between;margin-top:30px;font-size:11px;}
+    .p-sigrow div{width:45%;border-top:1px solid #333;padding-top:4px;text-align:center;color:#333;}
+    .p-footer{margin-top:20px;font-size:9.5px;color:#888;text-align:center;border-top:1px solid #ddd;padding-top:8px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand-mark">NX</div>
+    <div class="brand-text">
+      <h1>NEXTASY AVIATION CONSULTING</h1>
+      <p>Candidate Enrollment — Course &amp; Job Placement Program for Airlines</p>
+    </div>
+    <div class="program-chip">Program: <strong>&nbsp;International Handling Operations Program</strong></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="stepper" id="stepper"></div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="banner" id="errorBanner">
+    <strong>Please complete the following before continuing:</strong>
+    <ul id="errorList"></ul>
+  </div>
+  <div class="banner success" id="successBanner">
+    Your enrollment form is complete. Use <strong>Download Enrollment Form (PDF)</strong> below to save a copy.
+  </div>
+
+  <!-- ===================== TAB 1: PERSONAL DETAILS ===================== -->
+  <section class="panel active" data-panel="personal">
+    <div class="card">
+      <h2>1. Personal Details</h2>
+      <p class="sub">Basic identification details used for enrollment and airline documentation.</p>
+
+      <div class="grid">
+        <div class="field full">
+          <label>Full Name (as per Passport) <span class="req">*</span></label>
+          <input type="text" id="fullName" placeholder="e.g. Arjun Ramesh Kumar">
+        </div>
+        <div class="field">
+          <label>Gender <span class="req">*</span></label>
+          <select id="gender">
+            <option value="">Select</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Date of Birth <span class="req">*</span></label>
+          <input type="date" id="dob">
+        </div>
+        <div class="field">
+          <label>Blood Group <span class="req">*</span></label>
+          <select id="bloodGroup">
+            <option value="">Select</option>
+            <option>A+</option><option>A-</option>
+            <option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option>
+            <option>O+</option><option>O-</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Marital Status <span class="opt">(optional)</span></label>
+          <select id="maritalStatus">
+            <option value="">Select</option>
+            <option>Single</option>
+            <option>Married</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Mobile Number <span class="req">*</span></label>
+          <input type="tel" id="phone" placeholder="+91 98765 43210">
+        </div>
+        <div class="field">
+          <label>Email ID <span class="req">*</span></label>
+          <input type="email" id="email" placeholder="name@example.com">
+        </div>
+        <div class="field">
+          <label>PAN Number <span class="req">*</span></label>
+          <input type="text" id="pan" placeholder="ABCDE1234F" style="text-transform:uppercase">
+        </div>
+        <div class="field">
+          <label>Passport Number <span class="req">*</span></label>
+          <input type="text" id="passport" placeholder="N1234567" style="text-transform:uppercase">
+        </div>
+        <div class="field full">
+          <label>Permanent Address <span class="req">*</span></label>
+          <textarea id="permAddress" placeholder="House / Street, Village or Town, District, State, PIN Code"></textarea>
+        </div>
+        <div class="field full">
+          <label class="checkline" style="font-weight:600;font-size:12.5px;">
+            <input type="checkbox" id="sameAddress"> Correspondence address is the same as permanent address
+          </label>
+        </div>
+        <div class="field full" id="corrAddressWrap">
+          <label>Correspondence / Mailing Address</label>
+          <textarea id="corrAddress" placeholder="Address for postal communication, if different from above"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="panel-nav">
+      <span></span>
+      <button class="btn btn-primary" onclick="goNext('personal')">Next: Education →</button>
+    </div>
+  </section>
+
+  <!-- ===================== TAB 2: EDUCATION ===================== -->
+  <section class="panel" data-panel="education">
+    <div class="card">
+      <h2>2. Educational Background</h2>
+      <p class="sub">Details of schooling and higher education completed so far.</p>
+
+      <p class="subhead">Secondary (10th Standard)</p>
+      <div class="grid cols-3">
+        <div class="field"><label>School Name <span class="req">*</span></label><input type="text" id="edu10School"></div>
+        <div class="field"><label>Board</label><input type="text" id="edu10Board" placeholder="CBSE / State Board / ICSE"></div>
+        <div class="field"><label>Year of Passing</label><input type="text" id="edu10Year" placeholder="e.g. 2018"></div>
+        <div class="field"><label>Percentage / GPA</label><input type="text" id="edu10Pct"></div>
+      </div>
+
+      <hr class="section-divider">
+      <p class="subhead">Higher Secondary (12th Standard)</p>
+      <div class="grid cols-3">
+        <div class="field"><label>School / Junior College Name <span class="req">*</span></label><input type="text" id="edu12School"></div>
+        <div class="field"><label>Board / Stream</label><input type="text" id="edu12Board" placeholder="e.g. State Board – Commerce"></div>
+        <div class="field"><label>Year of Passing</label><input type="text" id="edu12Year"></div>
+        <div class="field"><label>Percentage / GPA</label><input type="text" id="edu12Pct"></div>
+      </div>
+
+      <hr class="section-divider">
+      <p class="subhead">Graduation / Diploma <span class="opt" style="text-transform:none;font-weight:500;">(if applicable)</span></p>
+      <div class="grid cols-3">
+        <div class="field"><label>College / University Name</label><input type="text" id="eduGradSchool"></div>
+        <div class="field"><label>Degree / Course</label><input type="text" id="eduGradDegree" placeholder="e.g. B.Com, BBA"></div>
+        <div class="field"><label>Year of Passing</label><input type="text" id="eduGradYear"></div>
+        <div class="field"><label>Percentage / CGPA</label><input type="text" id="eduGradPct"></div>
+      </div>
+
+      <hr class="section-divider">
+      <div class="field full">
+        <label>Additional Certifications / Courses <span class="opt">(optional)</span></label>
+        <textarea id="eduExtra" placeholder="e.g. English communication course, computer certification, etc."></textarea>
+      </div>
+    </div>
+    <div class="panel-nav">
+      <button class="btn btn-ghost" onclick="goTab('personal')">← Back</button>
+      <button class="btn btn-primary" onclick="goNext('education')">Next: About Yourself →</button>
+    </div>
+  </section>
+
+  <!-- ===================== TAB 3: ABOUT YOURSELF ===================== -->
+  <section class="panel" data-panel="about">
+    <div class="card">
+      <h2>3. About Yourself</h2>
+      <p class="sub">A short self-introduction used by our placement team when presenting you to airline partners.</p>
+      <div class="field full">
+        <label>Tell us about yourself <span class="req">*</span></label>
+        <textarea id="aboutYou" style="min-height:160px" placeholder="Your background, strengths, interests, and why you want to build a career in the aviation / airline industry..."></textarea>
+        <span class="hint">Aim for at least 3–4 sentences.</span>
+      </div>
+    </div>
+    <div class="panel-nav">
+      <button class="btn btn-ghost" onclick="goTab('education')">← Back</button>
+      <button class="btn btn-primary" onclick="goNext('about')">Next: References →</button>
+    </div>
+  </section>
+
+  <!-- ===================== TAB 4: REFERENCES ===================== -->
+  <section class="panel" data-panel="references">
+    <div class="card">
+      <h2>4. Reference Contacts</h2>
+      <p class="sub">Provide two people (not immediate family) who can vouch for your character.</p>
+
+      <div class="ref-card">
+        <p class="subhead">Reference 1</p>
+        <div class="grid">
+          <div class="field"><label>Full Name <span class="req">*</span></label><input type="text" id="ref1Name"></div>
+          <div class="field"><label>Relationship</label><input type="text" id="ref1Rel" placeholder="e.g. Teacher, Employer, Family friend"></div>
+          <div class="field"><label>Phone Number <span class="req">*</span></label><input type="tel" id="ref1Phone"></div>
+          <div class="field"><label>Email ID <span class="opt">(optional)</span></label><input type="email" id="ref1Email"></div>
+        </div>
+      </div>
+
+      <div class="ref-card">
+        <p class="subhead">Reference 2</p>
+        <div class="grid">
+          <div class="field"><label>Full Name <span class="req">*</span></label><input type="text" id="ref2Name"></div>
+          <div class="field"><label>Relationship</label><input type="text" id="ref2Rel" placeholder="e.g. Teacher, Employer, Family friend"></div>
+          <div class="field"><label>Phone Number <span class="req">*</span></label><input type="tel" id="ref2Phone"></div>
+          <div class="field"><label>Email ID <span class="opt">(optional)</span></label><input type="email" id="ref2Email"></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-nav">
+      <button class="btn btn-ghost" onclick="goTab('about')">← Back</button>
+      <button class="btn btn-primary" onclick="goNext('references')">Next: Program Selection →</button>
+    </div>
+  </section>
+
+  <!-- ===================== TAB 5: PROGRAM & AIRLINE ===================== -->
+  <section class="panel" data-panel="program">
+    <div class="card">
+      <h2>5. Program &amp; Airline Selection</h2>
+      <p class="sub">Choose the airline category and, for international, the role you're most interested in.</p>
+
+      <p class="subhead">Airline Category <span style="color:var(--danger)">*</span></p>
+      <div class="pill-group" id="airlineGroup">
+        <div class="pill">
+          <input type="radio" name="airline" id="airlineDomestic" value="Domestic Airline">
+          <label for="airlineDomestic"><span class="dot"></span> Domestic Airline</label>
+        </div>
+        <div class="pill">
+          <input type="radio" name="airline" id="airlineIntl" value="International Airline">
+          <label for="airlineIntl"><span class="dot"></span> International Airline</label>
+        </div>
+      </div>
+
+      <div id="roleGroup">
+        <hr class="section-divider">
+        <p class="subhead">Role Interest <span style="color:var(--danger)">*</span></p>
+        <div class="pill-group">
+          <div class="pill">
+            <input type="radio" name="role" id="roleCS" value="Customer Service">
+            <label for="roleCS"><span class="dot"></span> Customer Service</label>
+          </div>
+          <div class="pill">
+            <input type="radio" name="role" id="roleRamp" value="Ramp Operations">
+            <label for="roleRamp"><span class="dot"></span> Ramp</label>
+          </div>
+          <div class="pill">
+            <input type="radio" name="role" id="roleEng" value="Engineering">
+            <label for="roleEng"><span class="dot"></span> Engineering</label>
+          </div>
+        </div>
+      </div>
+
+      <hr class="section-divider">
+      <p class="subhead">Certificate Application</p>
+      <p style="font-size:13px;color:var(--text-muted);margin:0 0 12px;">
+        I hereby apply to NEXTASY Aviation Consulting for enrollment in the above course and request that a
+        Certificate of Completion be issued to me on successfully completing the program, subject to the
+        institute's terms and conditions.
+      </p>
+      <label class="checkline">
+        <input type="checkbox" id="certApply">
+        I confirm the above and agree to NEXTASY Aviation Consulting's enrollment terms <span class="req">*</span>
+      </label>
+    </div>
+    <div class="panel-nav">
+      <button class="btn btn-ghost" onclick="goTab('references')">← Back</button>
+      <button class="btn btn-primary" onclick="goNext('program')">Next: Photo &amp; Signature →</button>
+    </div>
+  </section>
+
+  <!-- ===================== TAB 6: UPLOADS ===================== -->
+  <section class="panel" data-panel="uploads">
+    <div class="card">
+      <h2>6. Photo &amp; Signature</h2>
+      <p class="sub">Upload a recent passport-size photo and a scanned copy of your signature.</p>
+
+      <div class="upload-row">
+        <div class="upload-box">
+          <h4>Passport Size Photo <span class="req">*</span></h4>
+          <p>JPG or PNG, clear front-facing photo</p>
+          <div class="preview" id="photoPreview"><span class="placeholder">No photo uploaded</span></div>
+          <label class="file-btn">Choose Photo<input type="file" accept="image/*" id="photoInput"></label>
+        </div>
+        <div class="upload-box">
+          <h4>Signature Scan <span class="req">*</span></h4>
+          <p>JPG or PNG, signature on plain paper</p>
+          <div class="preview" id="signaturePreview"><span class="placeholder">No signature uploaded</span></div>
+          <label class="file-btn">Choose Signature<input type="file" accept="image/*" id="signatureInput"></label>
+        </div>
+      </div>
+    </div>
+    <div class="panel-nav">
+      <button class="btn btn-ghost" onclick="goTab('program')">← Back</button>
+      <button class="btn btn-primary" onclick="goNext('uploads')">Next: Review &amp; Download →</button>
+    </div>
+  </section>
+
+  <!-- ===================== TAB 7: REVIEW & DOWNLOAD ===================== -->
+  <section class="panel" data-panel="review">
+    <div class="card">
+      <h2>7. Review &amp; Download</h2>
+      <p class="sub">Check the details below, then download the completed enrollment form as a PDF.</p>
+      <div id="reviewContent"></div>
+    </div>
+
+    <div class="download-cta">
+      <h3>Ready to submit</h3>
+      <p>This generates a clean, single enrollment form with every detail above, plus your photo and signature — using your browser's Save as PDF option.</p>
+      <button class="btn btn-gold" onclick="handleDownload()">⬇ Download Enrollment Form (PDF)</button>
+    </div>
+
+    <div class="panel-nav">
+      <button class="btn btn-ghost" onclick="goTab('uploads')">← Back</button>
+      <span></span>
+    </div>
+  </section>
+
+  <footer>NEXTASY Aviation Consulting · Candidate Enrollment Form · Enrollment No. <span id="footerId"></span></footer>
+</div>
+
+<!-- Hidden print-only layout, populated at download time -->
+<div id="printArea"></div>
+
+<script>
+(function(){
+  var TABS = ['personal','education','about','references','program','uploads','review'];
+  var LABELS = {personal:'Personal',education:'Education',about:'About',references:'References',program:'Program',uploads:'Uploads',review:'Review'};
+  var current = 0;
+  var photoData = null, signatureData = null;
+  var enrollmentId = 'NXA-' + new Date().getFullYear() + '-' + String(Date.now()).slice(-6);
+  document.getElementById('footerId').textContent = enrollmentId;
+
+  // ---------- Stepper build ----------
+  var stepperEl = document.getElementById('stepper');
+  TABS.forEach(function(t,i){
+    var b = document.createElement('button');
+    b.className = 'step-btn' + (i===0?' active':'');
+    b.dataset.tab = t;
+    b.innerHTML = '<span class="num">'+(i+1)+'</span>'+LABELS[t];
+    b.onclick = function(){ goTab(t); };
+    stepperEl.appendChild(b);
+  });
+
+  function updateStepperUI(){
+    var idx = TABS.indexOf(current);
+  }
+
+  window.goTab = function(name){
+    var idx = TABS.indexOf(name);
+    if(idx === -1) return;
+    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+    document.querySelector('.panel[data-panel="'+name+'"]').classList.add('active');
+    document.querySelectorAll('.step-btn').forEach(function(b,i){
+      b.classList.toggle('active', b.dataset.tab === name);
+      if(i < idx) b.classList.add('done');
+    });
+    document.getElementById('progressFill').style.width = (((idx+1)/TABS.length)*100)+'%';
+    current = idx;
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(name === 'review'){ renderReview(); }
+    hideBanner();
+  };
+
+  window.goNext = function(fromTab){
+    var errs = validateTab(fromTab);
+    if(errs.length){ showBanner(errs); return; }
+    var idx = TABS.indexOf(fromTab);
+    if(idx < TABS.length - 1){ window.goTab(TABS[idx+1]); }
+  };
+
+  // ---------- Address toggle ----------
+  var sameAddr = document.getElementById('sameAddress');
+  var corrWrap = document.getElementById('corrAddressWrap');
+  sameAddr.addEventListener('change', function(){
+    corrWrap.style.display = this.checked ? 'none' : '';
+    if(this.checked){ document.getElementById('corrAddress').value = document.getElementById('permAddress').value; }
+  });
+
+  // ---------- Airline / role toggle ----------
+  var roleGroup = document.getElementById('roleGroup');
+  document.querySelectorAll('input[name=airline]').forEach(function(r){
+    r.addEventListener('change', function(){
+      if(this.value === 'International Airline'){
+        roleGroup.classList.add('show');
+      } else {
+        roleGroup.classList.remove('show');
+        document.querySelectorAll('input[name=role]').forEach(function(rb){ rb.checked = false; });
+      }
+    });
+  });
+
+  // ---------- Uploads ----------
+  function wireUpload(inputId, previewId, setter){
+    document.getElementById(inputId).addEventListener('change', function(e){
+      var file = e.target.files[0];
+      if(!file) return;
+      var reader = new FileReader();
+      reader.onload = function(ev){
+        setter(ev.target.result);
+        document.getElementById(previewId).innerHTML = '<img src="'+ev.target.result+'" alt="preview">';
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  wireUpload('photoInput','photoPreview', function(v){ photoData = v; });
+  wireUpload('signatureInput','signaturePreview', function(v){ signatureData = v; });
+
+  // ---------- Validation ----------
+  function val(id){ var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+  function radioVal(name){ var el = document.querySelector('input[name='+name+']:checked'); return el ? el.value : ''; }
+  function markErr(id){ var el = document.getElementById(id); if(el) el.classList.add('err'); }
+  function clearErrs(){ document.querySelectorAll('.err').forEach(function(e){ e.classList.remove('err'); }); }
+
+  function validateTab(tab){
+    clearErrs();
+    var errs = [];
+    function req(id, label){
+      if(!val(id)){ errs.push({tab:tab, id:id, msg:label+' is required'}); markErr(id); }
+    }
+    if(tab === 'personal'){
+      req('fullName','Full Name'); req('gender','Gender'); req('dob','Date of Birth');
+      req('bloodGroup','Blood Group'); req('phone','Mobile Number'); req('email','Email ID');
+      req('pan','PAN Number'); req('passport','Passport Number'); req('permAddress','Permanent Address');
+    } else if(tab === 'education'){
+      req('edu10School','10th School Name'); req('edu12School','12th School/College Name');
+    } else if(tab === 'about'){
+      req('aboutYou','About Yourself');
+    } else if(tab === 'references'){
+      req('ref1Name','Reference 1 Name'); req('ref1Phone','Reference 1 Phone');
+      req('ref2Name','Reference 2 Name'); req('ref2Phone','Reference 2 Phone');
+    } else if(tab === 'program'){
+      if(!radioVal('airline')){ errs.push({tab:tab, id:'airlineGroup', msg:'Airline Category is required'}); }
+      else if(radioVal('airline') === 'International Airline' && !radioVal('role')){
+        errs.push({tab:tab, id:'roleGroup', msg:'Role Interest is required for International Airline'});
+      }
+      if(!document.getElementById('certApply').checked){
+        errs.push({tab:tab, id:'certApply', msg:'Please confirm the certificate application'});
+      }
+    } else if(tab === 'uploads'){
+      if(!photoData){ errs.push({tab:tab, id:'photoInput', msg:'Passport size photo is required'}); }
+      if(!signatureData){ errs.push({tab:tab, id:'signatureInput', msg:'Signature scan is required'}); }
+    }
+    return errs;
+  }
+
+  function validateAll(){
+    var all = [];
+    TABS.filter(function(t){ return t !== 'review'; }).forEach(function(t){
+      all = all.concat(validateTab(t));
+    });
+    return all;
+  }
+
+  function showBanner(errs){
+    var banner = document.getElementById('errorBanner');
+    var list = document.getElementById('errorList');
+    list.innerHTML = '';
+    errs.forEach(function(er){
+      var li = document.createElement('li');
+      li.textContent = er.msg;
+      li.onclick = function(){ goTab(er.tab); };
+      list.appendChild(li);
+    });
+    banner.classList.add('show');
+    document.getElementById('successBanner').classList.remove('show');
+    banner.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  function hideBanner(){
+    document.getElementById('errorBanner').classList.remove('show');
+  }
+
+  // ---------- Review ----------
+  function renderReview(){
+    var html = '<div class="review-grid">';
+
+    html += reviewBlock('Personal Details', [
+      ['Name', val('fullName')], ['Gender', val('gender')], ['Date of Birth', val('dob')],
+      ['Blood Group', val('bloodGroup')], ['Marital Status', val('maritalStatus') || '—'],
+      ['Mobile', val('phone')], ['Email', val('email')], ['PAN', val('pan')], ['Passport No.', val('passport')]
+    ]);
+    html += reviewBlock('Education', [
+      ['10th School', val('edu10School')], ['12th School/College', val('edu12School')],
+      ['Graduation', val('eduGradSchool') || '—']
+    ]);
+    html += reviewBlock('Program', [
+      ['Program', 'International Handling Operations Program'],
+      ['Airline Category', radioVal('airline') || '—'],
+      ['Role Interest', radioVal('role') || '—'],
+      ['Certificate Applied', document.getElementById('certApply').checked ? 'Yes' : 'No']
+    ]);
+    html += reviewBlock('References', [
+      ['Reference 1', val('ref1Name') + (val('ref1Phone') ? ' · '+val('ref1Phone') : '')],
+      ['Reference 2', val('ref2Name') + (val('ref2Phone') ? ' · '+val('ref2Phone') : '')]
+    ]);
+
+    html += '</div>';
+    html += '<div class="review-photos">';
+    html += '<div>'+(photoData ? '<img src="'+photoData+'">' : '<div class="preview"><span class="placeholder">No photo</span></div>') +'<p>Photo</p></div>';
+    html += '<div>'+(signatureData ? '<img src="'+signatureData+'">' : '<div class="preview"><span class="placeholder">No signature</span></div>') +'<p>Signature</p></div>';
+    html += '</div>';
+
+    document.getElementById('reviewContent').innerHTML = html;
+  }
+  function reviewBlock(title, rows){
+    var h = '<div class="review-block"><h3>'+title+'</h3>';
+    rows.forEach(function(r){
+      h += '<div class="review-line"><span class="k">'+r[0]+'</span><span class="v">'+(r[1] || '—')+'</span></div>';
+    });
+    h += '</div>';
+    return h;
+  }
+
+  // ---------- Download (print-to-PDF) ----------
+  window.handleDownload = function(){
+    var errs = validateAll();
+    if(errs.length){
+      var firstTab = errs[0].tab;
+      goTab(firstTab);
+      setTimeout(function(){ showBanner(errs); }, 150);
+      return;
+    }
+    hideBanner();
+    document.getElementById('successBanner').classList.add('show');
+    buildPrintArea();
+    setTimeout(function(){ window.print(); }, 200);
+  };
+
+  function pItem(label, value, full){
+    return '<div class="p-item'+(full?' full':'')+'"><span class="k">'+label+'</span><span class="v">'+(esc(value) || '—')+'</span></div>';
+  }
+  function esc(s){
+    if(!s) return s;
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function buildPrintArea(){
+    var today = new Date().toLocaleDateString('en-GB');
+    var corr = sameAddr.checked ? val('permAddress') : val('corrAddress');
+
+    var h = '';
+    h += '<div class="p-header">';
+    h += '  <div><h1>NEXTASY AVIATION CONSULTING</h1><p>Candidate Enrollment Form — International Handling Operations Program</p></div>';
+    h += '  <div class="p-idbox"><strong>Enrollment No.</strong> '+enrollmentId+'<br><strong>Date</strong> '+today+'</div>';
+    h += '</div>';
+
+    h += '<div class="p-section"><h2>Personal Details</h2><div class="p-row">';
+    h += pItem('Full Name', val('fullName'));
+    h += pItem('Gender', val('gender'));
+    h += pItem('Date of Birth', val('dob'));
+    h += pItem('Blood Group', val('bloodGroup'));
+    h += pItem('Marital Status', val('maritalStatus'));
+    h += pItem('Mobile Number', val('phone'));
+    h += pItem('Email ID', val('email'));
+    h += pItem('PAN Number', val('pan'));
+    h += pItem('Passport Number', val('passport'));
+    h += pItem('Permanent Address', val('permAddress'), true);
+    h += pItem('Correspondence Address', corr, true);
+    h += '</div></div>';
+
+    h += '<div class="p-section"><h2>Educational Background</h2><div class="p-row">';
+    h += pItem('10th — School', val('edu10School'));
+    h += pItem('10th — Board', val('edu10Board'));
+    h += pItem('10th — Year / %', val('edu10Year') + (val('edu10Pct') ? ' / '+val('edu10Pct') : ''));
+    h += pItem('12th — School/College', val('edu12School'));
+    h += pItem('12th — Board/Stream', val('edu12Board'));
+    h += pItem('12th — Year / %', val('edu12Year') + (val('edu12Pct') ? ' / '+val('edu12Pct') : ''));
+    h += pItem('Graduation — College', val('eduGradSchool'));
+    h += pItem('Graduation — Degree', val('eduGradDegree'));
+    h += pItem('Graduation — Year / %', val('eduGradYear') + (val('eduGradPct') ? ' / '+val('eduGradPct') : ''));
+    h += pItem('Additional Certifications', val('eduExtra'), true);
+    h += '</div></div>';
+
+    h += '<div class="p-section"><h2>About the Candidate</h2><div class="p-row">';
+    h += pItem('Self Description', val('aboutYou'), true);
+    h += '</div></div>';
+
+    h += '<div class="p-section"><h2>Reference Contacts</h2><div class="p-row">';
+    h += pItem('Reference 1 — Name', val('ref1Name'));
+    h += pItem('Reference 1 — Relationship', val('ref1Rel'));
+    h += pItem('Reference 1 — Phone', val('ref1Phone'));
+    h += pItem('Reference 2 — Name', val('ref2Name'));
+    h += pItem('Reference 2 — Relationship', val('ref2Rel'));
+    h += pItem('Reference 2 — Phone', val('ref2Phone'));
+    h += '</div></div>';
+
+    h += '<div class="p-section"><h2>Program &amp; Airline Selection</h2><div class="p-row">';
+    h += pItem('Program', 'International Handling Operations Program');
+    h += pItem('Airline Category', radioVal('airline'));
+    h += pItem('Role Interest', radioVal('role') || 'N/A (Domestic)');
+    h += pItem('Certificate Application', document.getElementById('certApply').checked ? 'Applied — agreed to terms' : 'Not confirmed');
+    h += '</div></div>';
+
+    h += '<div class="p-section"><h2>Photo &amp; Signature</h2>';
+    h += '<div class="p-photos">';
+    h += '<div>'+(photoData ? '<img src="'+photoData+'">' : '')+'<p style="font-size:10px;margin-top:4px;">Photo</p></div>';
+    h += '<div>'+(signatureData ? '<img src="'+signatureData+'">' : '')+'<p style="font-size:10px;margin-top:4px;">Signature</p></div>';
+    h += '</div></div>';
+
+    h += '<div class="p-sigrow"><div>Candidate Signature</div><div>Authorized Signatory — NEXTASY Aviation Consulting</div></div>';
+    h += '<div class="p-footer">This form was generated electronically via the NEXTASY Aviation Consulting enrollment portal on '+today+'. Enrollment No. '+enrollmentId+'.</div>';
+
+    document.getElementById('printArea').innerHTML = h;
+  }
+
+  // init
+  document.getElementById('progressFill').style.width = (100/TABS.length)+'%';
+})();
+</script>
+
+</body>
+</html>
