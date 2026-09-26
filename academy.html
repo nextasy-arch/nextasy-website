@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nextasy Academy</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --bg:#f3f6fa; --surface:#ffffff; --surface-2:#eaf0f6; --raised:#ffffff;
+    --text:#152233; --muted:#5b6b7c; --border:#dde5ed;
+    --primary:#0b3d63; --primary-ink:#ffffff; --primary-soft:#e7eef5;
+    --accent:#d99a2b; --accent-ink:#3a2705; --accent-soft:#fbedd2;
+    --success:#1f8f4e; --success-bg:#e5f5eb; --success-border:#bfe3cc;
+    --danger:#c0392b; --danger-bg:#fbe9e6; --danger-border:#f0c4bc;
+    --shadow:0 2px 14px rgba(15,35,60,0.08);
+    --radius:14px;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0b1626; --surface:#12233a; --surface-2:#16283f; --raised:#17293f;
+      --text:#e7eef5; --muted:#93a6b9; --border:#25384f;
+      --primary:#5b96cc; --primary-ink:#06121f; --primary-soft:#17324c;
+      --accent:#e6b451; --accent-ink:#241a02; --accent-soft:#3a2c0e;
+      --success:#49cf87; --success-bg:#123424; --success-border:#1e4d34;
+      --danger:#ff7a6e; --danger-bg:#3a1a16; --danger-border:#5c2620;
+      --shadow:0 4px 20px rgba(0,0,0,0.45);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0b1626; --surface:#12233a; --surface-2:#16283f; --raised:#17293f;
+    --text:#e7eef5; --muted:#93a6b9; --border:#25384f;
+    --primary:#5b96cc; --primary-ink:#06121f; --primary-soft:#17324c;
+    --accent:#e6b451; --accent-ink:#241a02; --accent-soft:#3a2c0e;
+    --success:#49cf87; --success-bg:#123424; --success-border:#1e4d34;
+    --danger:#ff7a6e; --danger-bg:#3a1a16; --danger-border:#5c2620;
+    --shadow:0 4px 20px rgba(0,0,0,0.45);
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    padding-inline:16px;
+  }
+  h1,h2,h3,.display{ font-family:'Big Shoulders Display', sans-serif; letter-spacing:0.3px; text-wrap:balance; }
+  .mono{ font-family:'IBM Plex Mono', monospace; font-variant-numeric:tabular-nums; }
+  a{ color:var(--primary); }
+  button{ font-family:inherit; }
+  [hidden]{ display:none !important; }
+
+  .shell{ max-width:960px; margin:0 auto; padding-block:24px 56px; }
+
+  /* ---------- Topbar ---------- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    max-width:960px; margin:0 auto; padding-block:16px;
+    border-bottom:1px solid var(--border);
+  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .brand-mark{
+    width:36px; height:36px; border-radius:9px; background:var(--primary);
+    color:var(--primary-ink); display:flex; align-items:center; justify-content:center;
+    font-size:18px; flex:none;
+  }
+  .brand-name{ font-family:'Big Shoulders Display', sans-serif; font-weight:800; font-size:20px; line-height:1; }
+  .brand-sub{ font-size:11px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; margin-top:2px; }
+  .who{ display:flex; align-items:center; gap:10px; font-size:13px; color:var(--muted); }
+  .who strong{ color:var(--text); }
+  .btn-ghost{
+    background:none; border:1px solid var(--border); color:var(--text);
+    padding:8px 14px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;
+  }
+  .btn-ghost:hover{ background:var(--surface-2); }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:11px 20px; border-radius:9px; border:none; cursor:pointer;
+    font-weight:600; font-size:14px; transition:transform .05s ease;
+  }
+  .btn:active{ transform:scale(0.98); }
+  .btn-primary{ background:var(--primary); color:var(--primary-ink); }
+  .btn-primary:hover{ filter:brightness(1.08); }
+  .btn-primary:disabled{ opacity:.45; cursor:not-allowed; }
+  .btn-accent{ background:var(--accent); color:var(--accent-ink); }
+  .btn-accent:hover{ filter:brightness(1.05); }
+  .btn-outline{ background:none; border:1px solid var(--border); color:var(--text); }
+  .btn-outline:hover{ background:var(--surface-2); }
+  .btn-block{ width:100%; }
+
+  /* ---------- Login ---------- */
+  #view-login{ min-height:calc(100vh - 40px); display:flex; align-items:center; justify-content:center; }
+  .login-card{
+    width:100%; max-width:400px; background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); box-shadow:var(--shadow); padding:32px 28px;
+  }
+  .login-mark{
+    width:52px; height:52px; border-radius:12px; background:var(--primary); color:var(--primary-ink);
+    display:flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:16px;
+  }
+  .login-card h1{ font-size:26px; margin:0 0 4px 0; }
+  .login-card p.lede{ color:var(--muted); font-size:14px; margin:0 0 22px 0; }
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:6px; }
+  .field input{
+    width:100%; padding:11px 12px; border-radius:8px; border:1px solid var(--border);
+    background:var(--bg); color:var(--text); font-size:14px; font-family:inherit;
+  }
+  .field input:focus{ outline:2px solid var(--primary); outline-offset:1px; }
+  .login-error{
+    background:var(--danger-bg); border:1px solid var(--danger-border); color:var(--danger);
+    padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:14px;
+  }
+  .demo-hint{
+    margin-top:18px; padding:12px 14px; background:var(--surface-2); border-radius:9px;
+    font-size:12.5px; color:var(--muted); line-height:1.5;
+  }
+  .demo-hint b{ color:var(--text); }
+
+  /* ---------- Dashboard ---------- */
+  .dash-head{ margin-bottom:22px; }
+  .dash-head h1{ font-size:34px; margin:0 0 6px 0; }
+  .dash-head p{ color:var(--muted); margin:0; max-width:60ch; }
+  .stat-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin:22px 0 28px 0; }
+  .stat-tile{ background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px; }
+  .stat-tile .num{ font-family:'Big Shoulders Display',sans-serif; font-size:30px; line-height:1; }
+  .stat-tile .lbl{ font-size:12px; color:var(--muted); margin-top:4px; }
+
+  .module-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:16px; }
+  .module-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px; display:flex; flex-direction:column; gap:10px; box-shadow:var(--shadow);
+  }
+  .module-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+  .module-num{ font-family:'Big Shoulders Display',sans-serif; font-size:13px; color:var(--muted); letter-spacing:1px; }
+  .badge{ font-size:11px; font-weight:700; letter-spacing:0.4px; padding:4px 9px; border-radius:999px; white-space:nowrap; }
+  .badge-todo{ background:var(--surface-2); color:var(--muted); }
+  .badge-progress{ background:var(--accent-soft); color:var(--accent-ink); }
+  .badge-done{ background:var(--success-bg); color:var(--success); border:1px solid var(--success-border); }
+  .module-card h3{ font-size:19px; margin:0; line-height:1.2; }
+  .module-card .desc{ font-size:13px; color:var(--muted); line-height:1.5; flex:1; }
+  .module-meta{ display:flex; gap:14px; font-size:12px; color:var(--muted); }
+  .module-meta span{ display:flex; align-items:center; gap:5px; }
+  .module-score{ font-size:12.5px; font-weight:600; color:var(--success); }
+
+  /* ---------- Module view ---------- */
+  .back-link{ background:none; border:none; color:var(--muted); font-size:13px; cursor:pointer; padding:0; margin-bottom:14px; display:inline-flex; align-items:center; gap:6px; }
+  .back-link:hover{ color:var(--text); }
+  .module-header{ margin-bottom:18px; }
+  .eyebrow{ font-size:12px; letter-spacing:1.2px; text-transform:uppercase; color:var(--accent-ink); background:var(--accent-soft); display:inline-block; padding:4px 10px; border-radius:999px; margin-bottom:10px; font-weight:700; }
+  .module-header h1{ font-size:30px; margin:0 0 8px 0; }
+  .module-header .desc{ color:var(--muted); max-width:70ch; }
+
+  .panel{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .panel h2{ font-size:15px; margin:0 0 12px 0; text-transform:uppercase; letter-spacing:0.8px; color:var(--muted); font-family:'IBM Plex Sans',sans-serif; font-weight:700; }
+
+  .player{ display:flex; align-items:center; gap:14px; }
+  .play-btn{
+    width:46px; height:46px; border-radius:50%; border:none; background:var(--primary); color:var(--primary-ink);
+    font-size:16px; cursor:pointer; flex:none; display:flex; align-items:center; justify-content:center;
+  }
+  .player-body{ flex:1; min-width:0; }
+  .player-title{ font-size:13.5px; font-weight:600; margin-bottom:6px; }
+  .track{ height:6px; background:var(--surface-2); border-radius:99px; overflow:hidden; }
+  .track-fill{ height:100%; background:var(--primary); width:0%; transition:width .2s linear; }
+  .player-time{ font-size:11.5px; color:var(--muted); margin-top:5px; display:flex; justify-content:space-between; }
+  .player-note{ font-size:11.5px; color:var(--muted); margin-top:10px; font-style:italic; }
+
+  .video-frame{
+    position:relative; aspect-ratio:16/9; max-width:100%; border-radius:10px; overflow:hidden;
+    background:linear-gradient(135deg, var(--primary-soft), var(--surface-2));
+    display:flex; align-items:center; justify-content:center; border:1px solid var(--border);
+  }
+  .video-frame .play-btn{ width:60px; height:60px; font-size:20px; }
+  .video-caption{ position:absolute; bottom:10px; left:12px; right:12px; font-size:12px; color:var(--muted); }
+
+  .check-row{ display:flex; align-items:center; gap:10px; font-size:13.5px; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); color:var(--muted); }
+  .check-row.done{ color:var(--success); font-weight:600; }
+  .check-dot{ width:18px; height:18px; border-radius:50%; border:2px solid var(--border); flex:none; display:flex; align-items:center; justify-content:center; font-size:11px; }
+  .check-row.done .check-dot{ background:var(--success); border-color:var(--success); color:#fff; }
+
+  .lesson-body{ font-size:14.5px; line-height:1.7; }
+  .lesson-body h4{ font-size:15px; margin:18px 0 6px 0; }
+  .lesson-body h4:first-child{ margin-top:0; }
+  .lesson-body ul{ margin:6px 0; padding-left:20px; }
+  .lesson-body li{ margin-bottom:4px; }
+
+  .session-timer{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); }
+  .session-timer .mono{ color:var(--text); font-weight:600; }
+
+  .sticky-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:8px; }
+
+  /* ---------- Assessment ---------- */
+  .assess-topbar{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
+  .countdown{
+    display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border);
+    padding:9px 16px; border-radius:999px; box-shadow:var(--shadow); font-size:14px; font-weight:700;
+  }
+  .countdown.low{ color:var(--danger); border-color:var(--danger-border); background:var(--danger-bg); }
+  .q-block{ margin-bottom:20px; }
+  .q-block .q-num{ font-size:12px; color:var(--muted); font-weight:700; letter-spacing:0.5px; margin-bottom:6px; }
+  .q-block .q-text{ font-size:15.5px; font-weight:600; margin-bottom:10px; }
+  .opt{
+    display:flex; align-items:flex-start; gap:10px; padding:11px 13px; border-radius:9px;
+    border:1px solid var(--border); margin-bottom:8px; cursor:pointer; font-size:14px;
+  }
+  .opt:hover{ background:var(--surface-2); }
+  .opt input{ margin-top:2px; }
+  .opt.selected{ border-color:var(--primary); background:var(--primary-soft); }
+
+  /* ---------- Result ---------- */
+  .result-hero{ text-align:center; padding:32px 20px; }
+  .result-ring{
+    width:130px; height:130px; border-radius:50%; margin:0 auto 18px auto; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; border:6px solid var(--success-border); background:var(--success-bg); color:var(--success);
+  }
+  .result-ring.fail{ border-color:var(--danger-border); background:var(--danger-bg); color:var(--danger); }
+  .result-ring .pct{ font-family:'Big Shoulders Display',sans-serif; font-size:34px; line-height:1; }
+  .result-ring .of{ font-size:11px; }
+  .result-title{ font-size:26px; margin:0 0 6px 0; }
+  .result-sub{ color:var(--muted); margin:0 0 24px 0; }
+  .result-actions{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .review-list{ text-align:left; margin-top:28px; }
+  .review-item{ display:flex; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); font-size:13.5px; }
+  .review-item:last-child{ border-bottom:none; }
+  .review-mark{ flex:none; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; color:#fff; }
+  .review-mark.ok{ background:var(--success); }
+  .review-mark.bad{ background:var(--danger); }
+
+  .footnote{ text-align:center; font-size:11.5px; color:var(--muted); margin-top:40px; line-height:1.6; }
+
+  @media (max-width:480px){
+    .login-card{ padding:24px 20px; }
+    .result-actions{ flex-direction:column; }
+    .result-actions .btn{ width:100%; }
+  }
+</style>
+</head>
+<body>
+<div id="view-login">
+  <div class="login-card">
+    <div class="login-mark">&#9992;</div>
+    <h1>Nextasy Academy</h1>
+    <p class="lede">Ground operations training for candidates selected by Nextasy Aviation Consulting.</p>
+    <div id="login-error" class="login-error" hidden></div>
+    <form id="login-form">
+      <div class="field">
+        <label for="in-name">Full name</label>
+        <input id="in-name" type="text" autocomplete="name" placeholder="e.g. Priya Antony Ram" required>
+      </div>
+      <div class="field">
+        <label for="in-email">Email</label>
+        <input id="in-email" type="email" autocomplete="email" placeholder="the email your enrollment was sent to" required>
+      </div>
+      <div class="field">
+        <label for="in-code">Password (your mobile number)</label>
+        <input id="in-code" type="password" autocomplete="off" inputmode="tel" placeholder="e.g. 9xxxxxxxxx" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+    </form>
+    <div class="demo-hint" id="login-hint">
+      Enter the email your enrollment email was sent to. The first time you sign in, whatever mobile number you enter becomes your password on this device going forward.
+    </div>
+  </div>
+</div>
+
+<div id="view-app" hidden>
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">&#9992;</div>
+      <div>
+        <div class="brand-name">NEXTASY ACADEMY</div>
+        <div class="brand-sub">Nextasy Aviation Consulting</div>
+      </div>
+    </div>
+    <div class="who">
+      <span>Signed in as <strong id="who-name">&mdash;</strong></span>
+      <button class="btn-ghost" id="btn-logout">Sign out</button>
+    </div>
+  </div>
+
+  <div class="shell">
+
+    <div id="view-dashboard">
+      <div class="dash-head">
+        <h1>Your training modules</h1>
+        <p>Five modules on international airline operations and ground handling procedures. Each module is a 60-minute self-paced session followed by a 15-minute assessment.</p>
+      </div>
+      <div class="stat-row">
+        <div class="stat-tile"><div class="num mono" id="stat-completed">0/5</div><div class="lbl">Modules completed</div></div>
+        <div class="stat-tile"><div class="num mono" id="stat-avg">&mdash;</div><div class="lbl">Average score</div></div>
+        <div class="stat-tile"><div class="num mono" id="stat-time">5 hrs</div><div class="lbl">Total program length</div></div>
+      </div>
+      <div class="module-grid" id="module-grid"></div>
+    </div>
+
+    <div id="view-module" hidden>
+      <button class="back-link" id="btn-back-dash">&larr; Back to dashboard</button>
+      <div class="module-header">
+        <div class="eyebrow" id="mod-eyebrow">Module 1</div>
+        <h1 id="mod-title">&nbsp;</h1>
+        <p class="desc" id="mod-desc"></p>
+      </div>
+
+      <div class="panel">
+        <h2>Audio session</h2>
+        <div class="player">
+          <button class="play-btn" id="audio-play" aria-label="Play audio lesson">&#9658;</button>
+          <div class="player-body">
+            <div class="player-title" id="audio-title">Lesson narration</div>
+            <div class="track"><div class="track-fill" id="audio-fill"></div></div>
+            <div class="player-time"><span class="mono" id="audio-elapsed">0:00</span><span class="mono" id="audio-duration">18:00</span></div>
+          </div>
+        </div>
+        <div class="player-note">Sample player &mdash; replace with your recorded lesson audio.</div>
+      </div>
+
+      <div class="panel">
+        <h2>Video lesson</h2>
+        <div class="video-frame">
+          <button class="play-btn" id="video-play" aria-label="Play video lesson">&#9658;</button>
+          <div class="video-caption" id="video-caption">Sample player &mdash; replace with your hosted video walkthrough.</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Lesson content</h2>
+        <div class="lesson-body" id="lesson-body"></div>
+        <div class="check-row" id="check-audio"><span class="check-dot">&#10003;</span> Audio session listened</div>
+        <div class="check-row" id="check-video"><span class="check-dot">&#10003;</span> Video lesson watched</div>
+      </div>
+
+      <div class="sticky-actions">
+        <div class="session-timer" style="margin-right:auto;">
+          Session time <span class="mono" id="session-elapsed">0:00</span> / recommended <span class="mono">60:00</span>
+        </div>
+        <button class="btn btn-primary" id="btn-to-assessment" disabled>Start 15-min assessment</button>
+      </div>
+    </div>
+
+    <div id="view-assessment" hidden>
+      <div class="assess-topbar">
+        <div>
+          <div class="eyebrow" id="assess-eyebrow">Module 1 &middot; Assessment</div>
+          <h1 style="font-size:26px;margin:6px 0 0 0;" id="assess-title">&nbsp;</h1>
+        </div>
+        <div class="countdown" id="countdown"><span>&#9201;</span><span class="mono" id="countdown-time">15:00</span></div>
+      </div>
+      <div class="panel">
+        <div id="quiz-body"></div>
+        <div class="sticky-actions">
+          <button class="btn btn-primary" id="btn-submit-quiz">Submit assessment</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="view-result" hidden>
+      <div class="panel result-hero">
+        <div class="result-ring" id="result-ring">
+          <div class="pct mono" id="result-pct">0%</div>
+          <div class="of mono" id="result-frac">0 / 0</div>
+        </div>
+        <h2 class="result-title" id="result-title">Assessment complete</h2>
+        <p class="result-sub" id="result-sub">&nbsp;</p>
+        <div class="result-actions">
+          <button class="btn btn-accent" id="btn-download">Download result</button>
+          <button class="btn btn-outline" id="btn-retake">Retake assessment</button>
+          <button class="btn btn-primary" id="btn-result-dash">Back to dashboard</button>
+        </div>
+        <div class="review-list" id="review-list"></div>
+      </div>
+    </div>
+
+    <div class="footnote">
+      Sample curriculum content for demonstration purposes &mdash; replace with Nextasy&rsquo;s certified training materials before use with real candidates.<br>
+      Nextasy Aviation Consulting &middot; nextasy.biz
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var STORAGE_KEY_PREFIX = "nextasyAcademyProgress_v2_";
+  var NAME_KEY_PREFIX = "nextasyAcademyName_v2_";
+  var PASSHASH_KEY_PREFIX = "nextasyAcademyPassHash_v2_";
+  var PASS_MARK = 0.7;
+
+  // Candidates enrolled for training. Only these email addresses can sign in.
+  // A candidate's password is their own mobile number: the FIRST time they sign
+  // in on a device, whatever number they type is remembered (as a hash, never
+  // stored in plain text) and checked against on every later sign-in from that
+  // same device/browser.
+  var ENROLLED_CANDIDATES = [
+    { email:"priyaantonyram2003@gmail.com", name:"Priya Antony Ram" },
+    { email:"michealflewan93@gmail.com", name:"Michael Flavvan Deva Doss" }
+  ];
+
+  var STORAGE_KEY, NAME_KEY; // set once a candidate is identified, scoped per email
+
+  function findCandidate(email){
+    email = (email||"").trim().toLowerCase();
+    for (var i=0;i<ENROLLED_CANDIDATES.length;i++){
+      if (ENROLLED_CANDIDATES[i].email.toLowerCase() === email) return ENROLLED_CANDIDATES[i];
+    }
+    return null;
+  }
+
+  function sha256Hex(text){
+    var enc = new TextEncoder().encode(text);
+    if (window.crypto && window.crypto.subtle){
+      return window.crypto.subtle.digest("SHA-256", enc).then(function(buf){
+        var bytes = Array.from(new Uint8Array(buf));
+        return bytes.map(function(b){ return b.toString(16).padStart(2,"0"); }).join("");
+      });
+    }
+    // Fallback (very old browsers without SubtleCrypto): not cryptographic,
+    // but still avoids storing the raw number in localStorage.
+    var h = 0;
+    for (var i=0;i<text.length;i++){ h = ((h<<5)-h+text.charCodeAt(i))|0; }
+    return Promise.resolve("fallback-" + h);
+  }
+
+  var MODULES = [
+    {
+      id:"ramp-ops",
+      title:"Ramp Operations & Aircraft Turnaround",
+      desc:"Marshalling, ground power, and the choreography of a fast, safe turnaround.",
+      lesson:
+        "<h4>Turnaround sequence</h4>" +
+        "<ul>" +
+        "<li>Arrival marshalling guides the aircraft to stand using standard hand or wand signals.</li>" +
+        "<li>Chocks and safety cones are placed before any ground equipment approaches the aircraft.</li>" +
+        "<li>Ground Power Unit (GPU) and Air Start Unit (ASU) connect so aircraft systems can run with engines off.</li>" +
+        "<li>Deplaning, cabin cleaning, catering, and baggage/cargo offload-onload happen in parallel under time pressure.</li>" +
+        "<li>Fueling follows the carrier's safety procedure, often with restrictions on nearby activity.</li>" +
+        "<li>Pushback is coordinated by headset between the tug driver and the flight crew; brakes release only on the crew's instruction.</li>" +
+        "</ul>" +
+        "<h4>Ramp safety zones</h4>" +
+        "<ul>" +
+        "<li>FOD (Foreign Object Debris) walks keep the stand clear of anything that could be ingested by an engine.</li>" +
+        "<li>Jet blast and intake zones are strict no-go areas while engines run.</li>" +
+        "<li>High-visibility PPE is required for anyone working on the ramp.</li>" +
+        "</ul>",
+      quiz:[
+        {q:"What does FOD stand for in ramp safety?", options:["Foreign Object Debris","Flight Operations Directive","Fuel Overflow Detection","Field Ordnance Disposal"], correct:0},
+        {q:"What is the main purpose of a Ground Power Unit (GPU)?", options:["To tow the aircraft","To supply electrical power while engines are off","To de-ice the wings","To measure cargo weight"], correct:1},
+        {q:"Chocks should be removed only after:", options:["The captain requests boarding music","Confirmation from the flight crew, per checklist","The last passenger sits down","The catering truck leaves"], correct:1},
+        {q:"During pushback, brakes are released:", options:["Whenever the tug driver decides","On the flight crew's instruction via headset","As soon as chocks are placed","Only after takeoff clearance"], correct:1},
+        {q:"Why is high-visibility PPE required on the ramp?", options:["Airline branding","To protect staff from vehicle and aircraft movement hazards","Passenger comfort","Weather protection only"], correct:1}
+      ]
+    },
+    {
+      id:"pax-handling",
+      title:"Passenger Handling & Check-in Procedures",
+      desc:"Document checks, seat assignment, special assistance, and the boarding sequence.",
+      lesson:
+        "<h4>Check-in essentials</h4>" +
+        "<ul>" +
+        "<li>For international travel, verify passport validity and destination entry/visa requirements before issuing a boarding pass.</li>" +
+        "<li>Confirm checked baggage weight against the fare's allowance and attach a bag tag that links the bag to the passenger and flight.</li>" +
+        "<li>Seat assignment follows fare class, prior selection, and any operational constraints (weight and balance, PRM seating rules).</li>" +
+        "</ul>" +
+        "<h4>Special assistance</h4>" +
+        "<ul>" +
+        "<li>PRM (Passenger with Reduced Mobility) requests are flagged early so wheelchairs, aisle chairs, or early boarding can be arranged.</li>" +
+        "<li>Unaccompanied minors and medical cases follow the carrier's specific handling procedure.</li>" +
+        "</ul>" +
+        "<h4>Boarding</h4>" +
+        "<ul>" +
+        "<li>Priority boarding typically covers premium cabins, PRM passengers, and families with young children.</li>" +
+        "<li>During delays or irregular operations, clear and timely communication matters more than a polished script.</li>" +
+        "</ul>",
+      quiz:[
+        {q:"What does PRM stand for?", options:["Priority Route Management","Passenger with Reduced Mobility","Pre-Registered Member","Passenger Rebooking Module"], correct:1},
+        {q:"For international travel, check-in staff should verify:", options:["Passport validity and entry/visa requirements","Only the passenger's name spelling","Frequent flyer tier","Seat pitch preference"], correct:0},
+        {q:"A baggage tag's main purpose is to:", options:["Decorate the suitcase","Link the bag to its passenger and flight","Record the bag's purchase price","Indicate the bag's color"], correct:1},
+        {q:"Priority boarding typically includes:", options:["Only staff traveling standby","Premium cabins, PRM passengers, and families with young children","Whoever arrives at the gate first","Passengers with the heaviest bags"], correct:1},
+        {q:"During a delay, good customer service emphasizes:", options:["Saying as little as possible","Clear, timely communication and empathy","Offering discounts immediately","Avoiding eye contact"], correct:1}
+      ]
+    },
+    {
+      id:"baggage-cargo",
+      title:"Baggage & Cargo Operations",
+      desc:"ULDs, reconciliation, weight and balance, and handling irregularities.",
+      lesson:
+        "<h4>Loading basics</h4>" +
+        "<ul>" +
+        "<li>A ULD (Unit Load Device) is a container or pallet used to load baggage and cargo efficiently into the aircraft hold.</li>" +
+        "<li>Weight and balance calculations affect the aircraft's stability and performance, so load positions are planned, not improvised.</li>" +
+        "</ul>" +
+        "<h4>Reconciliation and compliance</h4>" +
+        "<ul>" +
+        "<li>Baggage reconciliation ensures only bags belonging to passengers who actually boarded are loaded onto the aircraft.</li>" +
+        "<li>Dangerous goods require specific labeling, segregation, and trained handling in line with regulatory requirements.</li>" +
+        "</ul>" +
+        "<h4>When things go wrong</h4>" +
+        "<ul>" +
+        "<li>A damaged or missing bag is logged with a Property Irregularity Report (PIR), and the passenger is kept informed.</li>" +
+        "</ul>",
+      quiz:[
+        {q:"What is a ULD?", options:["A Unit Load Device for containing baggage/cargo","A type of boarding pass","A universal luggage discount","A fuel measurement unit"], correct:0},
+        {q:"Baggage reconciliation exists to ensure:", options:["Bags are sorted by color","Only bags of boarded passengers are loaded","All bags are the same weight","Bags are loaded before passengers board"], correct:1},
+        {q:"Weight and balance calculations mainly affect:", options:["Ticket pricing","Aircraft stability and performance","Boarding order","Cabin temperature"], correct:1},
+        {q:"Dangerous goods handling requires:", options:["No special treatment","Specific labeling, segregation, and trained handling","Storage next to passenger seating","Verbal notice only"], correct:1},
+        {q:"When a bag is damaged or lost, staff should:", options:["Say nothing and hope it turns up","File a Property Irregularity Report and inform the passenger","Charge the passenger a fee","Wait for the passenger to notice"], correct:1}
+      ]
+    },
+    {
+      id:"safety-emergency",
+      title:"Aviation Safety & Emergency Procedures",
+      desc:"Hazard awareness, PPE, and how ground teams respond when something goes wrong.",
+      lesson:
+        "<h4>Everyday safety</h4>" +
+        "<ul>" +
+        "<li>Pre-shift safety briefings make sure everyone knows the day's hazards and any changes to normal procedure.</li>" +
+        "<li>Standard PPE on the ramp includes a high-visibility vest, hearing protection near engines, and safety footwear.</li>" +
+        "<li>Jet blast and propeller wash require keeping a safe distance from running engines at all times.</li>" +
+        "</ul>" +
+        "<h4>When an incident happens</h4>" +
+        "<ul>" +
+        "<li>In an emergency, ground staff's first priority is passenger and crew safety, ahead of schedule or equipment.</li>" +
+        "<li>Every incident, even a near miss, gets reported &mdash; reporting is what improves procedures over time, not a way to assign blame.</li>" +
+        "</ul>",
+      quiz:[
+        {q:"The purpose of a pre-shift safety briefing is to:", options:["Fill time before the first flight","Ensure staff know the day's hazards and procedures","Assign parking spaces","Review payroll"], correct:1},
+        {q:"In an emergency evacuation, ground staff's first priority is:", options:["Protecting the aircraft's paint","Passenger and crew safety","Recovering catering equipment","Filing paperwork immediately"], correct:1},
+        {q:"Incident reporting matters because it:", options:["Is required for insurance discounts only","Helps prevent future incidents and improves safety culture","Is optional for minor events","Assigns blame to individuals"], correct:1},
+        {q:"Standard ramp PPE includes:", options:["A high-visibility vest, hearing protection, and safety footwear","Sunglasses only","A formal blazer","No specific requirement"], correct:0},
+        {q:"Jet blast and prop wash hazards are managed by:", options:["Standing closer to hear better","Maintaining a safe distance from running engines","Wearing headphones","Ignoring them once trained"], correct:1}
+      ]
+    },
+    {
+      id:"docs-comms",
+      title:"Airline Documentation & Communication",
+      desc:"Load sheets, NOTAMs, standard phraseology, and clean shift handovers.",
+      lesson:
+        "<h4>Key documents</h4>" +
+        "<ul>" +
+        "<li>The load sheet records the aircraft's weight and balance information for a specific flight.</li>" +
+        "<li>NOTAMs (Notices to Air Missions) alert crews and ground staff to temporary hazards or changes affecting operations.</li>" +
+        "</ul>" +
+        "<h4>Communication</h4>" +
+        "<ul>" +
+        "<li>Standard phraseology reduces misunderstandings between ground staff, crew, and air traffic control.</li>" +
+        "<li>A good shift handover covers outstanding tasks, irregularities, and anything the next shift needs to know immediately.</li>" +
+        "</ul>" +
+        "<h4>Why records matter</h4>" +
+        "<ul>" +
+        "<li>Accurate, timely record-keeping supports regulatory compliance and gives everyone a clear trail if something needs to be reviewed later.</li>" +
+        "</ul>",
+      quiz:[
+        {q:"A load sheet primarily records:", options:["Passenger meal preferences","Weight and balance information for the flight","Crew vacation schedules","Fuel pricing"], correct:1},
+        {q:"NOTAM stands for:", options:["Notice to Air Missions","National Operations Tracking and Monitoring","Notification of Ticket Adjustment","None of the above"], correct:0},
+        {q:"Standard phraseology in aviation communication exists to:", options:["Sound formal","Reduce misunderstandings and ensure clarity","Slow down radio traffic","Impress passengers"], correct:1},
+        {q:"A good shift handover should include:", options:["Only the good news","Outstanding tasks, irregularities, and key updates","Nothing if the shift was quiet","Personal opinions about colleagues"], correct:1},
+        {q:"Accurate record-keeping mainly supports:", options:["Faster boarding music","Regulatory compliance and accountability","Shorter queues","Better weather"], correct:1}
+      ]
+    }
+  ];
+
+  // ---------- State ----------
+  var progress = {};
+  var currentEmail = "";
+  var currentModuleIndex = -1;
+  var audioTimer = null, audioElapsed = 0, audioDuration = 18 * 60; // seconds, mock
+  var audioPlaying = false;
+  var videoWatched = false;
+  var sessionTimer = null, sessionElapsed = 0;
+  var quizAnswers = [];
+  var quizTimer = null, quizRemaining = 15 * 60;
+  var lastResult = null;
+
+  function loadProgress(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){ return {}; }
+  }
+  function saveProgress(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); }catch(e){}
+  }
+  function fmtTime(sec){
+    sec = Math.max(0, Math.round(sec));
+    var m = Math.floor(sec/60), s = sec%60;
+    return m + ":" + (s<10 ? "0"+s : s);
+  }
+
+  // ---------- View switching ----------
+  function showView(id){
+    ["view-dashboard","view-module","view-assessment","view-result"].forEach(function(v){
+      document.getElementById(v).hidden = (v !== id);
+    });
+  }
+
+  // ---------- Login ----------
+  var loginForm = document.getElementById("login-form");
+  var loginError = document.getElementById("login-error");
+  var loginSubmitBtn = loginForm.querySelector("button[type=submit]");
+  try{
+    var lastEmail = localStorage.getItem("nextasyAcademyLastEmail_v2");
+    if (lastEmail){
+      document.getElementById("in-email").value = lastEmail;
+      var cand = findCandidate(lastEmail);
+      if (cand){
+        var savedName = localStorage.getItem(NAME_KEY_PREFIX + lastEmail.toLowerCase());
+        if (savedName) document.getElementById("in-name").value = savedName;
+      }
+    }
+  }catch(e){}
+
+  function showLoginError(msg){
+    loginError.textContent = msg;
+    loginError.hidden = false;
+  }
+
+  loginForm.addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var name = document.getElementById("in-name").value.trim();
+    var email = document.getElementById("in-email").value.trim();
+    var code = document.getElementById("in-code").value.trim();
+    loginError.hidden = true;
+
+    if (!name){ showLoginError("Please enter your full name."); return; }
+    var candidate = findCandidate(email);
+    if (!candidate){
+      showLoginError("That email isn't on our enrolled candidate list. Check with Nextasy Aviation Consulting.");
+      return;
+    }
+    if (!code || code.length < 4){
+      showLoginError("Enter your mobile number as your password.");
+      return;
+    }
+
+    var emailKey = email.trim().toLowerCase();
+    var passHashKey = PASSHASH_KEY_PREFIX + emailKey;
+
+    loginSubmitBtn.disabled = true;
+    loginSubmitBtn.textContent = "Checking…";
+
+    sha256Hex(emailKey + "|" + code).then(function(hash){
+      var storedHash = null;
+      try{ storedHash = localStorage.getItem(passHashKey); }catch(e){}
+
+      if (storedHash && storedHash !== hash){
+        showLoginError("That mobile number doesn't match what's on file for this device. If your number changed, contact Nextasy Aviation Consulting to reset it.");
+        loginSubmitBtn.disabled = false;
+        loginSubmitBtn.textContent = "Sign in";
+        return;
+      }
+      if (!storedHash){
+        try{ localStorage.setItem(passHashKey, hash); }catch(e){}
+      }
+
+      currentEmail = emailKey;
+      STORAGE_KEY = STORAGE_KEY_PREFIX + emailKey;
+      NAME_KEY = NAME_KEY_PREFIX + emailKey;
+      progress = loadProgress();
+      try{
+        localStorage.setItem(NAME_KEY, name);
+        localStorage.setItem("nextasyAcademyLastEmail_v2", email.trim());
+      }catch(e){}
+
+      document.getElementById("who-name").textContent = name;
+      document.getElementById("view-login").hidden = true;
+      document.getElementById("view-app").hidden = false;
+      loginSubmitBtn.disabled = false;
+      loginSubmitBtn.textContent = "Sign in";
+      renderDashboard();
+    });
+  });
+
+  document.getElementById("btn-logout").addEventListener("click", function(){
+    document.getElementById("view-app").hidden = true;
+    document.getElementById("view-login").hidden = false;
+    document.getElementById("in-code").value = "";
+  });
+
+  // ---------- Dashboard ----------
+  function statusFor(id){
+    var p = progress[id];
+    if (!p) return "todo";
+    return p.status || "todo";
+  }
+  function renderDashboard(){
+    var grid = document.getElementById("module-grid");
+    grid.innerHTML = "";
+    var completed = 0, scoreSum = 0, scoreCount = 0;
+    MODULES.forEach(function(m, i){
+      var st = statusFor(m.id);
+      var p = progress[m.id];
+      if (st === "done"){ completed++; if (typeof p.score === "number"){ scoreSum += p.score; scoreCount++; } }
+      var card = document.createElement("div");
+      card.className = "module-card";
+      var badgeClass = st === "done" ? "badge-done" : (st === "progress" ? "badge-progress" : "badge-todo");
+      var badgeText = st === "done" ? "Completed" : (st === "progress" ? "In progress" : "Not started");
+      var btnText = st === "done" ? "Review module" : (st === "progress" ? "Continue module" : "Start module");
+      card.innerHTML =
+        '<div class="module-top"><div class="module-num">MODULE 0' + (i+1) + '</div><span class="badge ' + badgeClass + '">' + badgeText + '</span></div>' +
+        '<h3>' + m.title + '</h3>' +
+        '<div class="desc">' + m.desc + '</div>' +
+        (st === "done" && p && typeof p.score === "number" ? '<div class="module-score">Last score: ' + Math.round(p.score*100) + '%</div>' : '') +
+        '<div class="module-meta"><span>&#127911; Audio + video</span><span>&#9201; 60 min + 15 min</span></div>' +
+        '<button class="btn btn-primary btn-block" data-idx="' + i + '">' + btnText + '</button>';
+      card.querySelector("button").addEventListener("click", function(){ openModule(i); });
+      grid.appendChild(card);
+    });
+    document.getElementById("stat-completed").textContent = completed + "/" + MODULES.length;
+    document.getElementById("stat-avg").textContent = scoreCount ? Math.round((scoreSum/scoreCount)*100) + "%" : "—";
+    showView("view-dashboard");
+  }
+
+  document.getElementById("btn-back-dash").addEventListener("click", function(){
+    stopAudio(); stopSessionTimer();
+    renderDashboard();
+  });
+  document.getElementById("btn-result-dash").addEventListener("click", renderDashboard);
+
+  // ---------- Module view ----------
+  function openModule(i){
+    currentModuleIndex = i;
+    var m = MODULES[i];
+    if (!progress[m.id]) progress[m.id] = { status:"progress" };
+    else if (progress[m.id].status === "todo") progress[m.id].status = "progress";
+    saveProgress();
+
+    document.getElementById("mod-eyebrow").textContent = "Module 0" + (i+1) + " of 05";
+    document.getElementById("mod-title").textContent = m.title;
+    document.getElementById("mod-desc").textContent = m.desc;
+    document.getElementById("lesson-body").innerHTML = m.lesson;
+    document.getElementById("audio-title").textContent = m.title + " — narrated overview";
+
+    audioElapsed = 0; audioPlaying = false; videoWatched = false;
+    document.getElementById("audio-fill").style.width = "0%";
+    document.getElementById("audio-elapsed").textContent = "0:00";
+    document.getElementById("audio-duration").textContent = fmtTime(audioDuration);
+    document.getElementById("audio-play").innerHTML = "&#9658;";
+    document.getElementById("check-audio").classList.remove("done");
+    document.getElementById("check-video").classList.remove("done");
+    document.getElementById("btn-to-assessment").disabled = true;
+
+    sessionElapsed = 0;
+    document.getElementById("session-elapsed").textContent = "0:00";
+    startSessionTimer();
+
+    showView("view-module");
+  }
+
+  function startSessionTimer(){
+    stopSessionTimer();
+    sessionTimer = setInterval(function(){
+      sessionElapsed++;
+      document.getElementById("session-elapsed").textContent = fmtTime(sessionElapsed);
+    }, 1000);
+  }
+  function stopSessionTimer(){ if (sessionTimer){ clearInterval(sessionTimer); sessionTimer = null; } }
+
+  function checkUnlockAssessment(){
+    var unlocked = document.getElementById("check-audio").classList.contains("done") &&
+                   document.getElementById("check-video").classList.contains("done");
+    document.getElementById("btn-to-assessment").disabled = !unlocked;
+  }
+
+  function stopAudio(){
+    if (audioTimer){ clearInterval(audioTimer); audioTimer = null; }
+    audioPlaying = false;
+    var btn = document.getElementById("audio-play");
+    if (btn) btn.innerHTML = "&#9658;";
+  }
+
+  document.getElementById("audio-play").addEventListener("click", function(){
+    if (audioPlaying){
+      stopAudio();
+      return;
+    }
+    audioPlaying = true;
+    this.innerHTML = "&#10074;&#10074;";
+    // The mock always finishes in ~6s of real time regardless of the displayed
+    // lesson length, so previewing the flow never means waiting out a real 18-minute track.
+    var stepsToFinish = 60, stepSize = audioDuration / stepsToFinish;
+    audioTimer = setInterval(function(){
+      audioElapsed += stepSize;
+      var pct = Math.min(100, (audioElapsed/audioDuration)*100);
+      document.getElementById("audio-fill").style.width = pct + "%";
+      document.getElementById("audio-elapsed").textContent = fmtTime(audioElapsed);
+      if (audioElapsed >= audioDuration){
+        stopAudio();
+        document.getElementById("check-audio").classList.add("done");
+        checkUnlockAssessment();
+      }
+    }, 100);
+  });
+
+  document.getElementById("video-play").addEventListener("click", function(){
+    if (videoWatched) return;
+    var btn = this;
+    btn.innerHTML = "&#10074;&#10074;";
+    document.getElementById("video-caption").textContent = "Playing sample walkthrough…";
+    setTimeout(function(){
+      videoWatched = true;
+      btn.innerHTML = "&#10003;";
+      document.getElementById("video-caption").textContent = "Watched — replace with your hosted video.";
+      document.getElementById("check-video").classList.add("done");
+      checkUnlockAssessment();
+    }, 1800);
+  });
+
+  document.getElementById("btn-to-assessment").addEventListener("click", function(){
+    stopAudio(); stopSessionTimer();
+    openAssessment(currentModuleIndex);
+  });
+
+  // ---------- Assessment ----------
+  function openAssessment(i){
+    var m = MODULES[i];
+    quizAnswers = new Array(m.quiz.length).fill(null);
+    quizRemaining = 15*60;
+    document.getElementById("assess-eyebrow").textContent = "Module 0" + (i+1) + " · Assessment";
+    document.getElementById("assess-title").textContent = m.title;
+    var body = document.getElementById("quiz-body");
+    body.innerHTML = "";
+    m.quiz.forEach(function(q, qi){
+      var block = document.createElement("div");
+      block.className = "q-block";
+      var optsHtml = q.options.map(function(opt, oi){
+        return '<label class="opt" data-q="' + qi + '" data-o="' + oi + '">' +
+               '<input type="radio" name="q' + qi + '" value="' + oi + '"> <span>' + opt + '</span></label>';
+      }).join("");
+      block.innerHTML = '<div class="q-num">QUESTION ' + (qi+1) + ' OF ' + m.quiz.length + '</div>' +
+                         '<div class="q-text">' + q.q + '</div>' + optsHtml;
+      body.appendChild(block);
+    });
+    body.querySelectorAll(".opt").forEach(function(label){
+      label.addEventListener("click", function(){
+        var qi = parseInt(this.getAttribute("data-q"), 10);
+        var oi = parseInt(this.getAttribute("data-o"), 10);
+        quizAnswers[qi] = oi;
+        body.querySelectorAll('.opt[data-q="'+qi+'"]').forEach(function(l){ l.classList.remove("selected"); });
+        this.classList.add("selected");
+      });
+    });
+    startQuizTimer();
+    showView("view-assessment");
+  }
+
+  function startQuizTimer(){
+    stopQuizTimer();
+    updateCountdown();
+    quizTimer = setInterval(function(){
+      quizRemaining--;
+      updateCountdown();
+      if (quizRemaining <= 0){
+        stopQuizTimer();
+        submitQuiz();
+      }
+    }, 1000);
+  }
+  function stopQuizTimer(){ if (quizTimer){ clearInterval(quizTimer); quizTimer = null; } }
+  function updateCountdown(){
+    var el = document.getElementById("countdown");
+    document.getElementById("countdown-time").textContent = fmtTime(quizRemaining);
+    el.classList.toggle("low", quizRemaining <= 60);
+  }
+
+  document.getElementById("btn-submit-quiz").addEventListener("click", function(){
+    stopQuizTimer();
+    submitQuiz();
+  });
+
+  function submitQuiz(){
+    var m = MODULES[currentModuleIndex];
+    var correct = 0;
+    var review = m.quiz.map(function(q, qi){
+      var ok = quizAnswers[qi] === q.correct;
+      if (ok) correct++;
+      return { q: q.q, ok: ok, given: quizAnswers[qi], correctText: q.options[q.correct] };
+    });
+    var score = correct / m.quiz.length;
+    progress[m.id] = { status:"done", score: score, completedAt: new Date().toISOString() };
+    saveProgress();
+    lastResult = { moduleTitle: m.title, score: score, correct: correct, total: m.quiz.length, review: review };
+    renderResult();
+  }
+
+  document.getElementById("btn-retake").addEventListener("click", function(){
+    openAssessment(currentModuleIndex);
+  });
+
+  // ---------- Result ----------
+  function renderResult(){
+    var pct = Math.round(lastResult.score*100);
+    var pass = lastResult.score >= PASS_MARK;
+    var ring = document.getElementById("result-ring");
+    ring.classList.toggle("fail", !pass);
+    document.getElementById("result-pct").textContent = pct + "%";
+    document.getElementById("result-frac").textContent = lastResult.correct + " / " + lastResult.total;
+    document.getElementById("result-title").textContent = pass ? "Module passed" : "Not quite — review and retake";
+    document.getElementById("result-sub").textContent = pass
+      ? "Great work on " + lastResult.moduleTitle + ". Your result has been saved to this module."
+      : "Nextasy requires 70% to pass " + lastResult.moduleTitle + ". Review the lesson and try again.";
+    var list = document.getElementById("review-list");
+    list.innerHTML = "";
+    lastResult.review.forEach(function(r, i){
+      var row = document.createElement("div");
+      row.className = "review-item";
+      row.innerHTML = '<span class="review-mark ' + (r.ok?"ok":"bad") + '">' + (r.ok?"&#10003;":"&#10005;") + '</span>' +
+                       '<span>' + (i+1) + '. ' + r.q + (r.ok ? '' : ' <span style="color:var(--muted);">(correct answer: ' + r.correctText + ')</span>') + '</span>';
+      list.appendChild(row);
+    });
+    showView("view-result");
+  }
+
+  // ---------- Download ----------
+  document.getElementById("btn-download").addEventListener("click", function(){
+    downloadResult();
+  });
+
+  function downloadResult(){
+    var btn = document.getElementById("btn-download");
+    var original = btn.textContent;
+    btn.disabled = true; btn.textContent = "Preparing…";
+
+    var name = "";
+    try{ name = localStorage.getItem(NAME_KEY) || ""; }catch(e){}
+    var pct = Math.round(lastResult.score*100);
+    var pass = lastResult.score >= PASS_MARK;
+    var dateStr = new Date().toLocaleDateString(undefined, { year:"numeric", month:"long", day:"numeric" });
+
+    function finish(){ btn.disabled = false; btn.textContent = original; }
+
+    try{
+      var jsPDFCtor = window.jspdf && window.jspdf.jsPDF;
+      if (!jsPDFCtor){ finish(); return; }
+      var doc = new jsPDFCtor({ unit:"pt", format:"a4" });
+      var pageW = doc.internal.pageSize.getWidth();
+
+      doc.setFillColor(11,61,99);
+      doc.rect(0,0,pageW,90,"F");
+      doc.setTextColor(255,255,255);
+      doc.setFontSize(20);
+      doc.text("NEXTASY ACADEMY", 40, 40);
+      doc.setFontSize(11);
+      doc.text("International Airline Ground Ops — Assessment Result", 40, 62);
+
+      doc.setTextColor(20,30,45);
+      doc.setFontSize(13);
+      doc.text("Candidate", 40, 130);
+      doc.setFontSize(16);
+      doc.text(name || "Candidate", 40, 150);
+
+      doc.setFontSize(13);
+      doc.text("Module", 40, 185);
+      doc.setFontSize(16);
+      doc.text(lastResult.moduleTitle, 40, 205, { maxWidth: pageW-80 });
+
+      doc.setFontSize(13);
+      doc.text("Result", 40, 245);
+      doc.setFontSize(28);
+      doc.setTextColor(pass ? 31:192, pass? 143:57, pass? 78:43);
+      doc.text(pct + "%  (" + lastResult.correct + " / " + lastResult.total + ")", 40, 275);
+      doc.setTextColor(20,30,45);
+      doc.setFontSize(13);
+      doc.text(pass ? "Status: PASSED" : "Status: NOT YET PASSED (70% required)", 40, 300);
+
+      doc.setFontSize(11);
+      doc.text("Date: " + dateStr, 40, 330);
+
+      doc.setDrawColor(220,225,232);
+      doc.line(40, 360, pageW-40, 360);
+      doc.setFontSize(9);
+      doc.setTextColor(110,120,135);
+      doc.text("Sample assessment for demonstration purposes. Nextasy Aviation Consulting · nextasy.biz · dispatch@nextasy.biz", 40, 380, { maxWidth: pageW-80 });
+
+      var blob = doc.output("blob");
+      var filename = "Nextasy-Result-" + lastResult.moduleTitle.replace(/[^a-z0-9]+/gi,"-") + ".pdf";
+
+      (async function(){
+        try{
+          var downloadsCap = window.claude ? await window.claude.use("downloads") : null;
+          if (downloadsCap){
+            await downloadsCap.save({ filename: filename, data: blob });
+          } else {
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement("a");
+            a.href = url; a.download = filename;
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+          }
+        }catch(err){
+          // Declined or unavailable — leave the page usable either way.
+        }finally{
+          finish();
+        }
+      })();
+    }catch(e){
+      finish();
+    }
+  }
+
+})();
+</script>
+</body>
+</html>
