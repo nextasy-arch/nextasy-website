@@ -73,8 +73,8 @@ footer{ text-align:center; font-size:.8rem; color:var(--muted); padding:0 20px 4
 
 <section class="hero"><div class="in">
   <span class="eyebrow">Nextasy Certification Programs</span>
-  <h1>Welcome aboard, Subject Expert</h1>
-  <p>Thank you for joining our faculty panel. Please share your details below so we can plan your course modules and sessions and process your honorarium.</p>
+  <h1 id="h-title">Welcome aboard, Subject Expert</h1>
+  <p id="h-sub">Thank you for joining our faculty panel. Please share your details below so we can plan your course modules and sessions and process your honorarium.</p>
 </div></section>
 
 <div class="card">
@@ -105,7 +105,7 @@ footer{ text-align:center; font-size:.8rem; color:var(--muted); padding:0 20px 4
       <div class="f"><label for="subjects">Subjects / modules you will prepare <i>*</i></label><textarea id="subjects" required placeholder="e.g. Module 2: In-flight catering standards; Module 3: Galley operations"></textarea></div>
       <div class="grid2">
         <div class="f"><label for="exp">Years of experience</label><input id="exp" type="number" min="0" max="60"></div>
-        <div class="f"><label for="mode">Preferred session mode</label><select id="mode"><option>Online (live)</option><option>Recorded</option><option>Online + Recorded</option><option>Offline / In-person</option></select></div>
+        <div class="f" id="mode-wrap"><label for="mode">Preferred session mode</label><select id="mode"><option>Online (live)</option><option>Recorded</option><option>Online + Recorded</option><option>Offline / In-person</option></select></div>
       </div>
     </fieldset>
 
@@ -130,7 +130,7 @@ footer{ text-align:center; font-size:.8rem; color:var(--muted); padding:0 20px 4
       </div>
     </fieldset>
 
-    <label class="decl"><input type="checkbox" id="decl" required><span>I confirm that the above details are correct. I agree to prepare the course modules and conduct sessions for Nextasy Certification Programs as mutually agreed, and I authorise Nextasy Aviation Consulting Pvt. Ltd. to use these bank details only for my honorarium payments.</span></label>
+    <label class="decl"><input type="checkbox" id="decl" required><span>I confirm that the above details are correct. I agree to <span id="decl-role">prepare the course modules and conduct sessions</span> for Nextasy Certification Programs as mutually agreed, and I authorise Nextasy Aviation Consulting Pvt. Ltd. to use these bank details only for my honorarium payments.</span></label>
     <button class="btn btn-red" type="submit" style="width:100%">Generate &amp; download my onboarding PDF</button>
     <div class="msg" id="msg"></div>
   </form>
@@ -142,7 +142,7 @@ footer{ text-align:center; font-size:.8rem; color:var(--muted); padding:0 20px 4
     <ol>
       <li>Open the downloaded PDF and check your details.</li>
       <li>Email the PDF to <b>dispatch@nextasy.biz</b> (the button below opens a ready email; please attach the PDF).</li>
-      <li>Our team will confirm your module plan and session schedule.</li>
+      <li id="done-next">Our team will confirm your module plan and session schedule.</li>
     </ol>
     <div class="row">
       <a class="btn btn-red" id="mailbtn" href="mailto:dispatch@nextasy.biz">Email PDF to Nextasy</a>
@@ -157,6 +157,16 @@ footer{ text-align:center; font-size:.8rem; color:var(--muted); padding:0 20px 4
 const FORM_URL = 'https://formspree.io/f/xwlkboly';
 const $ = id => document.getElementById(id);
 let D = null;
+const MATERIAL = new URLSearchParams(location.search).get('role') === 'material';
+const ROLE = MATERIAL ? 'Course Material Expert' : 'Subject Expert';
+if (MATERIAL) {
+  $('h-title').textContent = 'Welcome aboard, Course Material Expert';
+  $('h-sub').textContent = 'Thank you for joining Nextasy to prepare course material for our online certification programs. Please share your details below so we can plan your modules and process your honorarium.';
+  $('mode-wrap').style.display = 'none';
+  $('decl-role').textContent = 'prepare the course material and modules';
+  $('done-next').textContent = 'Our team will share the module outline, content format guidelines and submission timelines.';
+  document.title = 'Course Material Expert Onboarding | Nextasy Aviation Consulting';
+}
 
 $('ifsc').addEventListener('input', e => e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''));
 $('pan').addEventListener('input', e => e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''));
@@ -173,22 +183,22 @@ $('ob-form').addEventListener('submit', async e => {
   const d = new Date(), p = n => String(n).padStart(2,'0');
   D = { ref: 'NXE-' + d.getFullYear() + p(d.getMonth()+1) + p(d.getDate()) + '-' + Math.random().toString(36).slice(2,6).toUpperCase(), date: d,
     name: $('name').value.trim(), email: $('email').value.trim(), phone: $('phone').value.trim(), org: $('org').value.trim(),
-    progs: progs, subjects: $('subjects').value.trim(), exp: $('exp').value, mode: $('mode').value,
+    progs: progs, subjects: $('subjects').value.trim(), exp: $('exp').value, mode: MATERIAL ? 'Not applicable (course material only)' : $('mode').value,
     holder: $('holder').value.trim(), bank: $('bank').value.trim(), acc: $('acc').value, ifsc: $('ifsc').value, branch: $('branch').value.trim(), pan: $('pan').value, upi: $('upi').value.trim() };
   const btn = f.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = 'Preparing…';
   // notify Nextasy (no bank details sent here)
   try {
     const fd = new FormData();
-    fd.append('Form', 'Subject Expert Onboarding'); fd.append('Reference', D.ref); fd.append('Name', D.name); fd.append('Email', D.email);
+    fd.append('Form', ROLE + ' Onboarding'); fd.append('Role', ROLE); fd.append('Reference', D.ref); fd.append('Name', D.name); fd.append('Email', D.email);
     fd.append('Phone', D.phone); fd.append('Designation & Organisation', D.org); fd.append('Programs', D.progs.join(', '));
-    fd.append('Subjects / Modules', D.subjects); fd.append('Experience (years)', D.exp); fd.append('Session mode', D.mode);
+    fd.append('Subjects / Modules', D.subjects); fd.append('Experience (years)', D.exp); if (!MATERIAL) fd.append('Session mode', D.mode);
     fd.append('Bank details', 'Provided in the onboarding PDF emailed by the expert');
-    fd.append('_subject', 'Subject Expert Onboarding: ' + D.name + ' (' + D.ref + ')');
+    fd.append('_subject', ROLE + ' Onboarding: ' + D.name + ' (' + D.ref + ')');
     await fetch(FORM_URL, { method:'POST', body:fd, headers:{ 'Accept':'application/json' } });
   } catch (err) { /* PDF still works if notification fails */ }
   makePdf();
-  const subj = encodeURIComponent('Subject Expert Onboarding Form - ' + D.name + ' (' + D.ref + ')');
-  const body = encodeURIComponent('Dear Nextasy Team,\n\nPlease find attached my Subject Expert Onboarding Form (Ref: ' + D.ref + ').\n\nPrograms: ' + D.progs.join(', ') + '\n\nRegards,\n' + D.name + '\n' + D.phone);
+  const subj = encodeURIComponent(ROLE + ' Onboarding Form - ' + D.name + ' (' + D.ref + ')');
+  const body = encodeURIComponent('Dear Nextasy Team,\n\nPlease find attached my ' + ROLE + ' Onboarding Form (Ref: ' + D.ref + ').\n\nPrograms: ' + D.progs.join(', ') + '\n\nRegards,\n' + D.name + '\n' + D.phone);
   $('mailbtn').href = 'mailto:dispatch@nextasy.biz?subject=' + subj + '&body=' + body;
   f.style.display = 'none'; $('done').style.display = 'block'; window.scrollTo({ top: 0, behavior: 'smooth' });
   btn.disabled = false; btn.textContent = 'Generate & download my onboarding PDF';
@@ -203,7 +213,7 @@ function makePdf(){
   doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.text('NEXTASY', 15, 15);
   doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.text('AVIATION CONSULTING PVT. LTD.  ·  CHENNAI, INDIA', 15, 21);
   doc.setFontSize(9); doc.text('dispatch@nextasy.biz', 195, 15, { align:'right' }); doc.text('nextasy.biz', 195, 21, { align:'right' });
-  doc.setTextColor(...navy); doc.setFont('helvetica','bold'); doc.setFontSize(15); doc.text('Subject Expert Onboarding Form', 15, 45);
+  doc.setTextColor(...navy); doc.setFont('helvetica','bold'); doc.setFontSize(15); doc.text(ROLE + ' Onboarding Form', 15, 45);
   doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...grey);
   doc.text('Nextasy Certification Programs', 15, 51); doc.text('Ref: ' + D.ref + '   ·   Date: ' + D.date.toLocaleDateString('en-GB'), 195, 51, { align:'right' });
   let y = 60;
@@ -215,18 +225,18 @@ function makePdf(){
   section('1. Basic details');
   rows([['Full name', D.name], ['Email ID', D.email], ['Mobile', D.phone], ['Designation & organisation', D.org], ['Experience (years)', D.exp]]);
   section('2. Subject expertise');
-  rows([['Program(s)', D.progs.join(', ')], ['Subjects / modules', D.subjects], ['Session mode', D.mode]]);
+  rows(MATERIAL ? [['Role', 'Course material preparation'], ['Program(s)', D.progs.join(', ')], ['Subjects / modules', D.subjects]] : [['Program(s)', D.progs.join(', ')], ['Subjects / modules', D.subjects], ['Session mode', D.mode]]);
   section('3. Bank details for honorarium');
   rows([['Account holder', D.holder], ['Bank name', D.bank], ['Account number', D.acc], ['IFSC code', D.ifsc], ['Branch', D.branch], ['PAN', D.pan], ['UPI ID', D.upi]]);
   doc.setDrawColor(...red); doc.setLineWidth(.5); doc.line(15,y,195,y); y += 7;
   doc.setTextColor(...navy); doc.setFont('helvetica','bold'); doc.setFontSize(10.5); doc.text('Declaration', 15, y); y += 5.5;
   doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(40,50,65);
-  const decl = 'I, ' + D.name + ', confirm that the information above is correct. I agree to prepare the course modules and conduct sessions for Nextasy Certification Programs as mutually agreed, and I authorise Nextasy Aviation Consulting Pvt. Ltd. to use the bank details above solely for my honorarium payments.';
+  const decl = 'I, ' + D.name + ', confirm that the information above is correct. I agree to ' + (MATERIAL ? 'prepare the course material and modules' : 'prepare the course modules and conduct sessions') + ' for Nextasy Certification Programs as mutually agreed, and I authorise Nextasy Aviation Consulting Pvt. Ltd. to use the bank details above solely for my honorarium payments.';
   const lines = doc.splitTextToSize(decl, 180); doc.text(lines, 15, y); y += lines.length*4.4 + 16;
   doc.setDrawColor(150); doc.setLineWidth(.3); doc.line(15,y,85,y); doc.line(125,y,195,y);
   doc.setFontSize(8.5); doc.setTextColor(...grey); doc.text('Signature', 15, y+4.5); doc.text('Date & place', 125, y+4.5);
   doc.setFontSize(7.5); doc.setTextColor(140); doc.text('Confidential · Please email this form to dispatch@nextasy.biz · Nextasy Aviation Consulting Pvt. Ltd.', 105, 288, { align:'center' });
-  doc.save('Nextasy-Expert-Onboarding-' + D.name.replace(/[^A-Za-z0-9]+/g,'-') + '.pdf');
+  doc.save('Nextasy-' + (MATERIAL ? 'Course-Material' : 'Expert') + '-Onboarding-' + D.name.replace(/[^A-Za-z0-9]+/g,'-') + '.pdf');
 }
 </script>
 </body>
