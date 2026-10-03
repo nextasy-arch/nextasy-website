@@ -732,7 +732,12 @@ nav.primary{ gap:26px; }
 header{ background:#ffffff !important; }
 .hero{ background:radial-gradient(ellipse at 80% 20%, rgba(29,78,216,0.08), transparent 55%), radial-gradient(ellipse at 10% 90%, rgba(200,16,46,0.06), transparent 50%), #ffffff !important; }
 .hero::after{ display:none; }
-.hero-plane{ opacity:.22 !important; }
+.hero{ flex-direction:column; align-items:stretch !important; min-height:auto !important; padding-top:76px !important; }
+.hero-plane{ position:relative !important; opacity:1 !important; height:48vh !important; min-height:300px; width:100%;
+  -webkit-mask-image:linear-gradient(to bottom, black 78%, transparent 100%) !important; mask-image:linear-gradient(to bottom, black 78%, transparent 100%) !important; }
+.hero-plane img{ object-position:center 38%; }
+.hero-grid{ padding-top:46px; padding-bottom:80px; }
+@media (max-width:960px){ .hero-plane{ height:30vh !important; min-height:200px; opacity:1 !important; } .hero-grid{ padding-top:30px; padding-bottom:60px; } .hero{ padding-top:64px !important; } }
 .hero .eyebrow{ color:var(--red) !important; font-weight:600; letter-spacing:.14em; }
 .hero h1{ color:var(--navy); }
 .hero h1 em{ color:var(--red) !important; text-shadow:none !important; animation:none !important; }
