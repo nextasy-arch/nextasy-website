@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certification Programs | Nextasy Aviation Consulting</title>
+<meta name="description" content="Online aviation certification programs by Nextasy Aviation Consulting, taught with industry experts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,600;0,700;0,800;1,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --red:#c8102e; --red-dark:#a30d25; --blue:#1d4ed8; --navy:#0b2a5b; --navy-deep:#061633;
+  --text:#0b1f3a; --muted:#4a5a70; --line:#dde5ef; --soft:#f2f5fa; --white:#fff;
+}
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+body{ font-family:'Inter',system-ui,sans-serif; color:var(--text); background:#fff; line-height:1.6; -webkit-font-smoothing:antialiased; }
+h1,h2,h3,h4{ font-family:'Poppins',sans-serif; line-height:1.15; }
+a{ color:inherit; text-decoration:none; }
+.wrap{ max-width:1180px; margin:0 auto; padding:0 32px; }
+@media (max-width:720px){ .wrap{ padding:0 18px; } }
+
+/* header */
+header{ position:sticky; top:0; z-index:50; background:#fff; border-bottom:3px solid var(--red); }
+.nav{ display:flex; align-items:center; justify-content:space-between; padding:16px 0; gap:16px; }
+.logo{ display:flex; flex-direction:column; line-height:1.05; }
+.logo b{ font-family:'Poppins',sans-serif; color:var(--navy); letter-spacing:.06em; font-size:1.1rem; }
+.logo span{ font-size:.58rem; letter-spacing:.24em; color:var(--blue); margin-top:3px; }
+.nav-links{ display:flex; gap:22px; align-items:center; font-size:.88rem; color:var(--muted); }
+.nav-links a:hover{ color:var(--red); }
+@media (max-width:760px){ .nav-links .hide-sm{ display:none; } }
+
+/* buttons */
+.btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; border:2px solid transparent; border-radius:6px; padding:13px 24px; font-weight:600; font-size:.92rem; cursor:pointer; transition:transform .2s, background .2s, box-shadow .2s; font-family:inherit; position:relative; overflow:hidden; }
+.btn-red{ background:var(--red); color:#fff; box-shadow:0 10px 24px -10px rgba(200,16,46,.6); }
+.btn-red:hover{ background:var(--red-dark); transform:translateY(-2px); }
+.btn-blue{ background:var(--navy); color:#fff; }
+.btn-blue:hover{ background:var(--blue); transform:translateY(-2px); }
+.btn-line{ border-color:var(--navy); color:var(--navy); background:transparent; }
+.btn-line:hover{ background:var(--navy); color:#fff; }
+.btn-sm{ padding:9px 16px; font-size:.82rem; }
+.btn[disabled]{ opacity:.6; cursor:wait; }
+
+/* hero */
+.hero{ position:relative; overflow:hidden; padding:84px 0 70px; background:radial-gradient(ellipse at 85% 10%, rgba(29,78,216,.10), transparent 55%), radial-gradient(ellipse at 5% 95%, rgba(200,16,46,.08), transparent 50%), #fff; }
+.eyebrow{ display:inline-flex; align-items:center; gap:10px; color:var(--red); font-size:.74rem; letter-spacing:.16em; text-transform:uppercase; font-weight:600; }
+.eyebrow::before{ content:'✈'; color:var(--blue); transform:rotate(-20deg); }
+.hero h1{ margin-top:18px; font-size:clamp(2.1rem,5vw,3.8rem); color:var(--navy); max-width:16ch; }
+.hero h1 em{ color:var(--red); font-style:italic; }
+.hero p.lead{ margin-top:20px; max-width:56ch; color:var(--muted); font-size:1.06rem; }
+.hero-actions{ margin-top:34px; display:flex; flex-wrap:wrap; gap:14px; }
+.badges{ margin-top:38px; display:flex; flex-wrap:wrap; gap:10px; }
+.badges span{ border:1px solid var(--line); background:#fff; border-radius:999px; padding:7px 14px; font-size:.8rem; color:var(--navy); }
+.badges span::before{ content:'●'; color:var(--red); margin-right:8px; font-size:.6rem; vertical-align:middle; }
+
+/* tracks */
+.tracks{ background:var(--soft); padding:70px 0; }
+.track-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+@media (max-width:820px){ .track-grid{ grid-template-columns:1fr; } }
+.track{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:32px; position:relative; overflow:hidden; transition:transform .3s, box-shadow .3s; }
+.track:hover{ transform:translateY(-4px); box-shadow:0 24px 44px -24px rgba(11,42,91,.35); }
+.track::before{ content:''; position:absolute; left:0; top:0; height:4px; width:100%; background:linear-gradient(90deg,var(--red) 0 50%, var(--blue) 50% 100%); }
+.track .tag{ font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; font-weight:600; color:var(--blue); }
+.track h3{ margin:10px 0 10px; font-size:1.5rem; color:var(--navy); }
+.track p{ color:var(--muted); }
+.track ul{ list-style:none; margin:18px 0 24px; display:grid; gap:8px; }
+.track li{ display:flex; gap:10px; font-size:.92rem; }
+.track li::before{ content:'✓'; color:var(--red); font-weight:700; }
+.track .row{ display:flex; flex-wrap:wrap; gap:10px; }
+
+/* courses */
+.courses{ padding:80px 0; }
+.sec-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:30px; flex-wrap:wrap; margin-bottom:38px; }
+.sec-head h2{ font-size:clamp(1.8rem,3.4vw,2.6rem); color:var(--navy); margin-top:10px; }
+.sec-head h2::after{ content:''; display:block; width:64px; height:4px; margin-top:16px; border-radius:2px; background:linear-gradient(90deg,var(--red) 0 50%, var(--blue) 50% 100%); }
+.sec-head p{ max-width:46ch; color:var(--muted); }
+.course-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+@media (max-width:960px){ .course-grid{ grid-template-columns:1fr; } }
+.course{ border:1px solid var(--line); border-radius:14px; overflow:hidden; display:flex; flex-direction:column; background:#fff; transition:transform .3s, box-shadow .3s; }
+.course:hover{ transform:translateY(-6px); box-shadow:0 28px 50px -26px rgba(11,42,91,.4); }
+.course-top{ padding:26px 26px 22px; color:#fff; position:relative; background:linear-gradient(135deg,var(--navy-deep),var(--navy) 60%,#12397a); min-height:150px; }
+.course:nth-child(2) .course-top{ background:linear-gradient(135deg,#7a0a1c,var(--red) 70%,#e0334f); }
+.course:nth-child(3) .course-top{ background:linear-gradient(135deg,#0b2a5b,#1d4ed8 70%,#3b6cf0); }
+.course-top .code{ font-family:'IBM Plex Mono',monospace; font-size:.76rem; letter-spacing:.1em; opacity:.85; }
+.course-top h3{ margin-top:10px; font-size:1.3rem; }
+.course-top .ic{ position:absolute; right:20px; top:18px; font-size:1.6rem; opacity:.35; }
+.course-body{ padding:22px 26px 26px; display:flex; flex-direction:column; gap:14px; flex:1; }
+.course-body p{ color:var(--muted); font-size:.94rem; }
+.meta{ display:flex; flex-wrap:wrap; gap:8px; }
+.meta span{ font-size:.74rem; background:var(--soft); border:1px solid var(--line); color:var(--navy); padding:5px 10px; border-radius:4px; }
+.fee-note{ font-size:.82rem; color:var(--navy); background:#fff6f7; border:1px dashed rgba(200,16,46,.4); padding:10px 12px; border-radius:6px; }
+.course-body .btn{ margin-top:auto; }
+
+/* how it works */
+.steps{ background:linear-gradient(120deg,var(--navy-deep),var(--navy) 60%,#12397a); color:#fff; padding:70px 0; }
+.steps h2{ font-size:clamp(1.6rem,3vw,2.2rem); }
+.step-grid{ margin-top:34px; display:grid; grid-template-columns:repeat(4,1fr); gap:0; }
+@media (max-width:820px){ .step-grid{ grid-template-columns:1fr 1fr; } }
+.step{ padding:20px 22px; border-left:1px solid rgba(255,255,255,.14); }
+.step b{ font-family:'Poppins',sans-serif; font-size:2rem; color:#ff5a6e; display:block; }
+.step span{ display:block; margin-top:6px; color:rgba(255,255,255,.82); font-size:.92rem; }
+
+/* expert band */
+.expert-band{ padding:70px 0; }
+.expert-box{ border:1px solid var(--line); border-radius:16px; padding:40px; display:grid; grid-template-columns:1.3fr 1fr; gap:30px; align-items:center; background:radial-gradient(ellipse at 100% 0%, rgba(29,78,216,.08), transparent 60%), #fff; }
+@media (max-width:820px){ .expert-box{ grid-template-columns:1fr; padding:26px; } }
+.expert-box h2{ color:var(--navy); font-size:clamp(1.6rem,3vw,2.2rem); margin-top:10px; }
+.expert-box p{ color:var(--muted); margin-top:12px; }
+.lock{ display:flex; gap:12px; align-items:flex-start; background:var(--soft); padding:16px; border-radius:10px; font-size:.88rem; color:var(--navy); }
+.lock i{ font-style:normal; font-size:1.2rem; }
+
+footer{ border-top:1px solid var(--line); padding:30px 0; font-size:.84rem; color:var(--muted); }
+footer .wrap{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+
+/* modal */
+.modal{ position:fixed; inset:0; z-index:100; display:none; align-items:flex-start; justify-content:center; background:rgba(6,22,51,.62); backdrop-filter:blur(4px); padding:30px 14px; overflow-y:auto; }
+.modal.open{ display:flex; animation:fade .25s ease; }
+@keyframes fade{ from{ opacity:0; } }
+.dialog{ background:#fff; width:100%; max-width:620px; border-radius:14px; overflow:hidden; box-shadow:0 40px 80px -30px rgba(0,0,0,.5); animation:pop .3s cubic-bezier(.2,.8,.2,1); }
+@keyframes pop{ from{ transform:translateY(24px) scale(.98); opacity:0; } }
+.dialog-head{ background:linear-gradient(120deg,var(--navy-deep),var(--navy)); color:#fff; padding:22px 26px; position:relative; }
+.dialog-head small{ font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:#9cc3ff; }
+.dialog-head h3{ margin-top:6px; font-size:1.3rem; }
+.close{ position:absolute; right:14px; top:12px; background:none; border:none; color:#fff; font-size:1.6rem; cursor:pointer; line-height:1; padding:6px; }
+.dialog form{ padding:24px 26px 26px; }
+.grid2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+@media (max-width:560px){ .grid2{ grid-template-columns:1fr; } }
+.f{ display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+.f label{ font-size:.8rem; font-weight:600; color:var(--navy); }
+.f label i{ color:var(--red); font-style:normal; }
+.f input, .f select, .f textarea{ font:inherit; font-size:.94rem; border:1px solid var(--line); border-radius:7px; padding:11px 12px; background:#fbfcfe; color:var(--text); }
+.f input:focus, .f select:focus, .f textarea:focus{ outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(29,78,216,.15); background:#fff; }
+.f textarea{ min-height:90px; resize:vertical; }
+.f .hint{ font-size:.74rem; color:var(--muted); }
+.checks{ display:flex; flex-wrap:wrap; gap:8px; }
+.checks label{ font-weight:500; font-size:.82rem; border:1px solid var(--line); border-radius:999px; padding:6px 12px; cursor:pointer; display:flex; gap:6px; align-items:center; }
+.decl{ display:flex; gap:10px; align-items:flex-start; font-size:.82rem; color:var(--muted); background:var(--soft); padding:12px; border-radius:8px; margin:6px 0 16px; }
+.decl input{ margin-top:3px; accent-color:var(--red); }
+.msg{ margin-top:12px; font-size:.88rem; min-height:1.2em; }
+.msg.err{ color:var(--red); }
+.success{ padding:30px 26px; text-align:center; display:none; }
+.success .tick{ width:64px; height:64px; border-radius:50%; background:#e8f7ef; color:#1e8e5a; display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0 auto 14px; }
+.success h3{ color:var(--navy); }
+.success p{ color:var(--muted); margin:10px auto 18px; max-width:44ch; }
+.success .ref{ font-family:'IBM Plex Mono',monospace; background:var(--soft); display:inline-block; padding:6px 12px; border-radius:6px; color:var(--navy); margin-bottom:18px; }
+.success .row{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+
+.rv{ opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .7s ease; }
+.rv.in{ opacity:1; transform:none; }
+@media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } .rv{ opacity:1; transform:none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="index.html" class="logo"><b>NEXTASY</b><span>AVIATION CONSULTING</span></a>
+    <nav class="nav-links">
+      <a href="index.html" class="hide-sm">Home</a>
+      <a href="#courses">Courses</a>
+      <a href="#experts" class="hide-sm">Industry Experts</a>
+      <a href="#courses" class="btn btn-red btn-sm">Enrol Now</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Nextasy Certification Programs</span>
+    <h1>Learn aviation from <em>industry experts</em></h1>
+    <p class="lead">Online certification programs designed and taught with working professionals from airlines, catering, cabin operations and travel. Practical, career-focused and open to students from any university.</p>
+    <div class="hero-actions">
+      <a href="#courses" class="btn btn-red">View Certification Courses</a>
+      <button class="btn btn-line" data-open="expert-modal">I'm an Industry Expert</button>
+    </div>
+    <div class="badges"><span>Online delivery</span><span>Industry expert faculty</span><span>Nextasy certificate on completion</span></div>
+  </div>
+</section>
+
+<section class="tracks">
+  <div class="wrap track-grid">
+    <div class="track rv">
+      <span class="tag">For students &amp; graduates</span>
+      <h3>Enrol in a certification</h3>
+      <p>Choose a course, register in under two minutes and download your enrolment and declaration form instantly.</p>
+      <ul><li>Register online with your university details</li><li>Download your enrolment PDF right away</li><li>Fee details sent to your email after enrolment</li></ul>
+      <div class="row"><a href="#courses" class="btn btn-red">Browse courses</a></div>
+    </div>
+    <div class="track rv">
+      <span class="tag">For industry professionals</span>
+      <h3>Join our expert panel</h3>
+      <p>Share your experience with the next generation of aviation professionals as a trainer, guest faculty or mentor.</p>
+      <ul><li>Register your profile and areas of expertise</li><li>Update your profile any time</li><li>Your details stay confidential with Nextasy</li></ul>
+      <div class="row"><button class="btn btn-blue" data-open="expert-modal">Register as an expert</button><button class="btn btn-line" data-open="expert-modal" data-update="1">Update my profile</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="courses" id="courses">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="eyebrow">Courses offered all year</span><h2>Certification courses</h2></div>
+      <p>Enrolment is open throughout the year. After you enrol, our team emails you the fee details, schedule and next steps.</p>
+    </div>
+    <div class="course-grid">
+      <article class="course rv">
+        <div class="course-top"><span class="code">NXC-101</span><span class="ic">🍽</span><h3>Catering &amp; Cabin Operations</h3></div>
+        <div class="course-body">
+          <p>In-flight catering, galley operations, cabin service standards and onboard passenger care, taught by professionals from airline catering and cabin crew backgrounds.</p>
+          <div class="meta"><span>Online</span><span>Industry experts</span><span>Certificate</span></div>
+          <div class="fee-note">Fee details are emailed to you after enrolment.</div>
+          <button class="btn btn-red" data-enrol="Catering & Cabin Operations" data-code="NXC-101">Enrol in this course</button>
+        </div>
+      </article>
+      <article class="course rv">
+        <div class="course-top"><span class="code">NXC-201</span><span class="ic">🌍</span><h3>Airline Tourism Management</h3></div>
+        <div class="course-body">
+          <p>How airlines and tourism connect, from tour packaging, airline–tourism partnerships and travel distribution to destination management and customer experience.</p>
+          <div class="meta"><span>Online</span><span>Industry experts</span><span>Certificate</span></div>
+          <div class="fee-note">Fee details are emailed to you after enrolment.</div>
+          <button class="btn btn-red" data-enrol="Airline Tourism Management" data-code="NXC-201">Enrol in this course</button>
+        </div>
+      </article>
+      <article class="course rv">
+        <div class="course-top"><span class="code">NXC-301</span><span class="ic">✈</span><h3>Aviation Management: Introductory Course</h3></div>
+        <div class="course-body">
+          <p>A foundation in how the aviation industry works, covering airlines, airports, ground operations, regulations and career pathways. Ideal for beginners.</p>
+          <div class="meta"><span>Online</span><span>Beginner friendly</span><span>Certificate</span></div>
+          <div class="fee-note">Fee details are emailed to you after enrolment.</div>
+          <button class="btn btn-red" data-enrol="Aviation Management: Introductory Course" data-code="NXC-301">Enrol in this course</button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="steps">
+  <div class="wrap">
+    <span class="eyebrow" style="color:#ff8a9a">How enrolment works</span>
+    <h2 style="margin-top:10px;">Four simple steps</h2>
+    <div class="step-grid">
+      <div class="step"><b>01</b><span>Choose your course and click Enrol</span></div>
+      <div class="step"><b>02</b><span>Fill in your details and accept the declaration</span></div>
+      <div class="step"><b>03</b><span>Download your enrolment &amp; declaration PDF</span></div>
+      <div class="step"><b>04</b><span>Receive fee details and schedule by email</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="expert-band" id="experts">
+  <div class="wrap">
+    <div class="expert-box rv">
+      <div>
+        <span class="eyebrow">Industry expert panel</span>
+        <h2>Bring your experience to the classroom</h2>
+        <p>We work with professionals from airlines, airports, in-flight catering, cabin operations, travel and tourism. Register once and we will contact you when a program matches your expertise.</p>
+        <div class="row" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;">
+          <button class="btn btn-blue" data-open="expert-modal">Register as an expert</button>
+          <button class="btn btn-line" data-open="expert-modal" data-update="1">Update my profile</button>
+        </div>
+      </div>
+      <div class="lock"><i>🔒</i><div><b>Confidential.</b> Expert profiles are sent only to the Nextasy team at dispatch@nextasy.biz. They are not published on this website or shared with anyone else.</div></div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span>© <span id="yr"></span> Nextasy Aviation Consulting Pvt. Ltd. · Chennai, India</span><span>dispatch@nextasy.biz</span></div></footer>
+
+<!-- ===== Student enrolment modal ===== -->
+<div class="modal" id="enrol-modal" role="dialog" aria-modal="true" aria-labelledby="enrol-title">
+  <div class="dialog">
+    <div class="dialog-head"><small>Certification enrolment</small><h3 id="enrol-title">Enrol</h3><button class="close" data-close aria-label="Close">×</button></div>
+    <form id="enrol-form" novalidate>
+      <input type="hidden" name="Form" value="Certification Enrolment">
+      <input type="hidden" name="Course" id="e-course">
+      <input type="hidden" name="Course Code" id="e-code">
+      <input type="hidden" name="Enrolment ID" id="e-id">
+      <div class="f"><label for="e-name">Full name (as on Aadhaar) <i>*</i></label><input id="e-name" name="Name" required autocomplete="name"></div>
+      <div class="f"><label for="e-uni">University / College <i>*</i></label><input id="e-uni" name="University" required></div>
+      <div class="grid2">
+        <div class="f"><label for="e-aadhaar">Aadhaar number <i>*</i></label><input id="e-aadhaar" name="Aadhaar Number" required inputmode="numeric" placeholder="1234 5678 9012" maxlength="14"><span class="hint">12 digits. Used only for identity verification.</span></div>
+        <div class="f"><label for="e-phone">Phone number <i>*</i></label><input id="e-phone" name="Phone" type="tel" required inputmode="tel" placeholder="+91 98765 43210"></div>
+      </div>
+      <div class="f"><label for="e-email">Email address <i>*</i></label><input id="e-email" name="Email" type="email" required autocomplete="email"><span class="hint">Fee details and your schedule will be sent here.</span></div>
+      <label class="decl"><input type="checkbox" id="e-decl" required><span>I declare that the information given above is true and correct. I consent to Nextasy Aviation Consulting using my Aadhaar number only to verify my identity for this certification program.</span></label>
+      <button type="submit" class="btn btn-red" style="width:100%">Submit enrolment</button>
+      <div class="msg" id="e-msg"></div>
+    </form>
+    <div class="success" id="enrol-success">
+      <div class="tick">✓</div>
+      <h3>You're enrolled!</h3>
+      <p>Your enrolment has been sent to the Nextasy team. We'll email the fee details and schedule to <b id="s-email"></b>.</p>
+      <div class="ref" id="s-ref"></div>
+      <div class="row"><button class="btn btn-red" id="dl-pdf">Download enrolment PDF</button><button class="btn btn-line" data-close>Close</button></div>
+      <p style="font-size:.8rem;margin-top:16px;">Please print the PDF, sign the declaration and email a scanned copy to <a href="mailto:dispatch@nextasy.biz" style="color:var(--blue)">dispatch@nextasy.biz</a>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Industry expert modal ===== -->
+<div class="modal" id="expert-modal" role="dialog" aria-modal="true" aria-labelledby="expert-title">
+  <div class="dialog">
+    <div class="dialog-head"><small id="x-kicker">Industry expert panel</small><h3 id="expert-title">Register as an industry expert</h3><button class="close" data-close aria-label="Close">×</button></div>
+    <form id="expert-form" novalidate>
+      <input type="hidden" name="Form" value="Industry Expert Registration" id="x-formtype">
+      <div class="grid2">
+        <div class="f"><label for="x-name">Full name <i>*</i></label><input id="x-name" name="Name" required autocomplete="name"></div>
+        <div class="f"><label for="x-email">Email <i>*</i></label><input id="x-email" name="Email" type="email" required autocomplete="email"></div>
+      </div>
+      <div class="grid2">
+        <div class="f"><label for="x-phone">Phone <i>*</i></label><input id="x-phone" name="Phone" type="tel" required></div>
+        <div class="f"><label for="x-exp">Years of experience <i>*</i></label><input id="x-exp" name="Years of Experience" type="number" min="0" max="60" required></div>
+      </div>
+      <div class="grid2">
+        <div class="f"><label for="x-ind">Industry <i>*</i></label>
+          <select id="x-ind" name="Industry" required><option value="">Select</option><option>Airline</option><option>Airport</option><option>In-flight Catering</option><option>Cabin Crew / Cabin Operations</option><option>Ground Handling</option><option>Travel &amp; Tourism</option><option>Aviation Education / Training</option><option>Other</option></select></div>
+        <div class="f"><label for="x-org">Current / last organisation <i>*</i></label><input id="x-org" name="Organisation" required></div>
+      </div>
+      <div class="f"><label for="x-role">Designation <i>*</i></label><input id="x-role" name="Designation" required></div>
+      <div class="f"><label>Courses you can teach</label>
+        <div class="checks">
+          <label><input type="checkbox" name="Can Teach" value="Catering & Cabin Operations"> Catering &amp; Cabin Ops</label>
+          <label><input type="checkbox" name="Can Teach" value="Airline Tourism Management"> Airline Tourism Mgmt</label>
+          <label><input type="checkbox" name="Can Teach" value="Aviation Management Intro"> Aviation Mgmt Intro</label>
+        </div></div>
+      <div class="f"><label for="x-li">LinkedIn profile (optional)</label><input id="x-li" name="LinkedIn" type="url" placeholder="https://linkedin.com/in/..."></div>
+      <div class="f"><label for="x-bio">Brief profile &amp; key experience <i>*</i></label><textarea id="x-bio" name="Profile" required></textarea></div>
+      <label class="decl"><input type="checkbox" id="x-decl" required><span>I confirm these details are accurate and agree that Nextasy may contact me about teaching opportunities. My details will be kept confidential.</span></label>
+      <button type="submit" class="btn btn-blue" style="width:100%" id="x-submit">Submit my profile</button>
+      <div class="msg" id="x-msg"></div>
+    </form>
+    <div class="success" id="expert-success">
+      <div class="tick">✓</div>
+      <h3>Thank you!</h3>
+      <p>Your profile has been sent confidentially to the Nextasy team. We'll get in touch when a program matches your expertise.</p>
+      <div class="row"><button class="btn btn-line" data-close>Close</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const FORM_URL = 'https://formspree.io/f/xwlkboly';
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+// reveal
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+// modals
+function openModal(id){ const m=document.getElementById(id); m.classList.add('open'); document.body.style.overflow='hidden'; setTimeout(()=>{ const f=m.querySelector('input:not([type=hidden])'); f && f.focus(); },120); }
+function closeModal(m){ m.classList.remove('open'); document.body.style.overflow=''; }
+document.querySelectorAll('.modal').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m || e.target.closest('[data-close]')) closeModal(m); });
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.modal.open').forEach(closeModal); });
+
+// expert modal (register / update)
+document.querySelectorAll('[data-open="expert-modal"]').forEach(b => b.addEventListener('click', () => {
+  const upd = !!b.dataset.update;
+  document.getElementById('expert-title').textContent = upd ? 'Update my expert profile' : 'Register as an industry expert';
+  document.getElementById('x-kicker').textContent = upd ? 'Profile update' : 'Industry expert panel';
+  document.getElementById('x-formtype').value = upd ? 'Industry Expert Profile Update' : 'Industry Expert Registration';
+  document.getElementById('x-submit').textContent = upd ? 'Send profile update' : 'Submit my profile';
+  document.getElementById('expert-form').style.display = ''; document.getElementById('expert-success').style.display = 'none';
+  openModal('expert-modal');
+}));
+
+// enrol modal
+let lastEnrol = null;
+document.querySelectorAll('[data-enrol]').forEach(b => b.addEventListener('click', () => {
+  document.getElementById('enrol-title').textContent = b.dataset.enrol;
+  document.getElementById('e-course').value = b.dataset.enrol;
+  document.getElementById('e-code').value = b.dataset.code;
+  document.getElementById('enrol-form').style.display = ''; document.getElementById('enrol-success').style.display = 'none';
+  document.getElementById('e-msg').textContent = '';
+  openModal('enrol-modal');
+}));
+
+// Aadhaar formatting
+const aad = document.getElementById('e-aadhaar');
+aad.addEventListener('input', () => { const d = aad.value.replace(/\D/g, '').slice(0, 12); aad.value = d.replace(/(\d{4})(?=\d)/g, '$1 '); });
+
+function makeId(code){ const d=new Date(); const p=n=>String(n).padStart(2,'0'); return code+'-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+Math.random().toString(36).slice(2,6).toUpperCase(); }
+
+async function send(form, subject){
+  const fd = new FormData(form); fd.append('_subject', subject);
+  const r = await fetch(FORM_URL, { method:'POST', body:fd, headers:{ 'Accept':'application/json' } });
+  if (!r.ok) throw new Error('send failed');
+}
+
+document.getElementById('enrol-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target, msg = document.getElementById('e-msg'); msg.className = 'msg';
+  const digits = aad.value.replace(/\D/g, '');
+  if (!f.checkValidity()) { msg.textContent = 'Please fill in all required fields and accept the declaration.'; msg.classList.add('err'); f.reportValidity(); return; }
+  if (digits.length !== 12) { msg.textContent = 'Please enter a valid 12-digit Aadhaar number.'; msg.classList.add('err'); aad.focus(); return; }
+  const id = makeId(document.getElementById('e-code').value); document.getElementById('e-id').value = id;
+  const btn = f.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = 'Submitting…';
+  try {
+    await send(f, 'New enrolment: '+document.getElementById('e-course').value+' — '+f.Name.value);
+    lastEnrol = { id, course: document.getElementById('e-course').value, code: document.getElementById('e-code').value, name: f.Name.value.trim(), uni: f.University.value.trim(), aadhaar: digits, phone: f.Phone.value.trim(), email: f.Email.value.trim(), date: new Date() };
+    document.getElementById('s-email').textContent = lastEnrol.email;
+    document.getElementById('s-ref').textContent = 'Enrolment ID: ' + id;
+    f.style.display = 'none'; document.getElementById('enrol-success').style.display = 'block';
+    f.reset(); downloadPdf();
+  } catch (err) {
+    msg.textContent = 'Something went wrong. Please try again or email dispatch@nextasy.biz.'; msg.classList.add('err');
+  } finally { btn.disabled = false; btn.textContent = 'Submit enrolment'; }
+});
+
+document.getElementById('expert-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target, msg = document.getElementById('x-msg'); msg.className = 'msg';
+  if (!f.checkValidity()) { msg.textContent = 'Please fill in all required fields and accept the confirmation.'; msg.classList.add('err'); f.reportValidity(); return; }
+  const btn = document.getElementById('x-submit'), label = btn.textContent; btn.disabled = true; btn.textContent = 'Sending…';
+  try {
+    await send(f, document.getElementById('x-formtype').value+': '+f.Name.value);
+    f.reset(); f.style.display = 'none'; document.getElementById('expert-success').style.display = 'block';
+  } catch (err) { msg.textContent = 'Something went wrong. Please try again or email dispatch@nextasy.biz.'; msg.classList.add('err'); }
+  finally { btn.disabled = false; btn.textContent = label; }
+});
+
+// PDF: enrolment confirmation + declaration form
+function downloadPdf(){
+  if (!lastEnrol || !window.jspdf) return;
+  const { jsPDF } = window.jspdf; const doc = new jsPDF({ unit:'mm', format:'a4' }); const E = lastEnrol;
+  const navy=[11,42,91], red=[200,16,46], grey=[74,90,112];
+  doc.setFillColor(...navy); doc.rect(0,0,210,30,'F'); doc.setFillColor(...red); doc.rect(0,30,210,2,'F');
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.text('NEXTASY', 15, 15);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.text('AVIATION CONSULTING PVT. LTD.  ·  CHENNAI, INDIA', 15, 21);
+  doc.setFontSize(9); doc.text('dispatch@nextasy.biz', 195, 15, { align:'right' });
+  doc.setTextColor(...navy); doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.text('Certification Program — Enrolment Form', 15, 46);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...grey);
+  doc.text('Enrolment ID: '+E.id, 15, 53); doc.text('Date: '+E.date.toLocaleDateString('en-GB'), 195, 53, { align:'right' });
+  const masked = 'XXXX XXXX ' + E.aadhaar.slice(-4);
+  const rows = [['Course', E.course+' ('+E.code+')'], ['Full name', E.name], ['University / College', E.uni], ['Aadhaar number', masked], ['Phone', E.phone], ['Email', E.email], ['Mode', 'Online'], ['Fee', 'Details will be emailed after enrolment']];
+  let y = 64; doc.setFontSize(10.5);
+  rows.forEach((r,i) => { if (i%2===0){ doc.setFillColor(242,245,250); doc.rect(15,y-5.5,180,9,'F'); }
+    doc.setTextColor(...grey); doc.setFont('helvetica','normal'); doc.text(r[0], 19, y);
+    doc.setTextColor(11,31,58); doc.setFont('helvetica','bold'); doc.text(doc.splitTextToSize(String(r[1]), 115), 75, y); y += 9; });
+  y += 8; doc.setDrawColor(...red); doc.setLineWidth(.6); doc.line(15,y,195,y); y += 9;
+  doc.setTextColor(...navy); doc.setFont('helvetica','bold'); doc.setFontSize(12.5); doc.text('Declaration', 15, y); y += 7;
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(40,50,65);
+  const decl = 'I, '+E.name+', a student of '+E.uni+', hereby declare that the information provided in this enrolment form is true and correct to the best of my knowledge. I agree to follow the rules, attendance requirements and code of conduct of the Nextasy Certification Program "'+E.course+'". I consent to Nextasy Aviation Consulting Pvt. Ltd. using my Aadhaar details solely for identity verification for this program. I understand that the certificate will be issued only on successful completion of the program requirements and payment of the applicable fee.';
+  const lines = doc.splitTextToSize(decl, 180); doc.text(lines, 15, y); y += lines.length*5.2 + 18;
+  doc.setDrawColor(150); doc.setLineWidth(.3); doc.line(15,y,85,y); doc.line(125,y,195,y);
+  doc.setFontSize(9); doc.setTextColor(...grey); doc.text('Signature of student', 15, y+5); doc.text('Date & place', 125, y+5);
+  y += 20; doc.setFillColor(255,246,247); doc.setDrawColor(...red); doc.roundedRect(15,y,180,22,2,2,'FD');
+  doc.setTextColor(...navy); doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.text('Next steps', 20, y+7);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(40,50,65);
+  doc.text('1. Print and sign this declaration.  2. Email a scanned copy to dispatch@nextasy.biz with your Enrolment ID.', 20, y+13);
+  doc.text('3. Fee details and the class schedule will be sent to your registered email.', 20, y+18);
+  doc.setFontSize(8); doc.setTextColor(140); doc.text('Nextasy Aviation Consulting Pvt. Ltd. · nextasy.biz · This is a system-generated enrolment form.', 105, 287, { align:'center' });
+  doc.save('Nextasy-Enrolment-'+E.id+'.pdf');
+}
+document.getElementById('dl-pdf').addEventListener('click', downloadPdf);
+</script>
+</body>
+</html>
