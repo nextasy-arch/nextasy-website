@@ -585,6 +585,145 @@ footer{ background:var(--ink); border-top:1px solid var(--hairline); padding:70p
   font-size:0.78rem; color:var(--ivory-dim); flex-wrap:wrap; gap:10px;
 }
 
+
+/* ================= V2: AVIATION MOTION LAYER ================= */
+:root{ --red:#c8102e; --blue:#1d4ed8; --navy:#0b2a5b; --sky:#9cc3ff; }
+
+/* glass header */
+header{ background:rgba(255,255,255,0.88) !important; backdrop-filter:saturate(1.4) blur(14px); -webkit-backdrop-filter:saturate(1.4) blur(14px); }
+
+/* flight-path scroll progress */
+#flightbar{ position:fixed; top:0; left:0; right:0; height:3px; z-index:101; pointer-events:none; }
+#flightbar .trail{ position:absolute; left:0; top:0; height:3px; width:0; background:linear-gradient(90deg,var(--blue),var(--red)); }
+#flightbar .jet{ position:absolute; top:-8px; left:0; width:18px; height:18px; transform:translateX(-50%) rotate(90deg); color:var(--red); filter:drop-shadow(0 1px 2px rgba(0,0,0,.25)); }
+
+/* hero layout with ops board */
+@media (min-width:1100px){
+  .hero-grid{ grid-template-columns:1.2fr .8fr !important; }
+  .hero h1{ white-space:normal !important; font-size:clamp(2.6rem,4.4vw,4.4rem) !important; }
+}
+.hero{ isolation:isolate; }
+.hero::after{ content:''; position:absolute; inset:auto 0 0 0; height:140px; background:linear-gradient(to top, rgba(6,22,51,.65), transparent); z-index:0; pointer-events:none; }
+
+/* animated route map */
+.route-map{ position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.9; }
+.route-map .grid-dot{ fill:rgba(156,195,255,0.18); }
+.route-map .arc{ fill:none; stroke:rgba(156,195,255,0.55); stroke-width:1.4; stroke-dasharray:6 8; animation:dash 18s linear infinite; }
+.route-map .arc.red{ stroke:rgba(255,90,110,0.7); }
+.route-map .city{ fill:#fff; }
+.route-map .ping{ fill:none; stroke:#fff; stroke-width:1.2; transform-box:fill-box; transform-origin:center; animation:ping 2.6s ease-out infinite; }
+.route-map .lbl{ fill:rgba(255,255,255,.75); font:600 10px 'Inter',sans-serif; letter-spacing:.12em; }
+.route-map .jet{ fill:#fff; }
+@keyframes dash{ to{ stroke-dashoffset:-280; } }
+@keyframes ping{ 0%{ transform:scale(.4); opacity:1; } 100%{ transform:scale(3.2); opacity:0; } }
+
+/* clouds drifting */
+.cloud{ position:absolute; z-index:0; pointer-events:none; width:520px; height:140px; border-radius:50%;
+  background:radial-gradient(closest-side, rgba(255,255,255,.10), transparent); filter:blur(6px); animation:drift linear infinite; }
+.cloud.c1{ top:18%; left:-560px; animation-duration:70s; }
+.cloud.c2{ top:58%; left:-560px; width:760px; animation-duration:95s; animation-delay:-40s; }
+.cloud.c3{ top:36%; left:-560px; width:380px; animation-duration:55s; animation-delay:-20s; }
+@keyframes drift{ to{ transform:translateX(calc(100vw + 1200px)); } }
+
+/* departure / ops board */
+.ops-board{ position:relative; z-index:2; background:rgba(4,14,34,.72); border:1px solid rgba(156,195,255,.22); border-radius:14px; padding:20px 20px 14px;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.06); backdrop-filter:blur(6px); color:#fff; font-family:'Inter',sans-serif; }
+.ops-board .ob-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; font-size:.7rem; letter-spacing:.18em; color:var(--sky); }
+.ops-board .ob-head .live{ display:flex; align-items:center; gap:8px; color:#fff; }
+.ops-board .ob-head .live i{ width:8px; height:8px; border-radius:50%; background:#2ee59d; box-shadow:0 0 10px #2ee59d; animation:blink 1.6s infinite; }
+@keyframes blink{ 50%{ opacity:.25; } }
+.ob-row{ display:grid; grid-template-columns:58px 1fr 84px; gap:10px; align-items:center; padding:10px 0; border-top:1px solid rgba(255,255,255,.08); font-size:.8rem; }
+.ob-row .code{ font-family:'IBM Plex Mono',ui-monospace,monospace; color:#ffd166; letter-spacing:.06em; }
+.ob-row .flap{ font-family:'IBM Plex Mono',ui-monospace,monospace; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; overflow:hidden; }
+.ob-row .flap span{ display:inline-block; min-width:.62em; background:rgba(255,255,255,.06); margin-right:1px; border-radius:2px; text-align:center; }
+.ob-row .flap span.flip{ animation:flip .28s ease; }
+@keyframes flip{ 0%{ transform:rotateX(90deg); opacity:.3; } 100%{ transform:rotateX(0); opacity:1; } }
+.ob-row .st{ justify-self:end; font-size:.66rem; letter-spacing:.1em; padding:4px 8px; border-radius:3px; background:rgba(46,229,157,.14); color:#2ee59d; }
+.ob-row .st.board{ background:rgba(200,16,46,.22); color:#ff8a9a; animation:blink 1.2s infinite; }
+.ob-foot{ margin-top:10px; font-size:.68rem; color:rgba(255,255,255,.55); letter-spacing:.06em; display:flex; justify-content:space-between; }
+@media (max-width:1099px){ .ops-board{ margin-top:10px; } }
+
+/* runway lights divider */
+.runway{ position:relative; height:46px; background:#0b1f3a; overflow:hidden; display:flex; align-items:center; }
+.runway::before{ content:''; position:absolute; left:0; right:0; top:50%; height:2px; transform:translateY(-50%);
+  background:repeating-linear-gradient(90deg, rgba(255,255,255,.85) 0 34px, transparent 34px 70px); animation:taxi 1.6s linear infinite; }
+.runway .lights{ position:absolute; inset:0; display:flex; justify-content:space-between; align-items:flex-start; padding:5px 12px; }
+.runway .lights i{ width:5px; height:5px; border-radius:50%; background:#ffd166; box-shadow:0 0 8px #ffd166; animation:seq 2.4s infinite; }
+.runway .lights.b{ align-items:flex-end; }
+.runway .lights.b i{ background:#4da3ff; box-shadow:0 0 8px #4da3ff; }
+@keyframes taxi{ to{ background-position:-70px 0; } }
+@keyframes seq{ 0%,70%,100%{ opacity:.25; } 10%{ opacity:1; } }
+
+/* destinations ticker */
+.ticker{ background:#fff; border-bottom:1px solid var(--hairline); overflow:hidden; white-space:nowrap; padding:16px 0; }
+.ticker-track{ display:inline-flex; gap:42px; animation:tick 48s linear infinite; }
+.ticker-track span{ font-family:'Poppins',sans-serif; font-weight:600; font-size:.95rem; letter-spacing:.14em; color:var(--navy); display:inline-flex; align-items:center; gap:42px; }
+.ticker-track span::after{ content:'✈'; color:var(--red); font-size:.85rem; }
+@keyframes tick{ to{ transform:translateX(-50%); } }
+
+/* capability counters */
+.capbar{ background:linear-gradient(120deg,#061633,#0b2a5b 60%,#12397a); color:#fff; position:relative; overflow:hidden; }
+.capbar::before{ content:''; position:absolute; inset:0; background:repeating-linear-gradient(115deg, transparent 0 40px, rgba(255,255,255,.025) 40px 41px); }
+.capbar .wrap{ display:grid; grid-template-columns:repeat(4,1fr); gap:0; position:relative; }
+.capbar .cap{ padding:46px 26px; border-left:1px solid rgba(255,255,255,.1); }
+.capbar .cap:first-child{ border-left:none; }
+.capbar .cap b{ display:block; font-family:'Poppins',sans-serif; font-size:clamp(2.4rem,4vw,3.4rem); line-height:1; font-weight:700; }
+.capbar .cap b sup{ color:#ff5a6e; font-size:.5em; }
+.capbar .cap span{ display:block; margin-top:10px; color:rgba(255,255,255,.72); font-size:.88rem; }
+@media (max-width:820px){ .capbar .wrap{ grid-template-columns:1fr 1fr; } .capbar .cap:nth-child(3){ border-left:none; } .capbar .cap{ padding:30px 18px; } }
+
+/* eyebrow with jet icon */
+.section .eyebrow{ display:inline-flex; align-items:center; gap:10px; color:var(--red) !important; letter-spacing:.14em; text-transform:uppercase; font-size:.72rem; font-weight:600; }
+.section .eyebrow::before{ content:'✈'; font-size:.85rem; color:var(--blue); transform:rotate(-20deg); }
+.section h2{ color:var(--ivory); }
+.section-head h2{ position:relative; }
+.section-head h2::after{ content:''; display:block; width:64px; height:4px; margin-top:18px; border-radius:2px; background:linear-gradient(90deg,var(--red) 0 50%, var(--blue) 50% 100%); }
+
+/* scroll reveal */
+.rv{ opacity:0; transform:translateY(34px); transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); transition-delay:var(--d,0s); }
+.rv.in{ opacity:1; transform:none; }
+
+/* cards: lift, tilt and red/blue edge */
+.bento .cell{ transition:transform .35s, box-shadow .35s, background .35s; transform-style:preserve-3d; position:relative; }
+.bento .cell::after{ content:''; position:absolute; left:0; bottom:0; height:3px; width:0; background:linear-gradient(90deg,var(--red),var(--blue)); transition:width .45s; }
+.bento .cell:hover{ box-shadow:0 22px 40px -18px rgba(11,42,91,.35); z-index:2; }
+.bento .cell:hover::after{ width:100%; }
+.expertise-item{ transition:transform .3s, border-color .3s; }
+.expertise-item:hover{ transform:translateY(-6px); border-color:var(--red) !important; }
+.expertise-item h4::before{ content:''; display:inline-block; width:8px; height:8px; margin-right:10px; border-radius:50%; background:var(--red); box-shadow:0 0 0 4px rgba(200,16,46,.12); vertical-align:middle; }
+
+/* buttons: shine sweep */
+.btn{ position:relative; overflow:hidden; }
+.btn-gold{ background:var(--red) !important; color:#fff !important; box-shadow:0 10px 24px -10px rgba(200,16,46,.6); }
+.btn-gold:hover{ background:#a30d25 !important; transform:translateY(-2px); }
+.btn::after{ content:''; position:absolute; top:0; left:-120%; width:60%; height:100%; background:linear-gradient(100deg, transparent, rgba(255,255,255,.35), transparent); transform:skewX(-20deg); transition:left .7s; }
+.btn:hover::after{ left:140%; }
+
+/* membership card float */
+.membership-card-img{ animation:card-glow 4s ease-in-out infinite, floaty 6s ease-in-out infinite !important; }
+@keyframes floaty{ 0%,100%{ translate:0 0; } 50%{ translate:0 -14px; } }
+
+/* CTA: animated sky + jet */
+.cta-section{ position:relative; overflow:hidden; }
+.cta-section .wrap{ position:relative; z-index:1; }
+.cta-section .cta-jet{ position:absolute; right:-140px; top:28%; width:90px; color:rgba(255,255,255,.35); z-index:0; animation:fly 14s linear infinite; }
+.cta-section .cta-jet::after{ content:''; position:absolute; right:100%; top:50%; width:360px; height:2px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.55)); }
+@keyframes fly{ 0%{ transform:translate(0,30px); } 100%{ transform:translate(calc(-100vw - 300px),-60px); } }
+
+
+/* v2 fixes */
+.capbar .cap b span{ font-size:inherit !important; color:#fff !important; margin:0 !important; display:inline !important; }
+.bento{ background:#fff !important; }
+header{ display:flex; align-items:center; }
+header .nav-inner{ flex:1; margin:0; max-width:none; }
+header .nav-cta{ padding-right:40px; gap:10px; }
+nav.primary{ gap:26px; }
+@media (max-width:1200px){ header .nav-cta .btn:last-child{ display:none; } nav.primary{ gap:18px; } }
+@media (max-width:960px){ header .nav-cta{ padding-right:0; } }
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{ animation:none !important; transition:none !important; }
+  .rv{ opacity:1; transform:none; }
+}
 </style>
 </head>
 <body>
@@ -623,6 +762,21 @@ footer{ background:var(--ink); border-top:1px solid var(--hairline); padding:70p
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="home">
+  <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+  <svg class="route-map" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs><pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle class="grid-dot" cx="2" cy="2" r="1.2"/></pattern>
+      <path id="r1" d="M620 560 Q 820 300 1080 420"/><path id="r2" d="M620 560 Q 900 520 1240 610"/><path id="r3" d="M620 560 Q 760 380 880 300"/><path id="r4" d="M1080 420 Q 1180 330 1300 360"/></defs>
+    <rect width="1440" height="900" fill="url(#dots)" opacity=".7"/>
+    <use href="#r1" class="arc red"/><use href="#r2" class="arc"/><use href="#r3" class="arc"/><use href="#r4" class="arc red"/>
+    <g><circle class="city" cx="620" cy="560" r="4"/><circle class="ping" cx="620" cy="560" r="6"/><text class="lbl" x="560" y="590">MAA</text></g>
+    <g><circle class="city" cx="1080" cy="420" r="3.5"/><circle class="ping" cx="1080" cy="420" r="6" style="animation-delay:.8s"/><text class="lbl" x="1092" y="414">SIN</text></g>
+    <g><circle class="city" cx="1240" cy="610" r="3.5"/><circle class="ping" cx="1240" cy="610" r="6" style="animation-delay:1.4s"/><text class="lbl" x="1252" y="604">KUL</text></g>
+    <g><circle class="city" cx="880" cy="300" r="3.5"/><circle class="ping" cx="880" cy="300" r="6" style="animation-delay:.4s"/><text class="lbl" x="892" y="294">DXB</text></g>
+    <g><circle class="city" cx="1300" cy="360" r="3.5"/><text class="lbl" x="1312" y="354">HKG</text></g>
+    <path class="jet" d="M0 -7 L2 -2 L8 1 L8 3 L2 1.5 L1.5 5 L3.5 6.5 L3.5 7.5 L0 6.5 L-3.5 7.5 L-3.5 6.5 L-1.5 5 L-2 1.5 L-8 3 L-8 1 L-2 -2 Z" transform="rotate(90)"><animateMotion dur="9s" repeatCount="indefinite" rotate="auto"><mpath href="#r1"/></animateMotion></path>
+    <path class="jet" d="M0 -7 L2 -2 L8 1 L8 3 L2 1.5 L1.5 5 L3.5 6.5 L3.5 7.5 L0 6.5 L-3.5 7.5 L-3.5 6.5 L-1.5 5 L-2 1.5 L-8 3 L-8 1 L-2 -2 Z"><animateMotion dur="12s" begin="-4s" repeatCount="indefinite" rotate="auto"><mpath href="#r2"/></animateMotion></path>
+    <path class="jet" d="M0 -7 L2 -2 L8 1 L8 3 L2 1.5 L1.5 5 L3.5 6.5 L3.5 7.5 L0 6.5 L-3.5 7.5 L-3.5 6.5 L-1.5 5 L-2 1.5 L-8 3 L-8 1 L-2 -2 Z"><animateMotion dur="7s" begin="-2s" repeatCount="indefinite" rotate="auto"><mpath href="#r3"/></animateMotion></path>
+  </svg>
   <div class="hero-plane">
     <img src="nextasy-hero-plane.png" alt="Nextasy branded aircraft">
   </div>
@@ -636,9 +790,28 @@ footer{ background:var(--ink); border-top:1px solid var(--hairline); padding:70p
         <a href="#contact" class="btn btn-line">Contact Our Consultants</a>
       </div>
     </div>
+    <aside class="ops-board hero-fade" style="animation-delay:.9s" aria-label="Nextasy services board">
+      <div class="ob-head"><span>NEXTASY OPS · DEPARTURES</span><span class="live"><i></i><span id="ob-clock">--:--</span> IST</span></div>
+      <div class="ob-row"><span class="code">NX101</span><span class="flap" data-words="ROUTE PLANNING|NETWORK DESIGN|FLEET PLANNING">ROUTE PLANNING</span><span class="st">ON TIME</span></div>
+      <div class="ob-row"><span class="code">NX202</span><span class="flap" data-words="AIRPORT CONSULTING|TERMINAL OPS|PASSENGER FLOW">AIRPORT CONSULTING</span><span class="st">ON TIME</span></div>
+      <div class="ob-row"><span class="code">NX303</span><span class="flap" data-words="FEASIBILITY STUDY|MARKET RESEARCH|INVESTOR ADVISORY">FEASIBILITY STUDY</span><span class="st board">BOARDING</span></div>
+      <div class="ob-row"><span class="code">NX404</span><span class="flap" data-words="AVIATION TRAINING|GROUND HANDLING|CUSTOMER SERVICE">AVIATION TRAINING</span><span class="st">ON TIME</span></div>
+      <div class="ob-row"><span class="code">NX505</span><span class="flap" data-words="TRAVEL STRATEGY|TOUR OPERATIONS|DESTINATIONS">TRAVEL STRATEGY</span><span class="st">ON TIME</span></div>
+      <div class="ob-foot"><span>GATE: CHENNAI · MAA</span><span>dispatch@nextasy.biz</span></div>
+    </aside>
   </div>
 </section>
 
+<div class="runway" aria-hidden="true"><div class="lights"><i></i><i style="animation-delay:.1s"></i><i style="animation-delay:.2s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:.4s"></i><i style="animation-delay:.5s"></i><i style="animation-delay:.6s"></i><i style="animation-delay:.7s"></i><i style="animation-delay:.8s"></i><i style="animation-delay:.9s"></i><i style="animation-delay:1s"></i><i style="animation-delay:1.1s"></i></div><div class="lights b"><i></i><i style="animation-delay:.1s"></i><i style="animation-delay:.2s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:.4s"></i><i style="animation-delay:.5s"></i><i style="animation-delay:.6s"></i><i style="animation-delay:.7s"></i><i style="animation-delay:.8s"></i><i style="animation-delay:.9s"></i><i style="animation-delay:1s"></i><i style="animation-delay:1.1s"></i></div></div>
+<div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker-track"><span>CHENNAI · MAA</span><span>DELHI · DEL</span><span>MUMBAI · BOM</span><span>DUBAI · DXB</span><span>SINGAPORE · SIN</span><span>KUALA LUMPUR · KUL</span><span>BANGKOK · BKK</span><span>HONG KONG · HKG</span><span>DOHA · DOH</span><span>LONDON · LHR</span></div></div>
+<section class="capbar" aria-label="Nextasy at a glance">
+  <div class="wrap">
+    <div class="cap rv"><b><span class="count" data-to="4">0</span></b><span>Consulting disciplines</span></div>
+    <div class="cap rv" style="--d:.1s"><b><span class="count" data-to="10">0</span></b><span>Service lines</span></div>
+    <div class="cap rv" style="--d:.2s"><b><span class="count" data-to="8">0</span></b><span>Expertise areas across the value chain</span></div>
+    <div class="cap rv" style="--d:.3s"><b>360<sup>°</sup></b><span>Airline, airport &amp; travel advisory</span></div>
+  </div>
+</section>
 <!-- ============ ABOUT ============ -->
 <section class="section" id="about">
   <div class="wrap about-grid">
@@ -1100,5 +1273,61 @@ document.getElementById('join-form').addEventListener('submit', function(e){
 });
 </script>
 
+<script>
+// ===== V2 motion layer =====
+(function(){
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // flight-path scroll bar
+  const fb=document.createElement('div'); fb.id='flightbar';
+  fb.innerHTML='<div class="trail"></div><svg class="jet" viewBox="-9 -9 18 18"><path fill="currentColor" d="M0 -7 L2 -2 L8 1 L8 3 L2 1.5 L1.5 5 L3.5 6.5 L3.5 7.5 L0 6.5 L-3.5 7.5 L-3.5 6.5 L-1.5 5 L-2 1.5 L-8 3 L-8 1 L-2 -2 Z"/></svg>';
+  document.body.appendChild(fb);
+  const trail=fb.querySelector('.trail'), jet=fb.querySelector('.jet');
+  const onScroll=()=>{ const h=document.documentElement; const p=h.scrollTop/((h.scrollHeight-h.clientHeight)||1);
+    trail.style.width=(p*100)+'%'; jet.style.left=(p*100)+'%'; jet.style.opacity=p>0.005?1:0; };
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+  // reveal on scroll
+  const sel='.section-head, .vm-item, .about-copy p, .areas-tab-nav, .bento .cell, .expertise-item, .insight-row, .proj-item, .membership-copy, .card-stage, .join-form, .cta-section h2, .cta-section p, .contact-info, #contact-form, .footer-top';
+  document.querySelectorAll(sel).forEach((el,i)=>{ el.classList.add('rv'); if(!el.style.getPropertyValue('--d')) el.style.setProperty('--d',((i%4)*0.08)+'s'); });
+  const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);
+    e.target.querySelectorAll && e.target.querySelectorAll('.count').forEach(countUp); } }),{threshold:.14, rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+  function countUp(el){ const to=+el.dataset.to; if(reduce){ el.textContent=to; return; } let t0=null;
+    const step=ts=>{ t0=t0||ts; const k=Math.min((ts-t0)/1400,1); el.textContent=Math.round(to*(1-Math.pow(1-k,3))); if(k<1) requestAnimationFrame(step); };
+    requestAnimationFrame(step); }
+
+  // ticker: duplicate for seamless loop
+  const tt=document.getElementById('ticker-track'); if(tt) tt.innerHTML+=tt.innerHTML;
+
+  // ops board clock (IST) + split-flap
+  const clk=document.getElementById('ob-clock');
+  const tickClock=()=>{ if(clk) clk.textContent=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Kolkata'}); };
+  tickClock(); setInterval(tickClock,15000);
+  const CH='ABCDEFGHIJKLMNOPQRSTUVWXYZ ';
+  document.querySelectorAll('.flap').forEach((f,idx)=>{
+    const words=f.dataset.words.split('|'); let w=0;
+    const render=(txt)=>{ f.innerHTML=''; [...txt].forEach(c=>{ const s=document.createElement('span'); s.textContent=c===' '?' ':c; f.appendChild(s); }); };
+    render(words[0]);
+    if(reduce) return;
+    setInterval(()=>{ w=(w+1)%words.length; const target=words[w]; const len=Math.max(target.length, f.children.length);
+      render(target.padEnd(len,' ')); [...f.children].forEach((s,i)=>{ const fin=s.textContent; let n=0;
+        const iv=setInterval(()=>{ s.textContent=CH[Math.floor(Math.random()*CH.length)]; s.classList.remove('flip'); void s.offsetWidth; s.classList.add('flip');
+          if(++n>4+i%5){ clearInterval(iv); s.textContent=fin; } },55); }); }, 4200+idx*900);
+  });
+
+  // subtle 3D tilt on service cards
+  if(!reduce && window.matchMedia('(hover:hover)').matches){
+    document.querySelectorAll('.bento .cell').forEach(c=>{
+      c.addEventListener('mousemove',e=>{ const r=c.getBoundingClientRect(); const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+        c.style.transform=`perspective(800px) rotateX(${-y*6}deg) rotateY(${x*6}deg) translateY(-4px)`; });
+      c.addEventListener('mouseleave',()=>{ c.style.transform=''; });
+    });
+  }
+  // CTA jet
+  const cta=document.querySelector('.cta-section'); if(cta){ const j=document.createElement('div'); j.className='cta-jet'; j.setAttribute('aria-hidden','true');
+    j.innerHTML='<svg viewBox="-9 -9 18 18" style="transform:rotate(-90deg)"><path fill="currentColor" d="M0 -7 L2 -2 L8 1 L8 3 L2 1.5 L1.5 5 L3.5 6.5 L3.5 7.5 L0 6.5 L-3.5 7.5 L-3.5 6.5 L-1.5 5 L-2 1.5 L-8 3 L-8 1 L-2 -2 Z"/></svg>'; cta.prepend(j); }
+})();
+</script>
 </body>
 </html>
