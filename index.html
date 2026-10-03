@@ -721,6 +721,13 @@ nav.primary{ gap:26px; }
 @media (max-width:1200px){ header .nav-cta .btn:last-child{ display:none; } nav.primary{ gap:18px; } }
 @media (max-width:960px){ header .nav-cta{ padding-right:0; } }
 
+/* certifications teaser */
+.cert-teaser{ display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; padding:34px 36px; border-radius:14px; color:#fff;
+  background:linear-gradient(120deg,#061633,#0b2a5b 55%,#c8102e 140%); box-shadow:0 30px 60px -30px rgba(11,42,91,.6); position:relative; overflow:hidden; }
+.cert-teaser .eyebrow{ color:#ff8a9a !important; }
+.cert-teaser .eyebrow::before{ color:#9cc3ff !important; }
+.cert-teaser h3{ font-family:var(--serif); font-size:clamp(1.3rem,2.6vw,1.9rem); margin:10px 0 6px; color:#fff; }
+.cert-teaser p{ color:rgba(255,255,255,.78); font-size:.95rem; }
 /* v3: white hero */
 header{ background:#ffffff !important; }
 .hero{ background:radial-gradient(ellipse at 80% 20%, rgba(29,78,216,0.08), transparent 55%), radial-gradient(ellipse at 10% 90%, rgba(200,16,46,0.06), transparent 50%), #ffffff !important; }
@@ -758,6 +765,7 @@ header{ background:#ffffff !important; }
       <a href="#about">About Us</a>
       <a href="#consulting">Aviation Consulting</a>
       <a href="#services">Services</a>
+      <a href="certifications.html" style="color:var(--red);font-weight:600;">Certifications</a>
       <a href="#membership">Membership</a>
       <a href="#insights">Insights</a>
       <a href="#projects">Projects</a>
@@ -775,6 +783,7 @@ header{ background:#ffffff !important; }
   <a href="#about">About Us</a>
   <a href="#consulting">Aviation Consulting</a>
   <a href="#services">Services</a>
+  <a href="certifications.html">Certifications</a>
   <a href="#membership">Membership</a>
   <a href="#insights">Industry Insights</a>
   <a href="#projects">Projects</a>
@@ -941,6 +950,18 @@ header{ background:#ffffff !important; }
       <div class="cell wide"><span class="num">09</span><div><h4>Travel &amp; Tourism Consulting</h4><p>Commercial strategy connecting travel businesses to aviation growth.</p></div></div>
       <div class="cell"><span class="num">10</span><h4>Project Advisory</h4></div>
     </div>
+  </div>
+</section>
+
+<!-- ============ CERTIFICATIONS TEASER ============ -->
+<section class="section" style="padding-top:20px;padding-bottom:20px;">
+  <div class="wrap">
+    <a href="certifications.html" class="cert-teaser rv">
+      <div><span class="eyebrow">New · Certification Programs</span>
+      <h3>Online aviation certifications with industry experts</h3>
+      <p>Catering &amp; Cabin Operations · Airline Tourism Management · Aviation Management Intro</p></div>
+      <span class="btn btn-gold">Explore &amp; Enrol →</span>
+    </a>
   </div>
 </section>
 
