@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Assessment Dashboard | Nextasy Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="a2-ramp.js"></script>
+<script src="a2-cs.js"></script>
+<style>
+:root{ --red:#c8102e; --red-dark:#a30d25; --blue:#1d4ed8; --navy:#0b2a5b; --navy-deep:#061633; --text:#0b1f3a; --muted:#4a5a70; --line:#dde5ef; --soft:#f2f5fa; --green:#1e8e5a; }
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{ font-family:'Inter',system-ui,sans-serif; color:var(--text); background:var(--soft); line-height:1.55; -webkit-font-smoothing:antialiased; min-height:100vh; }
+h1,h2,h3{ font-family:'Poppins',sans-serif; line-height:1.2; }
+header{ background:#fff; border-bottom:3px solid var(--red); position:sticky; top:0; z-index:20; }
+.bar{ max-width:880px; margin:0 auto; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.logo{ display:flex; flex-direction:column; line-height:1.05; }
+.logo b{ font-family:'Poppins',sans-serif; color:var(--navy); letter-spacing:.06em; }
+.logo span{ font-size:.58rem; letter-spacing:.24em; color:var(--blue); margin-top:3px; }
+.pill{ font-size:.74rem; color:var(--navy); background:var(--soft); border:1px solid var(--line); padding:5px 11px; border-radius:999px; white-space:nowrap; }
+.hero{ background:linear-gradient(120deg,var(--navy-deep),var(--navy) 60%,#12397a); color:#fff; padding:36px 20px 80px; }
+.hero .in{ max-width:880px; margin:0 auto; }
+.eyebrow{ font-size:.74rem; letter-spacing:.16em; text-transform:uppercase; color:#ff8a9a; font-weight:600; }
+.hero h1{ font-size:clamp(1.6rem,4.2vw,2.4rem); margin-top:8px; }
+.hero p{ color:rgba(255,255,255,.82); margin-top:8px; max-width:62ch; }
+.card{ max-width:880px; margin:-56px auto 40px; background:#fff; border-radius:14px; border:1px solid var(--line); box-shadow:0 30px 60px -30px rgba(11,42,91,.35); overflow:hidden; }
+.pad{ padding:26px 28px 30px; }
+@media (max-width:600px){ .pad{ padding:20px 16px 24px; } }
+.facts{ display:grid; grid-template-columns:repeat(4,1fr); border-bottom:1px solid var(--line); }
+.facts div{ padding:14px 16px; border-right:1px solid var(--line); font-size:.78rem; color:var(--muted); }
+.facts div:last-child{ border-right:none; }
+.facts b{ display:block; font-family:'Poppins',sans-serif; font-size:1.15rem; color:var(--navy); }
+@media (max-width:600px){ .facts{ grid-template-columns:1fr 1fr; } .facts div:nth-child(2){ border-right:none; } .facts div:nth-child(-n+2){ border-bottom:1px solid var(--line); } }
+.f{ display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+.f label{ font-size:.8rem; font-weight:600; color:var(--navy); }
+.f input, .f select{ font:inherit; font-size:.95rem; border:1px solid var(--line); border-radius:7px; padding:12px; background:#fbfcfe; color:var(--text); }
+.f input:focus, .f select:focus{ outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(29,78,216,.15); background:#fff; }
+.rules{ background:var(--soft); border-radius:10px; padding:14px 18px; margin:6px 0 18px; font-size:.88rem; }
+.rules li{ margin:4px 0 4px 18px; }
+.note{ font-size:.84rem; color:var(--navy); background:#fff6f7; border:1px dashed rgba(200,16,46,.45); padding:10px 12px; border-radius:8px; margin-bottom:16px; }
+.btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; border:2px solid transparent; border-radius:8px; padding:13px 22px; font-weight:600; font-size:.95rem; cursor:pointer; font-family:inherit; transition:transform .15s, background .2s; }
+.btn-red{ background:var(--red); color:#fff; box-shadow:0 10px 24px -10px rgba(200,16,46,.6); }
+.btn-red:hover{ background:var(--red-dark); }
+.btn-line{ border-color:var(--navy); color:var(--navy); background:#fff; }
+.btn-line:hover{ background:var(--navy); color:#fff; }
+.btn[disabled]{ opacity:.5; cursor:not-allowed; }
+.msg{ margin-top:10px; font-size:.88rem; color:var(--red); min-height:1.2em; }
+.hidden{ display:none !important; }
+/* quiz */
+.qtop{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; padding:16px 28px; border-bottom:1px solid var(--line); background:#fbfcfe; }
+@media (max-width:600px){ .qtop{ padding:12px 16px; } }
+.qtop .meta{ font-size:.82rem; color:var(--muted); }
+.qtop .meta b{ color:var(--navy); }
+.prog{ height:6px; background:var(--line); }
+.prog i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--red),var(--blue)); transition:width .3s; }
+.story{ background:linear-gradient(120deg,#0b2a5b,#12397a); color:#fff; border-radius:12px; padding:18px 20px; margin-bottom:20px; }
+.story small{ font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:#9cc3ff; font-weight:600; }
+.story p{ margin-top:6px; font-size:1rem; line-height:1.6; }
+.play{ display:flex; align-items:center; gap:14px; margin-top:10px; flex-wrap:wrap; }
+.play span{ font-size:.85rem; color:#c9d6ea; }
+.play .btn[disabled]{ opacity:.55; }
+.eq{ display:inline-flex; gap:3px; align-items:flex-end; height:16px; }
+.eq i{ width:3px; background:#fff; animation:eq .8s infinite ease-in-out; }
+.eq i:nth-child(2){ animation-delay:.2s } .eq i:nth-child(3){ animation-delay:.4s }
+@keyframes eq{ 0%,100%{ height:4px } 50%{ height:16px } }
+.low{ color:#ffb3bd !important; }
+.q{ margin-bottom:20px; }
+.q h3{ font-family:'Inter',sans-serif; font-size:1rem; font-weight:600; color:var(--navy); margin-bottom:10px; }
+.q h3 span{ color:var(--red); margin-right:6px; }
+.opt{ display:flex; gap:12px; align-items:flex-start; border:1.5px solid var(--line); border-radius:9px; padding:11px 14px; margin-bottom:8px; cursor:pointer; transition:border-color .15s, background .15s; font-size:.95rem; }
+.opt:hover{ border-color:#9db4dd; }
+.opt input{ margin-top:4px; accent-color:var(--red); }
+.opt.sel{ border-color:var(--red); background:#fff6f7; }
+.opt b{ color:var(--navy); min-width:18px; }
+.nav{ display:flex; justify-content:space-between; gap:10px; margin-top:6px; flex-wrap:wrap; }
+.dots{ display:flex; flex-wrap:wrap; gap:5px; margin:14px 0 4px; }
+.dots button{ width:26px; height:26px; border-radius:6px; border:1px solid var(--line); background:#fff; font-size:.68rem; cursor:pointer; color:var(--muted); font-family:inherit; }
+.dots button.done{ background:var(--navy); color:#fff; border-color:var(--navy); }
+.dots button.half{ background:#9db4dd; color:#fff; border-color:#9db4dd; }
+.dots button.cur{ outline:2px solid var(--red); outline-offset:1px; }
+/* result */
+.res{ text-align:center; }
+.ring{ width:150px; height:150px; border-radius:50%; margin:6px auto 14px; display:flex; align-items:center; justify-content:center; flex-direction:column; color:var(--navy); }
+.ring{ position:relative; }
+.ring::before{ content:''; position:absolute; inset:14px; background:#fff; border-radius:50%; }
+.ring b, .ring span{ position:relative; }
+.ring b{ font-family:'Poppins',sans-serif; font-size:2.2rem; line-height:1; }
+.ring span{ font-size:.8rem; color:var(--muted); margin-top:4px; }
+.badge{ display:inline-block; padding:6px 16px; border-radius:999px; font-weight:700; letter-spacing:.1em; font-size:.82rem; }
+.badge.pass{ background:#e8f7ef; color:var(--green); }
+.badge.fail{ background:#fdeaec; color:var(--red); }
+.res .row{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:20px; }
+.sent{ margin-top:14px; font-size:.86rem; color:var(--muted); }
+.grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:20px; text-align:left; }
+.grid div{ background:var(--soft); border-radius:8px; padding:10px 12px; font-size:.76rem; color:var(--muted); }
+.grid b{ display:block; color:var(--navy); font-size:.95rem; }
+@media (max-width:600px){ .grid{ grid-template-columns:1fr 1fr; } }
+.btn-sm{ padding:8px 14px; font-size:.82rem; }
+.dhead{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:22px 28px; border-bottom:1px solid var(--line); background:#fbfcfe; }
+.dhead h2{ color:var(--navy); font-size:1.35rem; margin-top:4px; }
+.dhead p{ color:var(--muted); font-size:.86rem; margin-top:2px; }
+@media (max-width:600px){ .dhead{ padding:18px 16px; } }
+.acard{ border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+.atop{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:16px 20px; background:linear-gradient(120deg,var(--navy-deep),var(--navy) 60%,#12397a); color:#fff; }
+.atop small{ font-size:.7rem; letter-spacing:.16em; color:#ff8a9a; font-weight:600; }
+.atop h3{ font-size:1.1rem; margin-top:2px; }
+.status{ font-size:.74rem; font-weight:700; letter-spacing:.06em; padding:5px 12px; border-radius:999px; background:rgba(255,255,255,.14); color:#fff; white-space:nowrap; }
+.status.prog{ background:#ffc857; color:#3a2a00; } .status.done{ background:#2ee59d; color:#053d24; }
+.abody{ padding:18px 20px; }
+@media (max-width:600px){ .abody{ padding:16px 14px; } }
+.empty{ color:var(--muted); font-size:.9rem; }
+.sc{ display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+.sc .big{ font-family:'Poppins',sans-serif; font-size:2.2rem; color:var(--navy); line-height:1; }
+.sc .det{ flex:1; min-width:200px; font-size:.86rem; color:var(--muted); }
+.sc .det b{ color:var(--navy); }
+footer{ text-align:center; font-size:.8rem; color:var(--muted); padding:0 20px 40px; }
+</style>
+</head>
+<body>
+<header><div class="bar"><div class="logo"><b>NEXTASY</b><span>ACADEMY · AVIATION CONSULTING</span></div><span class="pill" id="pill">Assessment</span></div></header>
+
+<section class="hero"><div class="in">
+  <span class="eyebrow">Nextasy Academy · Assessment Dashboard</span>
+  <h1 id="h-title">Assessment Dashboard</h1>
+  <p id="h-sub">Register with your email, take your assessment and view your scorecard.</p>
+</div></section>
+
+<div class="card">
+  <!-- REGISTER -->
+  <div id="v-start">
+    <div class="pad">
+      <span class="eyebrow" style="color:var(--red)">Candidate registration</span>
+      <h2 style="color:var(--navy);margin:6px 0 4px;font-size:1.4rem;">Register / sign in to your Assessment Dashboard</h2>
+      <p style="color:var(--muted);font-size:.92rem;margin-bottom:18px;">Use the same email address that Nextasy sent your assessment link to. You can come back to this dashboard any time with the same email.</p>
+      <div class="f"><label for="name">Full name</label><input id="name" autocomplete="name" placeholder="As registered with Nextasy"></div>
+      <div class="f"><label for="email">Email ID</label><input id="email" type="email" autocomplete="email" placeholder="The email address this link was sent to"></div>
+      <div class="f" id="track-wrap"><label for="track">Your training track</label>
+        <select id="track"><option value="">Select your track</option><option value="ramp">Ramp Operations</option><option value="cs">Customer Service – International Sectors</option></select></div>
+      <button class="btn btn-red" id="btn-register" style="width:100%">Register &amp; Open Dashboard →</button>
+      <div class="msg" id="start-msg"></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="v-dash" class="hidden">
+    <div class="dhead">
+      <div><span class="eyebrow" style="color:var(--red)">Assessment Dashboard</span><h2 id="d-hello">Welcome</h2><p id="d-meta"></p></div>
+      <button class="btn btn-line btn-sm" id="btn-signout" type="button">Sign out</button>
+    </div>
+    <div class="pad">
+      <div class="acard">
+        <div class="atop"><div><small>ASSESSMENT 2</small><h3 id="a-title">Audio Session Assessment</h3></div><span class="status" id="a-status">Not started</span></div>
+        <div class="facts"><div><b>100</b>Questions</div><div><b>50</b>Audio sessions</div><div><b>3 hrs</b>Duration</div><div><b>70%</b>Pass mark</div></div>
+        <div class="abody">
+          <ul class="rules">
+            <li>There are <b>50 audio sessions</b>. Press <b>▶ Play audio</b> to listen to each short 3-line story, then answer its <b>2 multiple-choice questions</b>.</li>
+            <li>Each audio can be played <b>up to 2 times</b>. Please turn your volume up and use earphones if possible.</li>
+            <li>You have <b>3 hours</b>. The timer starts when you press Start and does not stop; the assessment submits automatically when time runs out.</li>
+            <li>Choose <b>one</b> answer per question. You can move back and forth before submitting.</li>
+            <li>After submitting, your scorecard appears here, your result PDF downloads, and the result is emailed to Nextasy automatically.</li>
+          </ul>
+          <div class="note">📌 This assessment will be evaluated for your <b>final submission</b>. Please attempt it honestly and on your own.</div>
+          <button class="btn btn-red" id="btn-start" style="width:100%">Start Assessment 2 →</button>
+        </div>
+      </div>
+      <div class="acard" style="margin-top:18px;">
+        <div class="atop"><div><small>MY SCORECARD</small><h3>Results</h3></div></div>
+        <div class="abody" id="scorecard"><p class="empty">No results yet. Your scorecard will appear here after you submit Assessment 2.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="v-quiz" class="hidden">
+    <div class="prog"><i id="prog"></i></div>
+    <div class="qtop"><div class="meta">Session <b id="s-no">1</b> of 50 · Answered <b id="ans-no">0</b>/100</div><div class="meta">⏱ Time left <b id="clock">3:00:00</b></div></div>
+    <div class="pad">
+      <div class="story"><small id="story-label">Scenario 1</small><div class="play"><button class="btn btn-red" id="btn-play" type="button">▶ Play audio</button><span id="plays">2 plays left</span></div><p id="story" class="hidden"></p></div>
+      <div id="qs"></div>
+      <div class="nav">
+        <button class="btn btn-line" id="btn-prev">← Previous</button>
+        <button class="btn btn-red" id="btn-next">Next →</button>
+      </div>
+      <div class="dots" id="dots"></div>
+      <div class="msg" id="quiz-msg"></div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="v-result" class="hidden">
+    <div class="pad res">
+      <span class="eyebrow" style="color:var(--red)">Assessment 2 · Result</span>
+      <h2 style="color:var(--navy);margin-top:6px;" id="r-name"></h2>
+      <div class="ring" id="ring"><b id="r-pct">0%</b><span id="r-score">0 / 100</span></div>
+      <span class="badge" id="r-badge"></span>
+      <div class="grid">
+        <div>Track<b id="r-track"></b></div><div>Correct<b id="r-correct"></b></div><div>Time taken<b id="r-time"></b></div><div>Result ID<b id="r-id"></b></div>
+      </div>
+      <div class="row">
+        <button class="btn btn-red" id="btn-pdf">Download Result PDF</button>
+        <button class="btn btn-line" id="btn-dash" type="button">Back to Dashboard</button>
+      </div>
+      <p class="sent" id="r-sent">Sending your result to Nextasy…</p>
+    </div>
+  </div>
+</div>
+
+<footer>Nextasy Academy · Nextasy Aviation Consulting Pvt. Ltd. · dispatch@nextasy.biz</footer>
+
+<script>
+const FORM_URL = 'https://formspree.io/f/xwlkboly';
+const NQ = 100, NS = 50, DURATION = 3*60*60*1000, MAXPLAYS = 2, PASS = 70;
+const TRACKS = { ramp: { name:'Ramp Operations', bank: (window.A2_RAMP || []).slice(0, NS) }, cs: { name:'Customer Service – International Sectors', bank: (window.A2_CS || []).slice(0, NS) } };
+const $ = id => document.getElementById(id);
+const store = { get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } }, set(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} } };
+const TTS = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+let S = null, timer = null, speaking = false;
+
+const qp = new URLSearchParams(location.search);
+const preTrack = qp.get('track');
+if (preTrack && TRACKS[preTrack]) { $('track').value = preTrack; $('track-wrap').classList.add('hidden'); }
+if (qp.get('name')) $('name').value = qp.get('name');
+if (qp.get('email')) $('email').value = qp.get('email');
+let U = store.get('nx-assess-user');
+if (U && (!preTrack || preTrack === U.track)) { dashboard(); }
+
+function key(){ return 'nx-a2c-' + S.track + '-' + S.email.toLowerCase(); }
+function save(){ store.set(key(), S); }
+function attemptOf(u){ return store.get('nx-a2c-' + u.track + '-' + u.email.toLowerCase()); }
+
+$('btn-register').addEventListener('click', async () => {
+  const track = $('track').value, name = $('name').value.trim(), email = $('email').value.trim();
+  const m = $('start-msg'); m.textContent = '';
+  if (name.length < 2) { m.textContent = 'Please enter your full name.'; $('name').focus(); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { m.textContent = 'Please enter a valid email ID.'; $('email').focus(); return; }
+  if (!TRACKS[track]) { m.textContent = 'Please select your training track.'; return; }
+  U = { name, email, track, reg: Date.now() }; store.set('nx-assess-user', U);
+  try {
+    const fd = new FormData(); fd.append('Form', 'Assessment Dashboard Registration'); fd.append('Name', name); fd.append('Email', email); fd.append('Track', TRACKS[track].name);
+    fd.append('_subject', 'Assessment registration: ' + name + ' (' + TRACKS[track].name + ')');
+    fetch(FORM_URL, { method:'POST', body:fd, headers:{ 'Accept':'application/json' } }).catch(() => {});
+  } catch (e) {}
+  dashboard();
+});
+$('btn-signout').addEventListener('click', () => { try { localStorage.removeItem('nx-assess-user'); } catch(e){} U = null; S = null; clearInterval(timer); stopAudio(); $('name').value = ''; $('email').value = ''; show('v-start'); });
+$('btn-dash').addEventListener('click', () => dashboard());
+
+function dashboard(){
+  clearInterval(timer); stopAudio();
+  const t = TRACKS[U.track]; setTitle(U.track);
+  $('h-title').textContent = 'Assessment Dashboard'; $('pill').textContent = t.name;
+  $('d-hello').textContent = 'Welcome, ' + U.name;
+  $('d-meta').textContent = U.email + ' · ' + t.name;
+  $('a-title').textContent = 'Audio Session Assessment · ' + t.name;
+  const a = attemptOf(U), st = $('a-status'), b = $('btn-start'), sc = $('scorecard');
+  if (!a) { st.textContent = 'Not started'; st.className = 'status'; b.disabled = false; b.textContent = 'Start Assessment 2 →'; }
+  else if (!a.done) {
+    const left = DURATION - (Date.now() - a.start);
+    if (left <= 0) { S = a; finish(true); return; }
+    st.textContent = 'In progress · ' + fmt(left) + ' left'; st.className = 'status prog'; b.disabled = false; b.textContent = 'Resume Assessment 2 →';
+  } else { st.textContent = 'Completed'; st.className = 'status done'; b.disabled = true; b.textContent = '✓ Assessment 2 submitted'; }
+  if (a && a.done) {
+    S = a; const g = grade(), col = g.pass ? '#1e8e5a' : '#c8102e';
+    sc.innerHTML = '';
+    const wrap = document.createElement('div'); wrap.className = 'sc';
+    const big = document.createElement('div'); big.className = 'big'; big.style.color = col; big.textContent = g.pct + '%';
+    const det = document.createElement('div'); det.className = 'det';
+    det.innerHTML = '<b>Assessment 2 – ' + t.name + '</b><br>Score: <b>' + g.correct + ' / ' + NQ + '</b> · Result: <b style="color:' + col + '">' + (g.pass ? 'PASSED' : 'NOT PASSED') + '</b><br>Submitted: ' + new Date(a.end).toLocaleString('en-IN', { timeZone:'Asia/Kolkata' }) + ' IST · Time taken: ' + fmt(a.end - a.start) + '<br>Result ID: ' + a.rid + (a.sent ? ' · ✓ Sent to Nextasy' : '');
+    const btns = document.createElement('div'); btns.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;';
+    const pdf = document.createElement('button'); pdf.className = 'btn btn-red btn-sm'; pdf.textContent = 'Download Scorecard PDF'; pdf.addEventListener('click', () => { S = a; makePdf(); });
+    const view = document.createElement('button'); view.className = 'btn btn-line btn-sm'; view.textContent = 'View Scorecard'; view.addEventListener('click', () => { S = a; showResult(false); });
+    btns.appendChild(pdf); btns.appendChild(view);
+    wrap.appendChild(big); wrap.appendChild(det); wrap.appendChild(btns); sc.appendChild(wrap);
+  } else { sc.innerHTML = '<p class="empty">No results yet. Your scorecard will appear here after you submit Assessment 2.</p>'; }
+  show('v-dash');
+}
+
+$('btn-start').addEventListener('click', () => {
+  const saved = attemptOf(U);
+  if (saved) { S = saved; S.name = U.name; }
+  else { S = { track: U.track, name: U.name, email: U.email, ans: {}, plays: {}, cur: 0, start: Date.now(), done: false }; }
+  if (S.done) { dashboard(); return; }
+  if (Date.now() - S.start >= DURATION) { finish(true); return; }
+  if (TTS) { try { speechSynthesis.getVoices(); } catch(e){} }
+  setTitle(S.track); save(); show('v-quiz'); render(); tick(); clearInterval(timer); timer = setInterval(tick, 1000);
+});
+
+function setTitle(t){ if (!TRACKS[t]) return; $('h-title').textContent = 'Assessment 2 · ' + TRACKS[t].name; $('pill').textContent = TRACKS[t].name; }
+function show(v){ ['v-start','v-dash','v-quiz','v-result'].forEach(x => $(x).classList.toggle('hidden', x !== v)); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+function bank(){ return TRACKS[S.track].bank; }
+function answered(){ return Object.keys(S.ans).length; }
+function fmt(ms){ ms = Math.max(0, ms); const s = Math.floor(ms/1000), h = Math.floor(s/3600), mm = Math.floor(s%3600/60), ss = s%60, p = n => String(n).padStart(2,'0'); return (h ? h + ':' : '') + p(mm) + ':' + p(ss); }
+function tick(){
+  if (!S || S.done) return;
+  const left = DURATION - (Date.now() - S.start);
+  $('clock').textContent = fmt(left); $('clock').style.color = left < 5*60*1000 ? '#c8102e' : '';
+  if (left <= 0) { stopAudio(); alert('Time is up! Your assessment will now be submitted.'); finish(true); }
+}
+
+function pickVoice(){
+  const vs = speechSynthesis.getVoices() || [];
+  return vs.find(v => /en[-_]IN/i.test(v.lang)) || vs.find(v => /en[-_]GB/i.test(v.lang)) || vs.find(v => /^en/i.test(v.lang)) || null;
+}
+function stopAudio(){ if (TTS) { try { speechSynthesis.cancel(); } catch(e){} } speaking = false; }
+function updatePlay(){
+  const i = S.cur, used = S.plays[i] || 0, left = MAXPLAYS - used, b = $('btn-play');
+  if (!TTS) { b.classList.add('hidden'); $('plays').textContent = 'Audio is not supported on this browser – please read the story below.'; $('story').classList.remove('hidden'); return; }
+  if (speaking) { b.innerHTML = '<span class="eq"><i></i><i></i><i></i></span>&nbsp; Playing…'; b.disabled = true; }
+  else { b.textContent = used ? '↻ Replay audio' : '▶ Play audio'; b.disabled = left <= 0; }
+  $('plays').textContent = left > 0 ? left + (left === 1 ? ' play left' : ' plays left') : 'No plays left';
+  $('plays').classList.toggle('low', left <= 0);
+}
+$('btn-play').addEventListener('click', () => {
+  const i = S.cur; if ((S.plays[i] || 0) >= MAXPLAYS || speaking) return;
+  S.plays[i] = (S.plays[i] || 0) + 1; save();
+  stopAudio();
+  const u = new SpeechSynthesisUtterance('Session ' + (i + 1) + '. ' + bank()[i].s);
+  const v = pickVoice(); if (v) u.voice = v; u.lang = v ? v.lang : 'en-IN'; u.rate = 0.92; u.pitch = 1;
+  u.onend = u.onerror = () => { speaking = false; updatePlay(); };
+  speaking = true; updatePlay(); speechSynthesis.speak(u);
+  const est = (u.text.split(' ').length / 2.2 + 4) * 1000; const tk = S.cur; setTimeout(() => { if (speaking && S.cur === tk) { speaking = false; updatePlay(); } }, est);
+});
+
+function render(){
+  stopAudio();
+  const b = bank(), i = S.cur, sc = b[i];
+  $('s-no').textContent = i + 1; $('story-label').textContent = 'Audio session ' + (i + 1); $('story').textContent = sc.s;
+  updatePlay();
+  const wrap = $('qs'); wrap.innerHTML = '';
+  sc.qs.forEach((q, k) => {
+    const n = i*2 + k + 1, d = document.createElement('div'); d.className = 'q';
+    const h = document.createElement('h3'); const sp = document.createElement('span'); sp.textContent = 'Q' + n + '.'; h.appendChild(sp); h.appendChild(document.createTextNode(q.q)); d.appendChild(h);
+    q.o.forEach((o, j) => {
+      const l = document.createElement('label'); l.className = 'opt' + (S.ans[n] === j ? ' sel' : '');
+      const r = document.createElement('input'); r.type = 'radio'; r.name = 'q' + n; r.checked = S.ans[n] === j;
+      r.addEventListener('change', () => { S.ans[n] = j; save(); [...d.querySelectorAll('.opt')].forEach((el, x) => el.classList.toggle('sel', x === j)); refreshNav(); });
+      const bb = document.createElement('b'); bb.textContent = 'ABCD'[j] + '.';
+      const t = document.createElement('span'); t.textContent = o;
+      l.appendChild(r); l.appendChild(bb); l.appendChild(t); d.appendChild(l);
+    });
+    wrap.appendChild(d);
+  });
+  $('btn-prev').disabled = i === 0;
+  $('btn-next').textContent = i === b.length - 1 ? 'Submit Assessment ✓' : 'Next →';
+  refreshNav(); $('quiz-msg').textContent = '';
+}
+function refreshNav(){
+  const b = bank(), i = S.cur;
+  $('ans-no').textContent = answered(); $('prog').style.width = (answered() / NQ * 100) + '%';
+  const dots = $('dots'); dots.innerHTML = '';
+  b.forEach((_, x) => { const c = (S.ans[x*2+1] !== undefined) + (S.ans[x*2+2] !== undefined);
+    const bt = document.createElement('button'); bt.textContent = x + 1; bt.title = 'Scenario ' + (x + 1);
+    bt.className = (c === 2 ? 'done' : c === 1 ? 'half' : '') + (x === i ? ' cur' : '');
+    bt.addEventListener('click', () => { S.cur = x; save(); render(); window.scrollTo({ top: 0 }); }); dots.appendChild(bt); });
+}
+$('btn-prev').addEventListener('click', () => { if (S.cur > 0) { S.cur--; save(); render(); window.scrollTo({ top: 0 }); } });
+$('btn-next').addEventListener('click', () => {
+  if (S.cur < bank().length - 1) { S.cur++; save(); render(); window.scrollTo({ top: 0 }); return; }
+  const left = NQ - answered();
+  if (left > 0) {
+    const first = [...Array(NQ).keys()].map(x => x + 1).find(n => S.ans[n] === undefined);
+    if (!confirm(left + ' question(s) are not answered (first: Q' + first + '). Unanswered questions score zero. Submit anyway?')) return;
+  } else if (!confirm('Submit your assessment now? You cannot change your answers after submitting.')) return;
+  finish(false);
+});
+
+function grade(){
+  const b = bank(); let correct = 0; const wrong = [], rows = [];
+  b.forEach((sc, i) => sc.qs.forEach((q, k) => { const n = i*2 + k + 1, a = S.ans[n], ok = a === q.a; if (ok) correct++; else wrong.push(n); rows.push({ n, a, c: q.a, ok }); }));
+  const pct = Math.round(correct / NQ * 100);
+  return { correct, pct, pass: pct >= PASS, wrong, rows };
+}
+function finish(timeUp){
+  if (S.done) return;
+  stopAudio(); S.done = true; S.timeUp = !!timeUp; S.end = Math.min(Date.now(), S.start + DURATION);
+  const d = new Date(), p = n => String(n).padStart(2,'0');
+  S.rid = 'A2-' + (S.track === 'ramp' ? 'RO' : 'CS') + '-' + d.getFullYear() + p(d.getMonth()+1) + p(d.getDate()) + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
+  clearInterval(timer); save(); showResult(true);
+}
+async function showResult(fresh){
+  const g = grade(); show('v-result');
+  $('r-name').textContent = S.name; $('r-pct').textContent = g.pct + '%'; $('r-score').textContent = g.correct + ' / ' + NQ;
+  $('ring').style.background = 'conic-gradient(' + (g.pass ? '#1e8e5a' : '#c8102e') + ' ' + (g.pct*3.6) + 'deg, #e6ecf5 0)';
+  $('r-badge').textContent = g.pass ? 'PASSED' : 'NOT PASSED'; $('r-badge').className = 'badge ' + (g.pass ? 'pass' : 'fail');
+  $('r-track').textContent = TRACKS[S.track].name; $('r-correct').textContent = g.correct + ' of ' + NQ;
+  $('r-time').textContent = fmt(S.end - S.start) + (S.timeUp ? ' (time up)' : ''); $('r-id').textContent = S.rid;
+  if (fresh) { makePdf(); }
+  if (S.sent) { $('r-sent').textContent = '✓ Your result has been sent to Nextasy (dispatch@nextasy.biz).'; return; }
+  try {
+    const fd = new FormData();
+    fd.append('Form', 'Assessment 2 Result'); fd.append('Result ID', S.rid); fd.append('Name', S.name); fd.append('Email', S.email);
+    fd.append('Track', TRACKS[S.track].name); fd.append('Score', g.correct + ' / ' + NQ + ' (' + g.pct + '%)'); fd.append('Result', g.pass ? 'PASSED' : 'NOT PASSED');
+    fd.append('Answered', answered() + ' / ' + NQ); fd.append('Time taken', fmt(S.end - S.start) + (S.timeUp ? ' (auto-submitted, time up)' : ''));
+    fd.append('Incorrect / unanswered questions', g.wrong.join(', ') || 'None');
+    fd.append('Submitted at', new Date(S.end).toLocaleString('en-IN', { timeZone:'Asia/Kolkata' }) + ' IST');
+    fd.append('_subject', 'Assessment 2 Result: ' + S.name + ' – ' + g.correct + '/' + NQ + ' (' + TRACKS[S.track].name + ')');
+    const r = await fetch(FORM_URL, { method:'POST', body:fd, headers:{ 'Accept':'application/json' } });
+    if (!r.ok) throw new Error('send');
+    S.sent = true; save(); $('r-sent').textContent = '✓ Your result has been sent to Nextasy (dispatch@nextasy.biz).';
+  } catch (e) {
+    $('r-sent').innerHTML = 'We could not send your result automatically. Please email the downloaded PDF to <a href="mailto:dispatch@nextasy.biz" style="color:#1d4ed8">dispatch@nextasy.biz</a>.';
+  }
+}
+$('btn-pdf').addEventListener('click', makePdf);
+
+function makePdf(){
+  if (!window.jspdf) { alert('PDF tool is still loading – please try again in a moment.'); return; }
+  const g = grade(), { jsPDF } = window.jspdf, doc = new jsPDF({ unit:'mm', format:'a4' });
+  const navy=[11,42,91], red=[200,16,46], grey=[74,90,112], green=[30,142,90];
+  doc.setFillColor(...navy); doc.rect(0,0,210,30,'F'); doc.setFillColor(...red); doc.rect(0,30,210,2,'F');
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.text('NEXTASY', 15, 15);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.text('ACADEMY  ·  NEXTASY AVIATION CONSULTING PVT. LTD.', 15, 21);
+  doc.setFontSize(9); doc.text('dispatch@nextasy.biz', 195, 15, { align:'right' }); doc.text('nextasy.biz', 195, 21, { align:'right' });
+  doc.setTextColor(...navy); doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.text('Assessment 2 – Result Certificate', 15, 46);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...grey); doc.text(TRACKS[S.track].name + '  ·  Audio session assessment', 15, 52);
+  const rows = [['Candidate', S.name], ['Email ID', S.email], ['Track', TRACKS[S.track].name], ['Result ID', S.rid], ['Submitted', new Date(S.end).toLocaleString('en-IN', { timeZone:'Asia/Kolkata' }) + ' IST'], ['Time taken', fmt(S.end - S.start) + (S.timeUp ? ' (time up)' : '') + ' of 3:00:00'], ['Questions answered', answered() + ' of ' + NQ]];
+  let y = 62; doc.setFontSize(10);
+  rows.forEach((r,i) => { if (i%2===0){ doc.setFillColor(242,245,250); doc.rect(15,y-5.2,110,8.2,'F'); }
+    doc.setTextColor(...grey); doc.setFont('helvetica','normal'); doc.text(r[0], 18, y);
+    doc.setTextColor(11,31,58); doc.setFont('helvetica','bold'); doc.text(doc.splitTextToSize(String(r[1]), 62), 60, y); y += 8.2; });
+  const c = g.pass ? green : red;
+  doc.setDrawColor(...c); doc.setLineWidth(1.2); doc.circle(162, 82, 22);
+  doc.setTextColor(...c); doc.setFont('helvetica','bold'); doc.setFontSize(24); doc.text(g.pct + '%', 162, 84, { align:'center' });
+  doc.setFontSize(9); doc.setTextColor(...grey); doc.setFont('helvetica','normal'); doc.text(g.correct + ' / ' + NQ + ' correct', 162, 91, { align:'center' });
+  doc.setFillColor(...c); doc.roundedRect(140, 108, 44, 9, 2, 2, 'F'); doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(10);
+  doc.text(g.pass ? 'PASSED' : 'NOT PASSED', 162, 114, { align:'center' });
+  y = Math.max(y, 122) + 6;
+  doc.setTextColor(...navy); doc.setFont('helvetica','bold'); doc.setFontSize(11.5); doc.text('Answer summary', 15, y); y += 4;
+  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...grey); doc.text('Green = correct · Red = incorrect · Grey = not answered. Letters show your answer.', 15, y + 4); y += 9;
+  const cw = 18, ch = 7.6;
+  g.rows.forEach((r, idx) => { const col = idx % 10, row = Math.floor(idx / 10), x = 15 + col*cw, yy = y + row*ch;
+    if (r.a === undefined) doc.setFillColor(225,230,238); else if (r.ok) doc.setFillColor(222,244,232); else doc.setFillColor(252,228,231);
+    doc.rect(x, yy, cw - 1.2, ch - 1.2, 'F');
+    doc.setFontSize(7.5); doc.setTextColor(11,31,58); doc.setFont('helvetica','bold'); doc.text('Q' + r.n, x + 1.5, yy + 4.6);
+    doc.setFont('helvetica','normal'); doc.setTextColor(...(r.a === undefined ? grey : r.ok ? green : red)); doc.text(r.a === undefined ? '-' : 'ABCD'[r.a], x + cw - 4.5, yy + 4.6); });
+  y += Math.ceil(NQ/10)*ch + 8;
+  doc.setDrawColor(...red); doc.setLineWidth(.5); doc.line(15, y, 195, y); y += 6;
+  doc.setFontSize(8.8); doc.setTextColor(40,50,65);
+  doc.text(doc.splitTextToSize('Pass mark: 70%. Duration: 3 hours. This assessment will be evaluated for the candidate’s final submission. The result has been recorded by Nextasy Academy; please keep this PDF for your records.', 180), 15, y);
+  doc.setFontSize(7.5); doc.setTextColor(140); doc.text('Nextasy Academy · Nextasy Aviation Consulting Pvt. Ltd. · nextasy.biz · dispatch@nextasy.biz', 105, 288, { align:'center' });
+  doc.save('Nextasy-Assessment2-' + S.name.replace(/[^A-Za-z0-9]+/g,'-') + '.pdf');
+}
+</script>
+</body>
+</html>
