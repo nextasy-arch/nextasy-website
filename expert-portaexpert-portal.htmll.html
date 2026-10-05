@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expert Portal | Nextasy Academy</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{ --red:#c8102e; --red-dark:#a30d25; --blue:#1d4ed8; --navy:#0b2a5b; --navy-deep:#061633; --text:#0b1f3a; --muted:#4a5a70; --line:#dde5ef; --soft:#f2f5fa; --ok:#0f8a4a; --amber:#b7791f; }
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{ font-family:'Inter',system-ui,sans-serif; color:var(--text); background:var(--soft); line-height:1.55; -webkit-font-smoothing:antialiased; }
+h1,h2,h3,h4{ font-family:'Poppins',sans-serif; line-height:1.2; color:var(--navy); }
+a{ color:inherit; text-decoration:none; }
+.wrap{ max-width:1180px; margin:0 auto; padding:0 28px; }
+@media (max-width:720px){ .wrap{ padding:0 16px; } }
+header{ background:#fff; border-bottom:3px solid var(--red); position:sticky; top:0; z-index:20; }
+.nav{ display:flex; align-items:center; justify-content:space-between; padding-top:14px; padding-bottom:14px; gap:12px; }
+.logo{ display:flex; flex-direction:column; line-height:1.05; }
+.logo b{ font-family:'Poppins',sans-serif; color:var(--navy); letter-spacing:.06em; font-size:1.05rem; }
+.logo span{ font-size:.56rem; letter-spacing:.24em; color:var(--blue); margin-top:3px; }
+.who{ display:flex; align-items:center; gap:12px; font-size:.85rem; color:var(--muted); }
+.btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; border:2px solid transparent; border-radius:8px; padding:11px 20px; font-weight:600; font-size:.9rem; cursor:pointer; font-family:inherit; transition:background .2s, transform .2s; }
+.btn-red{ background:var(--red); color:#fff; } .btn-red:hover{ background:var(--red-dark); }
+.btn-blue{ background:var(--navy); color:#fff; } .btn-blue:hover{ background:var(--blue); }
+.btn-line{ border-color:var(--navy); color:var(--navy); background:#fff; } .btn-line:hover{ background:var(--navy); color:#fff; }
+.btn-sm{ padding:7px 13px; font-size:.8rem; }
+.btn[disabled]{ opacity:.55; cursor:not-allowed; }
+.hide{ display:none !important; }
+
+/* login */
+.login{ min-height:calc(100vh - 70px); display:grid; place-items:center; padding:40px 16px; background:radial-gradient(ellipse at 85% 10%, rgba(29,78,216,.12), transparent 55%), radial-gradient(ellipse at 5% 95%, rgba(200,16,46,.10), transparent 50%), #fff; }
+.card{ background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:0 20px 50px -30px rgba(11,42,91,.45); }
+.login .card{ width:100%; max-width:420px; padding:30px; }
+.eyebrow{ color:var(--red); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; font-weight:600; }
+.f{ margin-top:14px; }
+.f label{ display:block; font-size:.78rem; font-weight:600; color:var(--navy); margin-bottom:5px; }
+.f label small{ font-weight:400; color:var(--muted); }
+.f input, .f textarea, .f select{ width:100%; border:1.5px solid var(--line); border-radius:8px; padding:10px 12px; font:inherit; font-size:.92rem; color:var(--text); background:#fff; }
+.f textarea{ resize:vertical; min-height:90px; }
+.f textarea.big{ min-height:320px; }
+.f input:focus, .f textarea:focus{ outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(29,78,216,.12); }
+.err{ color:var(--red); font-size:.82rem; margin-top:10px; min-height:1.2em; }
+
+/* dashboard */
+.dash{ padding:28px 0 60px; }
+.task{ display:grid; grid-template-columns:1.3fr 1fr; gap:0; overflow:hidden; }
+@media (max-width:860px){ .task{ grid-template-columns:1fr; } }
+.task-main{ padding:24px 26px; }
+.task-side{ background:var(--navy); color:#fff; padding:24px 26px; }
+.task-side h4{ color:#fff; font-size:.95rem; }
+.stats{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+.stats div{ background:rgba(255,255,255,.08); border-radius:10px; padding:12px; }
+.stats b{ display:block; font-family:'Poppins',sans-serif; font-size:1.35rem; }
+.stats span{ font-size:.74rem; color:#c9d6ea; }
+.bar{ height:10px; background:rgba(255,255,255,.18); border-radius:6px; margin-top:16px; overflow:hidden; }
+.bar i{ display:block; height:100%; background:#ffc857; width:0; transition:width .4s; }
+.pill{ display:inline-block; font-size:.72rem; font-weight:600; padding:3px 10px; border-radius:999px; }
+.p-new{ background:#eef3ff; color:var(--blue); } .p-draft{ background:#fff4df; color:var(--amber); } .p-done{ background:#e7f6ee; color:var(--ok); }
+.std{ margin-top:14px; font-size:.86rem; color:var(--muted); }
+.std li{ margin:4px 0 0 18px; }
+.layout{ display:grid; grid-template-columns:290px 1fr; gap:20px; margin-top:20px; align-items:start; }
+@media (max-width:900px){ .layout{ grid-template-columns:1fr; } }
+.units{ padding:10px; position:sticky; top:84px; }
+.units h4{ font-size:.9rem; padding:8px 10px; }
+.u{ display:flex; gap:10px; align-items:flex-start; padding:10px; border-radius:10px; cursor:pointer; border:1.5px solid transparent; }
+.u:hover{ background:var(--soft); }
+.u.on{ border-color:var(--red); background:#fff6f7; }
+.u .n{ flex:0 0 26px; height:26px; border-radius:50%; background:var(--soft); color:var(--navy); font-weight:700; font-size:.78rem; display:grid; place-items:center; }
+.u.done .n{ background:var(--ok); color:#fff; }
+.u.draft .n{ background:#ffc857; color:#3a2a00; }
+.u b{ display:block; font-size:.84rem; color:var(--navy); font-weight:600; }
+.u small{ font-size:.72rem; color:var(--muted); }
+.editor{ padding:24px 26px; }
+.ed-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; }
+.guide{ background:var(--soft); border-left:4px solid var(--blue); border-radius:8px; padding:12px 14px; font-size:.84rem; color:var(--muted); margin-top:14px; }
+.guide b{ color:var(--navy); }
+.row2{ display:grid; grid-template-columns:2fr 1fr; gap:12px; }
+@media (max-width:560px){ .row2{ grid-template-columns:1fr; } }
+.wc{ font-size:.74rem; color:var(--muted); text-align:right; margin-top:3px; }
+.wc.ok{ color:var(--ok); }
+.actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:20px; align-items:center; }
+.saved{ font-size:.8rem; color:var(--muted); }
+.toast{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--navy); color:#fff; padding:12px 20px; border-radius:10px; font-size:.88rem; box-shadow:0 10px 30px rgba(0,0,0,.25); z-index:50; opacity:0; transition:opacity .3s; pointer-events:none; }
+.toast.show{ opacity:1; }
+footer{ text-align:center; font-size:.78rem; color:var(--muted); padding:20px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="index.html" class="logo"><b>NEXTASY</b><span>ACADEMY · EXPERT PORTAL</span></a>
+    <div class="who hide" id="who"><span id="whoName"></span><button class="btn btn-line btn-sm" id="logout">Log out</button></div>
+  </div>
+</header>
+
+<!-- LOGIN -->
+<section class="login" id="vLogin">
+  <form class="card" id="loginForm" autocomplete="on">
+    <div class="eyebrow">✈ Nextasy Academy</div>
+    <h2 style="margin-top:8px;font-size:1.5rem;">Industry Expert Login</h2>
+    <p style="color:var(--muted);font-size:.88rem;margin-top:6px;">Sign in to view your assigned tasks and prepare your course notes.</p>
+    <div class="f"><label>Login ID (your email)</label><input name="email" type="email" autocomplete="username" required></div>
+    <div class="f"><label>Password</label><input name="password" type="password" autocomplete="current-password" required></div>
+    <div class="err" id="loginErr"></div>
+    <button class="btn btn-red" style="width:100%;margin-top:6px;" type="submit">Log in →</button>
+    <p style="font-size:.76rem;color:var(--muted);margin-top:14px;text-align:center;">Need help? Write to <a href="mailto:dispatch@nextasy.biz" style="color:var(--blue);">dispatch@nextasy.biz</a></p>
+  </form>
+</section>
+
+<!-- DASHBOARD -->
+<section class="dash hide" id="vDash">
+  <div class="wrap">
+    <div class="card task">
+      <div class="task-main">
+        <div class="eyebrow">Assigned task · Subject notes preparation</div>
+        <div class="f" style="margin-top:10px;"><label>Subject title <small>(you may refine it)</small></label><input id="subjectTitle" maxlength="120"></div>
+        <p style="margin-top:12px;font-size:.9rem;color:var(--muted);">Prepare complete teaching notes for a <b style="color:var(--navy)">30-hour</b> certification course, organised as <b style="color:var(--navy)">10 units of 3 hours</b> each. Notes must meet an international standard so they can be used with students across India and abroad.</p>
+        <ul class="std">
+          <li>Align content with <b>ICAO</b> and <b>IATA</b> concepts and terminology; add Indian context (DGCA, AAI) where useful.</li>
+          <li>Original writing only. Cite every source (APA style). No copied text from books or websites.</li>
+          <li>Clear, simple English suitable for undergraduate students.</li>
+          <li>Each unit: learning outcomes, detailed notes (min. 1,500 words), key terms, a case study, review questions and references.</li>
+        </ul>
+      </div>
+      <div class="task-side">
+        <h4>Your progress</h4>
+        <div class="stats">
+          <div><b>30 hrs</b><span>Course duration</span></div>
+          <div><b>10</b><span>Units × 3 hrs</span></div>
+          <div><b id="stDone">0/10</b><span>Units submitted</span></div>
+          <div><b id="stWords">0</b><span>Words written</span></div>
+        </div>
+        <div class="bar"><i id="bar"></i></div>
+        <p style="font-size:.78rem;color:#c9d6ea;margin-top:10px;">Your work is saved automatically on this device. Press <b style="color:#fff">Submit unit</b> to send each finished unit to the Nextasy team.</p>
+        <div style="margin-top:14px;background:rgba(255,200,87,.14);border:1px solid rgba(255,200,87,.5);border-radius:10px;padding:10px 12px;">
+          <div style="font-size:.72rem;letter-spacing:.12em;color:#ffc857;font-weight:600;">⏳ DEADLINE · 3 DAYS</div>
+          <div style="font-weight:600;margin-top:2px;" id="dueTxt">Thursday, 8 October 2026</div>
+          <div style="font-size:.78rem;color:#c9d6ea;" id="dueLeft"></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+          <button class="btn btn-red btn-sm" id="pdfAll">⬇ Download final PDF</button>
+          <button class="btn btn-sm" style="background:#fff;color:var(--navy);" id="mailPdf">✉ Email PDF to Nextasy</button>
+        </div>
+        <p style="font-size:.74rem;color:#c9d6ea;margin-top:8px;">When all 10 units are ready: download the final PDF, then email it (as an attachment) to <b style="color:#fff">dispatch@nextasy.biz</b>.</p>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="card units" id="unitList"><h4>Course units</h4></aside>
+
+      <div class="card editor">
+        <div class="ed-head">
+          <div><div class="eyebrow" id="edEyebrow">Unit 1 · 3 hours</div><h3 id="edTitle" style="margin-top:4px;font-size:1.25rem;"></h3></div>
+          <span class="pill p-new" id="edStatus">Not started</span>
+        </div>
+        <div class="guide" id="edGuide"></div>
+
+        <div class="row2">
+          <div class="f"><label>Unit title</label><input id="fTitle" maxlength="140"></div>
+          <div class="f"><label>Teaching hours</label><input id="fHours" type="number" min="1" max="10" step="0.5"></div>
+        </div>
+        <div class="f"><label>Learning outcomes <small>(3–5, one per line, start with a verb: Explain, Identify, Compare…)</small></label><textarea id="fOutcomes"></textarea></div>
+        <div class="f"><label>Detailed notes <small>(minimum 1,500 words · start a line with # for a heading and - for a bullet point)</small></label><textarea id="fNotes" class="big"></textarea><div class="wc" id="wcNotes">0 words</div></div>
+        <div class="f"><label>Key terms &amp; definitions <small>(one per line: Term – meaning)</small></label><textarea id="fTerms"></textarea></div>
+        <div class="f"><label>Case study / real-world example</label><textarea id="fCase"></textarea></div>
+        <div class="f"><label>Review questions <small>(5 MCQs with answers + 2 descriptive questions)</small></label><textarea id="fQs" style="min-height:140px;"></textarea></div>
+        <div class="f"><label>References <small>(APA style — ICAO documents, IATA, textbooks, journals)</small></label><textarea id="fRefs"></textarea></div>
+
+        <div class="actions">
+          <button class="btn btn-line" id="prevU">← Previous</button>
+          <button class="btn btn-blue" id="saveU">Save draft</button>
+          <button class="btn btn-red" id="submitU">Submit unit ✓</button>
+          <button class="btn btn-line" id="nextU">Next →</button>
+          <span class="saved" id="savedAt"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>© Nextasy Aviation Consulting Pvt. Ltd. · Expert Portal · <a href="mailto:dispatch@nextasy.biz">dispatch@nextasy.biz</a></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var FORM_URL = 'https://formspree.io/f/xwlkboly';
+  /* expert accounts: email -> name + SHA-256 of password */
+  var EXPERTS = {
+    'dr31shabana@gmail.com': { name: 'Shabana Rahman', pw: 'bcb15f821479b4d5772bd0ca866c00ad5f926e3580720659cc80d39c9d09802a',
+      subject: 'Introduction to Aviation Management', due: '2026-10-08T23:59:00+05:30' }
+  };
+  var UNITS = [
+    ['The Aviation Industry: Evolution and Structure', 'History of aviation, growth of commercial air transport, key stakeholders (airlines, airports, ANSPs, OEMs, regulators), the aviation value chain, India in the global market.'],
+    ['Aviation Regulation and International Bodies', 'Chicago Convention 1944, freedoms of the air, ICAO and its Annexes, IATA, bilateral air service agreements, DGCA, AAI, BCAS and MoCA in India.'],
+    ['Airline Business Models and Management', 'Full-service, low-cost, hybrid and regional carriers; alliances and codeshares; fleet and network planning; airline organisation structure.'],
+    ['Airport Management and Operations', 'Airport ownership models (incl. PPP), airside and landside, terminal operations, aeronautical vs non-aeronautical revenue, airport capacity.'],
+    ['Air Navigation and Air Traffic Management', 'Airspace classes, ATC services, CNS/ATM, PBN, slot coordination, role of AAI as ANSP, Global Air Navigation Plan.'],
+    ['Aviation Safety and Security Management', 'ICAO Annex 19 and Safety Management Systems, risk management, accident investigation (Annex 13), Annex 17 security, BCAS screening.'],
+    ['Airline Commercial Management', 'Pricing and revenue management, distribution (GDS, NDC), loyalty programmes, ancillary revenue, airline marketing.'],
+    ['Ground Handling and Air Cargo', 'Passenger and ramp handling, turnaround process, IATA AHM, cargo and dangerous goods basics, e-freight.'],
+    ['Aviation Economics, Finance and Sustainability', 'Cost structure (CASK, RASK), load factor and yield, aircraft leasing, fuel management, CORSIA, SAF and net-zero 2050.'],
+    ['Customer Experience, Human Factors and Careers', 'Passenger experience and service quality, human factors (SHELL model, CRM), soft skills, career pathways in aviation management.']
+  ];
+  var me = null, data = null, cur = 0;
+  var $ = function(id){ return document.getElementById(id); };
+  function toast(t){ var e = $('toast'); e.textContent = t; e.classList.add('show'); setTimeout(function(){ e.classList.remove('show'); }, 2600); }
+  function key(){ return 'nx-expert-notes-' + me.email; }
+  function words(s){ s = (s || '').trim(); return s ? s.split(/\s+/).length : 0; }
+  function sha(t){ return crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)).then(function(b){ return Array.from(new Uint8Array(b)).map(function(x){ return ('0' + x.toString(16)).slice(-2); }).join(''); }); }
+
+  function load(){
+    try { data = JSON.parse(localStorage.getItem(key()) || 'null'); } catch(e){ data = null; }
+    if (!data){ data = { subject: me.subject, units: UNITS.map(function(u){ return { title: u[0], hours: 3, outcomes: '', notes: '', terms: '', cs: '', qs: '', refs: '', status: 'new', saved: '' }; }) }; }
+  }
+  function persist(){ try { localStorage.setItem(key(), JSON.stringify(data)); } catch(e){} }
+
+  /* login */
+  $('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var em = this.email.value.trim().toLowerCase(), pw = this.password.value;
+    var acc = EXPERTS[em];
+    sha(pw).then(function(h){
+      if (!acc || acc.pw !== h){ $('loginErr').textContent = 'Incorrect login ID or password. Please check your welcome email.'; return; }
+      try { sessionStorage.setItem('nx-expert', em); } catch(err){}
+      start(em);
+    });
+  });
+  $('logout').addEventListener('click', function(){ save(true); try { sessionStorage.removeItem('nx-expert'); } catch(e){} location.reload(); });
+
+  function start(em){
+    me = { email: em, name: EXPERTS[em].name, subject: EXPERTS[em].subject };
+    load();
+    $('vLogin').classList.add('hide'); $('vDash').classList.remove('hide'); $('who').classList.remove('hide');
+    $('whoName').textContent = me.name;
+    $('subjectTitle').value = data.subject;
+    renderList(); open(firstOpen()); due();
+  }
+  function due(){
+    var d = new Date(EXPERTS[me.email].due), ms = d - new Date();
+    $('dueTxt').textContent = d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + ', 11:59 PM';
+    if (ms <= 0){ $('dueLeft').textContent = 'Deadline reached – please submit your PDF now.'; return; }
+    var h = Math.floor(ms / 3600000); $('dueLeft').textContent = Math.floor(h / 24) + ' days ' + (h % 24) + ' hrs left';
+  }
+  function firstOpen(){ for (var i = 0; i < data.units.length; i++){ if (data.units[i].status !== 'done') return i; } return 0; }
+
+  function renderList(){
+    var box = $('unitList'); box.innerHTML = '<h4>Course units</h4>';
+    data.units.forEach(function(u, i){
+      var d = document.createElement('div');
+      d.className = 'u' + (i === cur ? ' on' : '') + (u.status === 'done' ? ' done' : u.status === 'draft' ? ' draft' : '');
+      d.innerHTML = '<span class="n">' + (u.status === 'done' ? '✓' : (i + 1)) + '</span><div><b></b><small>' + u.hours + ' hrs · ' + (u.status === 'done' ? 'Submitted' : u.status === 'draft' ? 'Draft · ' + words(u.notes) + ' words' : 'Not started') + '</small></div>';
+      d.querySelector('b').textContent = 'Unit ' + (i + 1) + ': ' + u.title;
+      d.addEventListener('click', function(){ save(true); open(i); });
+      box.appendChild(d);
+    });
+    var done = data.units.filter(function(u){ return u.status === 'done'; }).length;
+    var w = data.units.reduce(function(a, u){ return a + words(u.notes); }, 0);
+    $('stDone').textContent = done + '/10'; $('stWords').textContent = w.toLocaleString('en-IN');
+    $('bar').style.width = (done * 10) + '%';
+  }
+  var F = { fTitle: 'title', fHours: 'hours', fOutcomes: 'outcomes', fNotes: 'notes', fTerms: 'terms', fCase: 'cs', fQs: 'qs', fRefs: 'refs' };
+  function open(i){
+    cur = i; var u = data.units[i];
+    Object.keys(F).forEach(function(id){ $(id).value = u[F[id]]; });
+    $('edEyebrow').textContent = 'Unit ' + (i + 1) + ' of 10 · ' + u.hours + ' hours';
+    $('edTitle').textContent = u.title;
+    $('edGuide').innerHTML = '<b>Suggested coverage:</b> ' + UNITS[i][1];
+    var st = $('edStatus');
+    st.className = 'pill ' + (u.status === 'done' ? 'p-done' : u.status === 'draft' ? 'p-draft' : 'p-new');
+    st.textContent = u.status === 'done' ? 'Submitted' : u.status === 'draft' ? 'Draft' : 'Not started';
+    $('savedAt').textContent = u.saved ? 'Last saved ' + u.saved : '';
+    $('prevU').disabled = i === 0; $('nextU').disabled = i === 9;
+    wc(); renderList();
+    if (window.innerWidth < 900) $('edTitle').scrollIntoView({ behavior: 'smooth' });
+  }
+  function collect(){
+    var u = data.units[cur];
+    Object.keys(F).forEach(function(id){ u[F[id]] = id === 'fHours' ? (parseFloat($(id).value) || 3) : $(id).value; });
+    return u;
+  }
+  function save(quiet){
+    if (!me) return;
+    var u = collect();
+    data.subject = $('subjectTitle').value.trim() || me.subject;
+    var has = (u.outcomes + u.notes + u.terms + u.cs + u.qs + u.refs).trim();
+    if (u.status !== 'done' && has) u.status = 'draft';
+    u.saved = new Date().toLocaleString('en-IN');
+    persist(); renderList();
+    $('savedAt').textContent = 'Last saved ' + u.saved;
+    if (!quiet) toast('Draft saved on this device');
+  }
+  function wc(){ var n = words($('fNotes').value); var e = $('wcNotes'); e.textContent = n.toLocaleString('en-IN') + ' words' + (n >= 1500 ? ' ✓' : ' (minimum 1,500)'); e.className = 'wc' + (n >= 1500 ? ' ok' : ''); }
+  $('fNotes').addEventListener('input', wc);
+  $('fTitle').addEventListener('input', function(){ $('edTitle').textContent = this.value; });
+  var timer; document.querySelectorAll('.editor input, .editor textarea, #subjectTitle').forEach(function(el){
+    el.addEventListener('input', function(){ clearTimeout(timer); timer = setTimeout(function(){ save(true); }, 1500); });
+  });
+  $('saveU').addEventListener('click', function(){ save(false); });
+  $('prevU').addEventListener('click', function(){ save(true); if (cur > 0) open(cur - 1); });
+  $('nextU').addEventListener('click', function(){ save(true); if (cur < 9) open(cur + 1); });
+
+  $('submitU').addEventListener('click', function(){
+    var u = collect(), miss = [];
+    if (u.title.trim().length < 3) miss.push('unit title');
+    if (u.outcomes.trim().split('\n').filter(Boolean).length < 3) miss.push('at least 3 learning outcomes');
+    if (words(u.notes) < 1500) miss.push('detailed notes (1,500+ words)');
+    if (!u.terms.trim()) miss.push('key terms');
+    if (!u.qs.trim()) miss.push('review questions');
+    if (!u.refs.trim()) miss.push('references');
+    if (miss.length){ toast('Please complete: ' + miss.join(', ')); save(true); return; }
+    var b = this; b.disabled = true; b.textContent = 'Submitting…';
+    var payload = {
+      _subject: 'Course Notes – Unit ' + (cur + 1) + ' – ' + data.subject + ' – ' + me.name,
+      _replyto: me.email, 'Form': 'Expert Portal – Notes Submission', 'Expert': me.name, 'Expert Email': me.email,
+      'Subject Title': $('subjectTitle').value.trim() || me.subject, 'Unit': (cur + 1) + ' of 10 – ' + u.title, 'Teaching Hours': u.hours,
+      'Learning Outcomes': u.outcomes, 'Detailed Notes': u.notes, 'Word Count': words(u.notes), 'Key Terms': u.terms,
+      'Case Study': u.cs || '-', 'Review Questions': u.qs, 'References': u.refs, 'Submitted At': new Date().toLocaleString('en-IN')
+    };
+    fetch(FORM_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload) })
+      .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(){ u.status = 'done'; save(true); open(cur); toast('Unit ' + (cur + 1) + ' submitted to Nextasy ✓'); })
+      .catch(function(){ toast('Could not submit. Your draft is saved — please check your internet and try again.'); })
+      .then(function(){ b.disabled = false; b.textContent = 'Submit unit ✓'; });
+  });
+
+  /* ===== final notes PDF (designed) ===== */
+  function buildPdf(){
+    var J = window.jspdf.jsPDF, doc = new J({ unit: 'mm', format: 'a4' });
+    var W = 210, H = 297, M = 20, CW = W - 2 * M, y = 0, pageStarts = [];
+    var NAVY = [11, 42, 91], RED = [200, 16, 46], INK = [33, 45, 66], MUTED = [107, 122, 144], SOFT = [242, 245, 250];
+    var subject = ($('subjectTitle').value || data.subject).trim();
+    function col(c){ doc.setTextColor(c[0], c[1], c[2]); }
+    function fill(c){ doc.setFillColor(c[0], c[1], c[2]); }
+    function band(){
+      fill(NAVY); doc.rect(0, 0, W, 11, 'F'); fill(RED); doc.rect(0, 11, W, 0.9, 'F');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(255, 255, 255); doc.text('NEXTASY ACADEMY', M, 7.2);
+      doc.setFont('helvetica', 'normal'); doc.text(subject, W - M, 7.2, { align: 'right' }); y = 22;
+    }
+    function newPage(){ doc.addPage(); band(); }
+    function need(h){ if (y + h > H - 18) newPage(); }
+    /* write wrapped text; opts: size, style, color, indent, bullet, accent (left bar colour), bg */
+    function write(t, o){
+      o = o || {}; var size = o.size || 10.5, lh = size * 0.47, ind = o.indent || 0;
+      doc.setFont('helvetica', o.style || 'normal'); doc.setFontSize(size);
+      var lines = doc.splitTextToSize(String(t), CW - ind - (o.accent ? 6 : 0) - (o.bullet ? 5 : 0));
+      lines.forEach(function(l, k){
+        need(lh + 1);
+        if (o.bg){ fill(o.bg); doc.rect(M, y - lh + 0.6, CW, lh + 0.9, 'F'); }
+        if (o.accent){ fill(o.accent); doc.rect(M, y - lh + 0.6, 1.3, lh + 0.9, 'F'); }
+        var x = M + ind + (o.accent ? 6 : 0);
+        if (o.bullet && k === 0){ col(o.bulletColor || RED); doc.setFont('helvetica', 'bold'); doc.text(o.bullet, x, y); doc.setFont('helvetica', o.style || 'normal'); }
+        col(o.color || INK); doc.text(l, x + (o.bullet ? 5 : 0), y); y += lh;
+      });
+    }
+    function gap(h){ y += h; }
+    function heading(t){
+      need(16); gap(3); doc.setFont('helvetica', 'bold'); doc.setFontSize(12); col(NAVY); doc.text(t.toUpperCase(), M, y);
+      fill(RED); doc.rect(M, y + 1.8, 14, 0.8, 'F'); y += 8;
+    }
+    function lines(s){ return String(s || '').split('\n').map(function(x){ return x.trim(); }).filter(Boolean); }
+
+    /* cover */
+    fill(NAVY); doc.rect(0, 0, W, 150, 'F'); fill(RED); doc.rect(0, 150, W, 3, 'F');
+    doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold'); doc.setFontSize(16); doc.text('NEXTASY', M, 28);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(156, 195, 255); doc.text('ACADEMY  ·  AVIATION CONSULTING PVT. LTD.', M, 34);
+    doc.setFontSize(9); doc.setTextColor(255, 138, 154); doc.setFont('helvetica', 'bold'); doc.text('CERTIFICATION PROGRAMME  ·  COURSE NOTES', M, 92);
+    doc.setTextColor(255, 255, 255); doc.setFontSize(26); y = 106;
+    doc.splitTextToSize(subject, CW).forEach(function(l){ doc.text(l, M, y); y += 11; });
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(11); doc.setTextColor(201, 214, 234); doc.text('30 teaching hours  ·  10 units  ·  International standard (ICAO / IATA aligned)', M, y + 4);
+    y = 178;
+    [['Prepared by', me.name + ', Industry Expert'], ['Programme', 'Nextasy Academy Certification Programmes'], ['Version', 'Final submission  ·  ' + new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })]].forEach(function(r){
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9); col(MUTED); doc.text(r[0].toUpperCase(), M, y);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(12); col(NAVY); doc.text(r[1], M, y + 6); y += 18;
+    });
+    fill(SOFT); doc.rect(0, H - 22, W, 22, 'F');
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); col(MUTED);
+    doc.text('dispatch@nextasy.biz  |  nextasy.biz  |  For academic use by Nextasy Academy', W / 2, H - 10, { align: 'center' });
+
+    /* units */
+    data.units.forEach(function(u, i){
+      newPage(); pageStarts.push(doc.internal.getNumberOfPages());
+      fill(SOFT); doc.roundedRect(M, y - 4, CW, 30, 2, 2, 'F'); fill(RED); doc.rect(M, y - 4, 2, 30, 'F');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(9); col(RED); doc.text('UNIT ' + (i + 1) + '  ·  ' + u.hours + ' HOURS', M + 7, y + 3);
+      doc.setFontSize(17); col(NAVY); var tl = doc.splitTextToSize(u.title, CW - 14); doc.text(tl.slice(0, 2), M + 7, y + 12); y += 34;
+
+      heading('Learning outcomes');
+      write('By the end of this unit, learners will be able to:', { size: 10, style: 'italic', color: MUTED }); gap(1.5);
+      lines(u.outcomes).forEach(function(l, k){ write(l, { bullet: (k + 1) + '.', bulletColor: RED }); gap(1); });
+
+      heading('Notes');
+      lines(u.notes).forEach(function(l){
+        if (/^#{1,3}\s/.test(l)){ need(12); gap(2); write(l.replace(/^#+\s*/, ''), { size: 11.5, style: 'bold', color: NAVY }); gap(1.5); }
+        else if (/^[-•*]\s/.test(l)){ write(l.replace(/^[-•*]\s*/, ''), { bullet: '•', indent: 3 }); gap(0.8); }
+        else { write(l); gap(2.5); }
+      });
+
+      if (lines(u.terms).length){
+        heading('Key terms');
+        lines(u.terms).forEach(function(l){
+          var p = l.split(/\s[–-]\s|:\s/); var term = p.shift(), def = p.join(' – ');
+          need(10); doc.setFont('helvetica', 'bold'); doc.setFontSize(10.5); col(NAVY); doc.text(term, M + 2, y);
+          if (def){ y += 4.8; write(def, { indent: 2, color: INK, size: 10 }); } else { y += 4.8; }
+          gap(1.5);
+        });
+      }
+      if (u.cs.trim()){
+        heading('Case study');
+        lines(u.cs).forEach(function(l){ write(l, { accent: [255, 200, 87], bg: [255, 248, 230] }); });
+        gap(2);
+      }
+      heading('Review questions');
+      lines(u.qs).forEach(function(l){
+        if (/^\(?[a-dA-D][\).]\s/.test(l)){ write(l, { indent: 8, size: 10 }); }
+        else { gap(1); write(l, { style: /^(\d+[\.\)]|Q\d)/.test(l) ? 'bold' : 'normal', color: NAVY }); }
+        gap(0.6);
+      });
+      heading('References');
+      lines(u.refs).forEach(function(l){ write(l, { size: 9.5, color: MUTED }); gap(1); });
+    });
+
+    /* contents page (inserted after cover) */
+    doc.insertPage(2); doc.setPage(2); band();
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(20); col(NAVY); doc.text('Contents', M, y + 4); fill(RED); doc.rect(M, y + 8, 18, 1, 'F'); y += 22;
+    data.units.forEach(function(u, i){
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(10); col(RED); doc.text('UNIT ' + (i + 1), M, y);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(11); col(INK); doc.text(doc.splitTextToSize(u.title, 118)[0], M + 22, y);
+      col(MUTED); doc.setFontSize(9.5); doc.text(u.hours + ' hrs', W - M - 16, y, { align: 'right' });
+      doc.setFont('helvetica', 'bold'); col(NAVY); doc.text(String(pageStarts[i] + 1), W - M, y, { align: 'right' });
+      doc.setDrawColor(221, 229, 239); doc.line(M, y + 3.5, W - M, y + 3.5); y += 12;
+    });
+    y += 6; fill(SOFT); doc.roundedRect(M, y, CW, 22, 2, 2, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); col(NAVY); doc.text('Total teaching time: ' + data.units.reduce(function(a, u){ return a + (+u.hours || 0); }, 0) + ' hours', M + 6, y + 9);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); col(MUTED); doc.text('Each unit includes learning outcomes, notes, key terms, a case study, review questions and references.', M + 6, y + 16);
+
+    /* footers */
+    var n = doc.internal.getNumberOfPages();
+    for (var p = 2; p <= n; p++){
+      doc.setPage(p); doc.setDrawColor(221, 229, 239); doc.line(M, H - 13, W - M, H - 13);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8); col(MUTED);
+      doc.text('Prepared by ' + me.name + '  ·  Nextasy Academy', M, H - 8);
+      doc.text('Page ' + p + ' of ' + n, W - M, H - 8, { align: 'right' });
+    }
+    return doc;
+  }
+  function pdfName(){ return 'Nextasy-Course-Notes-' + (($('subjectTitle').value || data.subject).replace(/[^A-Za-z0-9]+/g, '-')) + '-' + me.name.replace(/\s+/g, '-') + '.pdf'; }
+  $('pdfAll').addEventListener('click', function(){
+    save(true);
+    if (!window.jspdf){ toast('PDF tool is still loading, please try again.'); return; }
+    buildPdf().save(pdfName());
+    toast('PDF downloaded. Now email it to dispatch@nextasy.biz');
+  });
+  $('mailPdf').addEventListener('click', function(){
+    var sub = 'Course Notes – ' + (($('subjectTitle').value || data.subject).trim()) + ' – ' + me.name;
+    var body = 'Dear Nextasy Team,\n\nPlease find attached the final course notes for ' + (($('subjectTitle').value || data.subject).trim()) + ' (30 hours, 10 units).\n\nFile: ' + pdfName() + '\n\nRegards,\n' + me.name;
+    location.href = 'mailto:dispatch@nextasy.biz?subject=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(body);
+  });
+
+  /* auto sign-in within the same browser session */
+  try { var s = sessionStorage.getItem('nx-expert'); if (s && EXPERTS[s]) start(s); } catch(e){}
+  try { var q = new URLSearchParams(location.search).get('id'); if (q) document.querySelector('#loginForm [name=email]').value = q; } catch(e){}
+  window.addEventListener('beforeunload', function(){ save(true); });
+})();
+</script>
+</body>
+</html>
