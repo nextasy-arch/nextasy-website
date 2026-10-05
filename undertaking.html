@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Candidate Undertaking | Nextasy Academy</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{ --red:#c8102e; --red-dark:#a30d25; --blue:#1d4ed8; --navy:#0b2a5b; --text:#0b1f3a; --muted:#4a5a70; --line:#dde5ef; --soft:#f2f5fa; --ok:#0f8a4a; }
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{ font-family:'Inter',system-ui,sans-serif; color:var(--text); background:var(--soft); line-height:1.55; -webkit-font-smoothing:antialiased; }
+h1,h2,h3,h4{ font-family:'Poppins',sans-serif; line-height:1.2; color:var(--navy); }
+a{ color:inherit; }
+.wrap{ max-width:880px; margin:0 auto; padding:0 24px; }
+@media (max-width:720px){ .wrap{ padding:0 16px; } }
+header{ background:#fff; border-bottom:3px solid var(--red); }
+.nav{ display:flex; align-items:center; justify-content:space-between; padding-top:14px; padding-bottom:14px; }
+.logo{ display:flex; flex-direction:column; line-height:1.05; text-decoration:none; }
+.logo b{ font-family:'Poppins',sans-serif; color:var(--navy); letter-spacing:.06em; font-size:1.05rem; }
+.logo span{ font-size:.56rem; letter-spacing:.24em; color:var(--blue); margin-top:3px; }
+.hero{ background:var(--navy); color:#fff; padding:30px 0 26px; border-bottom:4px solid var(--red); }
+.hero h1{ color:#fff; font-size:clamp(1.5rem,3.5vw,2.1rem); margin-top:6px; }
+.hero p{ color:#c9d6ea; margin-top:8px; font-size:.95rem; }
+.eyebrow{ color:#ff8a9a; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; font-weight:600; }
+.card{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:24px 26px; margin-top:20px; box-shadow:0 18px 40px -30px rgba(11,42,91,.45); }
+.card h3{ font-size:1.05rem; }
+.step{ display:inline-grid; place-items:center; width:26px; height:26px; border-radius:50%; background:var(--red); color:#fff; font-size:.8rem; font-weight:700; margin-right:8px; }
+.grid2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media (max-width:600px){ .grid2{ grid-template-columns:1fr; } }
+.f{ margin-top:12px; }
+.f label{ display:block; font-size:.78rem; font-weight:600; color:var(--navy); margin-bottom:5px; }
+.f input{ width:100%; border:1.5px solid var(--line); border-radius:8px; padding:10px 12px; font:inherit; font-size:.92rem; }
+.f input:focus{ outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(29,78,216,.12); }
+.f input[readonly]{ background:var(--soft); color:var(--muted); }
+.f.bad input{ border-color:var(--red); }
+.pts{ list-style:none; margin-top:14px; counter-reset:p; }
+.pts li{ display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--line); font-size:.9rem; color:#33425a; }
+.pts li:last-child{ border-bottom:0; }
+.pts .num{ flex:0 0 28px; height:28px; border-radius:8px; background:var(--soft); color:var(--navy); font-weight:700; display:grid; place-items:center; font-size:.85rem; }
+.pts b{ color:var(--navy); }
+.pts input{ width:18px; height:18px; accent-color:var(--red); margin-top:4px; flex:0 0 18px; }
+.agree-all{ display:flex; gap:10px; align-items:center; background:#fff6f7; border:1px dashed #e8a3ae; border-radius:10px; padding:12px 14px; margin-top:10px; font-size:.88rem; font-weight:600; color:var(--navy); }
+.agree-all input{ width:18px; height:18px; accent-color:var(--red); }
+.sigbox{ border:2px dashed #9fb3cc; border-radius:10px; background:#fbfcfe; position:relative; margin-top:10px; touch-action:none; }
+.sigbox canvas{ display:block; width:100%; height:180px; cursor:crosshair; }
+.sigbox .hint{ position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); text-align:center; color:#9fb3cc; font-size:.9rem; pointer-events:none; }
+.sigbox .line{ position:absolute; left:8%; right:8%; bottom:38px; border-bottom:1px solid #c9d6ea; pointer-events:none; }
+.row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px; }
+.btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; border:2px solid transparent; border-radius:8px; padding:12px 22px; font-weight:600; font-size:.92rem; cursor:pointer; font-family:inherit; text-decoration:none; }
+.btn-red{ background:var(--red); color:#fff; } .btn-red:hover{ background:var(--red-dark); }
+.btn-blue{ background:var(--navy); color:#fff; }
+.btn-line{ border-color:var(--navy); color:var(--navy); background:#fff; }
+.btn-sm{ padding:7px 14px; font-size:.8rem; }
+.btn[disabled]{ opacity:.55; cursor:not-allowed; }
+.err{ color:var(--red); font-size:.85rem; margin-top:10px; display:none; }
+.done{ text-align:center; }
+.tick{ width:64px; height:64px; border-radius:50%; background:#e7f6ee; color:var(--ok); display:grid; place-items:center; font-size:2rem; margin:0 auto 10px; }
+.next{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:18px; text-align:left; }
+@media (max-width:640px){ .next{ grid-template-columns:1fr; } }
+.next div{ background:var(--soft); border-radius:10px; padding:14px; font-size:.85rem; color:#33425a; }
+.next b{ display:block; color:var(--navy); margin-bottom:4px; }
+.hide{ display:none !important; }
+footer{ text-align:center; font-size:.78rem; color:var(--muted); padding:28px 16px; }
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><a href="index.html" class="logo"><b>NEXTASY</b><span>ACADEMY · AVIATION CONSULTING</span></a><span style="font-size:.8rem;color:var(--muted);">Candidate Undertaking</span></div></header>
+
+<section class="hero"><div class="wrap">
+  <div class="eyebrow">✈ Certificate issuance · Step 1 of 2</div>
+  <h1>Candidate Undertaking &amp; Declaration</h1>
+  <p id="heroTxt">Please read the 10 points below, agree, sign electronically and send the signed PDF to Nextasy. Your certificate will be emailed to you after we receive it.</p>
+</div></section>
+
+<main class="wrap" id="vForm">
+  <div class="card">
+    <h3><span class="step">1</span>Your details</h3>
+    <div class="grid2">
+      <div class="f"><label>Full name (as it should appear on the certificate) *</label><input id="name" maxlength="80" autocomplete="name"></div>
+      <div class="f"><label>Email ID *</label><input id="email" type="email" maxlength="120" autocomplete="email"></div>
+      <div class="f"><label>Mobile number *</label><input id="mobile" inputmode="numeric" maxlength="10" placeholder="10-digit mobile" autocomplete="tel-national"></div>
+      <div class="f"><label>Programme</label><input id="prog" readonly></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="step">2</span>Undertaking – 10 points</h3>
+    <p style="font-size:.86rem;color:var(--muted);margin-top:6px;">I, the undersigned candidate, hereby declare and undertake to Nextasy Aviation Consulting Pvt. Ltd. ("Nextasy") that:</p>
+    <ul class="pts" id="pts"></ul>
+    <label class="agree-all"><input type="checkbox" id="all"> I have read, understood and agree to all 10 points above.</label>
+  </div>
+
+  <div class="card">
+    <h3><span class="step">3</span>Electronic signature</h3>
+    <p style="font-size:.86rem;color:var(--muted);margin-top:6px;">Sign inside the box with your finger (phone) or mouse (laptop).</p>
+    <div class="sigbox" id="sigbox"><canvas id="sig"></canvas><div class="line"></div><div class="hint" id="hint">✍ Sign here</div></div>
+    <div class="row"><button class="btn btn-line btn-sm" id="clear" type="button">Clear signature</button><span style="font-size:.8rem;color:var(--muted);">Date: <b id="today"></b></span></div>
+    <p class="err" id="err"></p>
+    <div class="row" style="margin-top:18px;"><button class="btn btn-red" id="submit" type="button">Sign &amp; generate PDF →</button></div>
+  </div>
+</main>
+
+<main class="wrap hide" id="vDone">
+  <div class="card done">
+    <div class="tick">✓</div>
+    <h2 style="font-size:1.4rem;">Undertaking signed</h2>
+    <p style="color:var(--muted);margin-top:6px;">Reference: <b id="ref" style="color:var(--navy);"></b></p>
+    <div class="row" style="justify-content:center;margin-top:16px;">
+      <button class="btn btn-blue" id="dl" type="button">⬇ Download signed PDF</button>
+      <a class="btn btn-red" id="mail" href="#">✉ Email PDF to Nextasy</a>
+    </div>
+    <div class="next">
+      <div><b>1 · Download</b>Save your signed undertaking PDF.</div>
+      <div><b>2 · Email it</b>Attach the PDF and send it to <b style="display:inline;">dispatch@nextasy.biz</b>.</div>
+      <div><b>3 · Certificate</b>Once received, your certificate (JPG) is emailed to you.</div>
+    </div>
+  </div>
+</main>
+
+<footer>© Nextasy Aviation Consulting Pvt. Ltd. · <a href="mailto:dispatch@nextasy.biz">dispatch@nextasy.biz</a> · nextasy.biz</footer>
+
+<script>
+(function(){
+  var FORM_URL = 'https://formspree.io/f/xwlkboly';
+  var TRACKS = { ramp: 'Ramp Operations', cs: 'Customer Service – International Sectors' };
+  var q = new URLSearchParams(location.search);
+  var track = TRACKS[q.get('track')] ? q.get('track') : 'ramp';
+  var PROG = TRACKS[track] + ' – Professional Training Programme';
+  var POINTS = [
+    ['Accurate information', 'All details I have given to Nextasy are true and correct. Nextasy may verify them, and may cancel the certificate if any detail is found to be false.'],
+    ['Completion of training & assessments', 'I personally attended the ' + TRACKS[track] + ' training and completed both Assessment 1 and Assessment 2 myself, without impersonation, outside help or any unfair means.'],
+    ['Fees – fully paid & non-refundable', 'All programme fees have been fully paid by me. I understand the fees are non-refundable, and I have no claim of any kind for a refund. No dues are pending from me.'],
+    ['Purpose & nature of the certificate', 'The certificate is a Certificate of Completion for a private professional training programme conducted by Nextasy Aviation Consulting Pvt. Ltd. It is not a university degree or diploma, and not a licence, rating or approval from DGCA, ICAO, IATA or any government body.'],
+    ['No guarantee of employment', 'The certificate records my training only. It does not guarantee a job, placement or interview selection with any airline, airport or employer.'],
+    ['Proper use of the certificate', 'I will use the certificate only for genuine purposes such as my CV and job applications. I will not alter, edit, forge or misrepresent it. Any misuse allows Nextasy to cancel it.'],
+    ['Verification', 'I authorise Nextasy to confirm the authenticity and details of my certificate to any employer or institution that requests verification using the certificate number.'],
+    ['Intellectual property', 'All course materials, notes, audio sessions and assessments belong to Nextasy. I will not copy, record, share, upload or sell them.'],
+    ['Conduct & confidentiality', 'I will maintain professional conduct and will not disclose assessment questions or answers to anyone.'],
+    ['Consent, e-signature & jurisdiction', 'I consent to Nextasy keeping my details for records and certificate verification. I accept this undertaking electronically; my electronic signature has the same effect as my handwritten signature. This undertaking is governed by the laws of India, with courts at Chennai having jurisdiction.']
+  ];
+  var $ = function(id){ return document.getElementById(id); };
+  $('prog').value = PROG;
+  if (q.get('name')) $('name').value = q.get('name');
+  if (q.get('email')) $('email').value = q.get('email');
+  var today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+  $('today').textContent = today;
+  var ul = $('pts');
+  POINTS.forEach(function(p, i){
+    var li = document.createElement('li');
+    li.innerHTML = '<span class="num">' + (i + 1) + '</span><div><b></b><br><span></span></div>';
+    li.querySelector('b').textContent = p[0]; li.querySelector('div span').textContent = p[1];
+    ul.appendChild(li);
+  });
+  $('mobile').addEventListener('input', function(){ this.value = this.value.replace(/[^0-9]/g, ''); });
+
+  /* signature pad */
+  var cv = $('sig'), ctx = cv.getContext('2d'), drawing = false, inked = false, last = null;
+  function size(){ var r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1; var img = inked ? cv.toDataURL() : null;
+    cv.width = r.width * d; cv.height = r.height * d; ctx.setTransform(d, 0, 0, d, 0, 0); ctx.lineWidth = 2.4; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#0b1f3a';
+    if (img){ var im = new Image(); im.onload = function(){ ctx.drawImage(im, 0, 0, r.width, r.height); }; im.src = img; } }
+  size(); window.addEventListener('resize', size);
+  function pos(e){ var r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+  cv.addEventListener('pointerdown', function(e){ drawing = true; last = pos(e); cv.setPointerCapture(e.pointerId); $('hint').style.display = 'none'; });
+  cv.addEventListener('pointermove', function(e){ if (!drawing) return; var p = pos(e); ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); last = p; inked = true; });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(function(t){ cv.addEventListener(t, function(){ drawing = false; }); });
+  $('clear').addEventListener('click', function(){ ctx.clearRect(0, 0, cv.width, cv.height); inked = false; $('hint').style.display = ''; });
+
+  function sigImage(){ /* trimmed signature as PNG */
+    var w = cv.width, h = cv.height, d = ctx.getImageData(0, 0, w, h).data, x0 = w, y0 = h, x1 = 0, y1 = 0;
+    for (var y = 0; y < h; y++) for (var x = 0; x < w; x++){ if (d[(y * w + x) * 4 + 3] > 20){ if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } }
+    var pad = 8; x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(w, x1 + pad); y1 = Math.min(h, y1 + pad);
+    var c2 = document.createElement('canvas'); c2.width = x1 - x0; c2.height = y1 - y0; c2.getContext('2d').drawImage(cv, x0, y0, c2.width, c2.height, 0, 0, c2.width, c2.height);
+    return { url: c2.toDataURL('image/png'), w: c2.width, h: c2.height };
+  }
+
+  var rec = null;
+  $('submit').addEventListener('click', function(){
+    var err = $('err'), bad = [];
+    function chk(id, ok){ $(id).closest('.f').classList.toggle('bad', !ok); if (!ok) bad.push(id); }
+    chk('name', $('name').value.trim().length >= 3);
+    chk('email', /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test($('email').value.trim()));
+    chk('mobile', /^[6-9][0-9]{9}$/.test($('mobile').value));
+    var msg = [];
+    if (bad.length) msg.push('please fill your name, email and a valid 10-digit mobile number');
+    if (!$('all').checked) msg.push('tick the box to agree to all 10 points');
+    if (!inked) msg.push('add your signature');
+    if (msg.length){ err.textContent = 'Before continuing: ' + msg.join('; ') + '.'; err.style.display = 'block'; return; }
+    err.style.display = 'none';
+    var b = this; b.disabled = true; b.textContent = 'Saving…';
+    var now = new Date();
+    rec = { ref: 'NXU-' + (track === 'ramp' ? 'RO' : 'CS') + '-' + now.getFullYear() + ('0' + (now.getMonth() + 1)).slice(-2) + ('0' + now.getDate()).slice(-2) + '-' + Math.random().toString(36).slice(2, 6).toUpperCase(),
+      name: $('name').value.trim(), email: $('email').value.trim(), mobile: '+91 ' + $('mobile').value, prog: PROG,
+      when: now.toLocaleString('en-IN', { dateStyle: 'long', timeStyle: 'short' }), sig: sigImage() };
+    var payload = { _subject: 'Undertaking Signed – ' + rec.name + ' – ' + TRACKS[track] + ' (' + rec.ref + ')', _replyto: rec.email,
+      'Form': 'Candidate Undertaking', 'Reference': rec.ref, 'Name': rec.name, 'Email': rec.email, 'Mobile': rec.mobile, 'Programme': rec.prog,
+      'Agreed to': 'All 10 points', 'Signed at': rec.when, 'Browser': navigator.userAgent };
+    fetch(FORM_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload) })
+      .catch(function(){}).then(function(){
+        $('ref').textContent = rec.ref;
+        var sub = 'Signed Undertaking – ' + rec.name + ' – ' + TRACKS[track] + ' (' + rec.ref + ')';
+        var body = 'Dear Nextasy Team,\n\nPlease find attached my signed undertaking (' + rec.ref + ') for the ' + rec.prog + '.\n\nName: ' + rec.name + '\nMobile: ' + rec.mobile + '\n\nKindly issue my certificate.\n\nRegards,\n' + rec.name;
+        $('mail').href = 'mailto:dispatch@nextasy.biz?subject=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(body);
+        $('vForm').classList.add('hide'); $('vDone').classList.remove('hide'); window.scrollTo(0, 0);
+        pdf().save(fileName());
+      });
+  });
+  function fileName(){ return 'Nextasy-Undertaking-' + rec.name.replace(/[^A-Za-z0-9]+/g, '-') + '-' + rec.ref + '.pdf'; }
+  $('dl').addEventListener('click', function(){ if (rec) pdf().save(fileName()); });
+
+  function pdf(){
+    var doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' }), W = 210, H = 297, M = 18, y;
+    function band(){ doc.setFillColor(11, 42, 91); doc.rect(0, 0, W, 24, 'F'); doc.setFillColor(200, 16, 46); doc.rect(0, 24, W, 1.5, 'F');
+      doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold'); doc.setFontSize(15); doc.text('NEXTASY', M, 12);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(156, 195, 255); doc.text('AVIATION CONSULTING PVT. LTD.  ·  NEXTASY ACADEMY', M, 17.5);
+      doc.setFontSize(8.5); doc.setTextColor(201, 214, 234); doc.text('dispatch@nextasy.biz  |  nextasy.biz', W - M, 12, { align: 'right' }); doc.text('Ref: ' + rec.ref, W - M, 17.5, { align: 'right' }); }
+    band(); y = 38;
+    doc.setTextColor(11, 42, 91); doc.setFont('helvetica', 'bold'); doc.setFontSize(16); doc.text('CANDIDATE UNDERTAKING & DECLARATION', W / 2, y, { align: 'center' }); y += 9;
+    doc.setFillColor(242, 245, 250);
+    var info = [['Name', rec.name], ['Email', rec.email], ['Mobile', rec.mobile], ['Date', new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })], ['Programme', rec.prog]];
+    doc.roundedRect(M, y, W - 2 * M, 31, 2, 2, 'F'); doc.setFontSize(9);
+    info.forEach(function(r, i){ var cx = M + 5 + (i % 2) * 87, cy = y + 8 + Math.floor(i / 2) * 8.5;
+      doc.setFont('helvetica', 'normal'); doc.setTextColor(107, 122, 144); doc.text(r[0] + ':', cx, cy);
+      doc.setFont('helvetica', 'bold'); doc.setTextColor(11, 31, 58); doc.text(i === 4 ? r[1] : doc.splitTextToSize(r[1], 64)[0], cx + 19, cy); });
+    y += 38;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(51, 66, 90);
+    doc.text('I, the undersigned candidate, hereby declare and undertake to Nextasy Aviation Consulting Pvt. Ltd. that:', M, y); y += 7;
+    POINTS.forEach(function(p, i){
+      doc.setFillColor(200, 16, 46); doc.circle(M + 2.6, y - 1.2, 2.6, 'F'); doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.text(String(i + 1), M + 2.6, y - 0.1, { align: 'center' });
+      doc.setTextColor(11, 42, 91); doc.setFontSize(9.5); doc.text(p[0], M + 8, y);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8.6); doc.setTextColor(51, 66, 90);
+      var ls = doc.splitTextToSize(p[1], W - 2 * M - 8); doc.text(ls, M + 8, y + 4.2, { lineHeightFactor: 1.05 }); y += 4.2 + ls.length * 3.7 + 2.4;
+    });
+    y += 1; doc.setDrawColor(232, 163, 174); doc.setFillColor(255, 246, 247); doc.roundedRect(M, y, W - 2 * M, 9, 1.5, 1.5, 'FD');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(11, 42, 91); doc.text('[X]  I have read, understood and agree to all 10 points above.', M + 4, y + 5.8); y += 13;
+    var sw = 55, sh = Math.min(22, sw * rec.sig.h / rec.sig.w); sw = sh * rec.sig.w / rec.sig.h;
+    doc.addImage(rec.sig.url, 'PNG', M, y, sw, sh); doc.setDrawColor(11, 42, 91); doc.line(M, y + 24, M + 70, y + 24);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); doc.text(rec.name, M, y + 29);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(107, 122, 144); doc.text('Candidate e-signature', M, y + 33.5);
+    doc.setTextColor(51, 66, 90); doc.setFontSize(9);
+    doc.text('Signed electronically on: ' + rec.when, W - M, y + 24, { align: 'right' }); doc.text('Place: Online (nextasy.biz)', W - M, y + 29, { align: 'right' });
+    doc.setFillColor(11, 42, 91); doc.rect(0, H - 12, W, 12, 'F'); doc.setTextColor(201, 214, 234); doc.setFontSize(7.5);
+    doc.text('Please email this signed PDF to dispatch@nextasy.biz to receive your certificate.  ·  Nextasy Aviation Consulting Pvt. Ltd.', W / 2, H - 5, { align: 'center' });
+    return doc;
+  }
+})();
+</script>
+</body>
+</html>
