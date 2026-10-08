@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Booking Desk | Nextasy</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{ --red:#c8102e; --red-dark:#a30d25; --blue:#1d4ed8; --navy:#0b2a5b; --navy-deep:#061633; --text:#0b1f3a; --muted:#4a5a70; --line:#dde5ef; --soft:#f2f5fa; --ok:#0f8a4a; --amber:#b7791f; }
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{ font-family:'Inter',system-ui,sans-serif; color:var(--text); background:var(--soft); line-height:1.5; -webkit-font-smoothing:antialiased; }
+h1,h2,h3,h4{ font-family:'Poppins',sans-serif; color:var(--navy); line-height:1.2; }
+button,input,select,textarea{ font:inherit; }
+.wrap{ max-width:1240px; margin:0 auto; padding:0 24px; }
+@media (max-width:720px){ .wrap{ padding:0 14px; } }
+header{ background:#fff; border-bottom:3px solid var(--red); position:sticky; top:0; z-index:20; }
+.nav{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:12px; padding-bottom:12px; flex-wrap:wrap; }
+.logo b{ font-family:'Poppins',sans-serif; color:var(--navy); letter-spacing:.06em; font-size:1.05rem; display:block; line-height:1; }
+.logo span{ font-size:.56rem; letter-spacing:.24em; color:var(--blue); }
+.tids{ font-size:.78rem; color:var(--muted); background:var(--soft); border:1px solid var(--line); border-radius:999px; padding:5px 12px; }
+.tids b{ color:var(--navy); }
+.btn{ display:inline-flex; align-items:center; justify-content:center; gap:6px; border:2px solid transparent; border-radius:8px; padding:9px 16px; font-weight:600; font-size:.86rem; cursor:pointer; }
+.btn-red{ background:var(--red); color:#fff; } .btn-red:hover{ background:var(--red-dark); }
+.btn-navy{ background:var(--navy); color:#fff; } .btn-navy:hover{ background:var(--blue); }
+.btn-line{ background:#fff; border-color:var(--navy); color:var(--navy); } .btn-line:hover{ background:var(--navy); color:#fff; }
+.btn-sm{ padding:6px 11px; font-size:.78rem; }
+.hide{ display:none !important; }
+.card{ background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:0 18px 40px -32px rgba(11,42,91,.5); }
+.eyebrow{ color:var(--red); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; font-weight:600; }
+/* login */
+.login{ min-height:calc(100vh - 70px); display:grid; place-items:center; padding:30px 16px; background:radial-gradient(ellipse at 85% 10%, rgba(29,78,216,.12), transparent 55%), radial-gradient(ellipse at 5% 95%, rgba(200,16,46,.1), transparent 50%), #fff; }
+.login .card{ width:100%; max-width:400px; padding:28px; }
+.f{ margin-top:12px; }
+.f label{ display:block; font-size:.74rem; font-weight:600; color:var(--navy); margin-bottom:4px; }
+.f input,.f select,.f textarea{ width:100%; border:1.5px solid var(--line); border-radius:8px; padding:9px 11px; font-size:.9rem; background:#fff; color:var(--text); }
+.f input:focus,.f select:focus,.f textarea:focus{ outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(29,78,216,.12); }
+.err{ color:var(--red); font-size:.82rem; min-height:1.2em; margin-top:8px; }
+/* dashboard */
+main{ padding:22px 0 50px; }
+.stats{ display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+@media (max-width:900px){ .stats{ grid-template-columns:repeat(2,1fr); } }
+.stat{ padding:14px 16px; }
+.stat small{ font-size:.7rem; letter-spacing:.1em; color:var(--muted); font-weight:600; text-transform:uppercase; }
+.stat b{ display:block; font-family:'Poppins',sans-serif; font-size:1.45rem; color:var(--navy); margin-top:2px; }
+.chambers{ display:flex; gap:8px; flex-wrap:wrap; margin:20px 0 12px; align-items:center; }
+.chip{ border:1.5px solid var(--line); background:#fff; border-radius:999px; padding:6px 14px; font-size:.82rem; font-weight:600; color:var(--navy); cursor:pointer; }
+.chip.on{ background:var(--navy); border-color:var(--navy); color:#fff; }
+.chip i{ font-style:normal; opacity:.65; margin-left:4px; }
+.grid{ display:grid; grid-template-columns:1.05fr 1fr; gap:18px; align-items:start; }
+@media (max-width:1000px){ .grid{ grid-template-columns:1fr; } }
+.panel{ padding:20px 22px; }
+.panel h3{ font-size:1.05rem; }
+.row2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.row3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+.row4{ display:grid; grid-template-columns:1.1fr .9fr .9fr 1fr; gap:8px; }
+@media (max-width:560px){ .row2,.row3,.row4{ grid-template-columns:1fr 1fr; } }
+.seg{ border:1px solid var(--line); border-radius:10px; padding:10px 12px 12px; margin-top:12px; background:#fbfcfe; }
+.seg h5{ font-size:.74rem; letter-spacing:.12em; color:var(--red); font-family:'Inter',sans-serif; display:flex; justify-content:space-between; }
+.seg .f{ margin-top:8px; }
+table{ width:100%; border-collapse:collapse; font-size:.84rem; }
+th{ text-align:left; font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:8px 6px; border-bottom:2px solid var(--line); }
+td{ padding:9px 6px; border-bottom:1px solid var(--line); vertical-align:top; }
+tr.sel td{ background:#fff6f7; }
+tbody tr{ cursor:pointer; }
+tbody tr:hover td{ background:var(--soft); }
+.pill{ display:inline-block; font-size:.7rem; font-weight:600; padding:2px 9px; border-radius:999px; white-space:nowrap; }
+.s-enq{ background:#eef3ff; color:var(--blue); } .s-hold{ background:#fff4df; color:var(--amber); } .s-paid{ background:#e7f6ee; color:var(--ok); } .s-tkt{ background:var(--navy); color:#fff; } .s-cxl{ background:#fde8eb; color:var(--red); }
+.toolbar{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.toolbar input{ border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:.84rem; min-width:180px; }
+.preview{ margin-top:16px; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+.preview .bar{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between; background:var(--navy); color:#fff; padding:10px 12px; }
+.preview .bar select{ border-radius:6px; border:0; padding:6px 8px; font-size:.82rem; }
+#mailFrame{ width:100%; height:620px; border:0; background:#e9eef5; display:block; }
+.hint{ font-size:.76rem; color:var(--muted); margin-top:8px; }
+.toast{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--navy); color:#fff; padding:11px 18px; border-radius:10px; font-size:.86rem; opacity:0; transition:opacity .3s; pointer-events:none; z-index:60; }
+.toast.show{ opacity:1; }
+.empty{ text-align:center; color:var(--muted); padding:28px 10px; font-size:.88rem; }
+</style>
+</head>
+<body>
+<header><div class="wrap nav">
+  <div class="logo"><b>NEXTASY</b><span>BOOKING DESK</span></div>
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+    <span class="tids">IATA TIDS Agent Code: <b id="tidsShow">—</b></span>
+    <span id="who" class="hide" style="font-size:.8rem;color:var(--muted);"></span>
+    <button class="btn btn-line btn-sm hide" id="settingsBtn">Settings</button>
+    <button class="btn btn-line btn-sm hide" id="logout">Log out</button>
+  </div>
+</div></header>
+
+<!-- LOGIN -->
+<section class="login" id="vLogin"><form class="card" id="loginForm">
+  <div class="eyebrow">✈ Nextasy Booking Desk</div>
+  <h2 style="margin-top:6px;font-size:1.4rem;">Staff Login</h2>
+  <p style="font-size:.86rem;color:var(--muted);margin-top:4px;">Air ticket bookings, chambers and customer emails.</p>
+  <div class="f"><label>Email ID</label><input name="email" type="email" autocomplete="username" required></div>
+  <div class="f"><label>Password</label><input name="password" type="password" autocomplete="current-password" required></div>
+  <div class="err" id="loginErr"></div>
+  <button class="btn btn-red" style="width:100%;margin-top:4px;" type="submit">Log in →</button>
+</form></section>
+
+<!-- CHANGE PASSWORD -->
+<section class="login hide" id="vPw"><form class="card" id="pwForm">
+  <div class="eyebrow">First login</div>
+  <h2 style="margin-top:6px;font-size:1.3rem;">Set a new password</h2>
+  <p style="font-size:.84rem;color:var(--muted);margin-top:4px;">The temporary password must be changed before you continue.</p>
+  <div class="f"><label>New password (min. 8 characters)</label><input name="p1" type="password" autocomplete="new-password" required></div>
+  <div class="f"><label>Confirm new password</label><input name="p2" type="password" autocomplete="new-password" required></div>
+  <div class="err" id="pwErr"></div>
+  <button class="btn btn-red" style="width:100%;margin-top:4px;" type="submit">Save password →</button>
+</form></section>
+
+<!-- DASHBOARD -->
+<main class="wrap hide" id="vDash">
+  <div class="stats">
+    <div class="card stat"><small>Bookings</small><b id="stAll">0</b></div>
+    <div class="card stat"><small>Enquiries / on hold</small><b id="stOpen">0</b></div>
+    <div class="card stat"><small>Payment received</small><b id="stPaid">0</b></div>
+    <div class="card stat"><small>Ticketed</small><b id="stTkt">0</b></div>
+    <div class="card stat"><small>Amount received</small><b id="stAmt">₹0</b></div>
+  </div>
+
+  <div class="chambers" id="chambers"></div>
+
+  <div class="grid">
+    <!-- form -->
+    <div class="card panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+        <h3 id="formTitle">New booking</h3>
+        <button class="btn btn-line btn-sm" id="newBtn" type="button">+ New</button>
+      </div>
+      <form id="bk">
+        <div class="row2">
+          <div class="f"><label>Passenger / lead name *</label><input name="name" required></div>
+          <div class="f"><label>Chamber *</label><select name="chamber"></select></div>
+          <div class="f"><label>Email *</label><input name="email" type="email" required></div>
+          <div class="f"><label>Mobile</label><input name="phone"></div>
+        </div>
+        <div class="row3">
+          <div class="f"><label>Trip type</label><select name="trip"><option>Round trip</option><option>One way</option><option>Multi-city</option></select></div>
+          <div class="f"><label>Passengers</label><input name="pax" type="number" min="1" value="1"></div>
+          <div class="f"><label>Airline · class</label><input name="airline" placeholder="IndiGo · Economy"></div>
+        </div>
+        <div id="segs"></div>
+        <button class="btn btn-line btn-sm" type="button" id="addSeg" style="margin-top:8px;">+ Add flight</button>
+        <div class="row3">
+          <div class="f"><label>Amount received (₹)</label><input name="amount" type="number" min="0" step="1"></div>
+          <div class="f"><label>Payment ref. (UTR / UPI)</label><input name="payref"></div>
+          <div class="f"><label>Status</label><select name="status"><option>Enquiry</option><option>On hold</option><option>Payment received</option><option>Ticketed</option><option>Cancelled</option></select></div>
+        </div>
+        <div class="row2">
+          <div class="f"><label>PNR (after ticketing)</label><input name="pnr"></div>
+          <div class="f"><label>Ticketing within</label><input name="tktTime" value="6–8 hours"></div>
+        </div>
+        <div class="f"><label>Journey notes / value-added services (one per line)</label><textarea name="notes" rows="3" placeholder="e.g. 15 kg check-in + 7 kg cabin baggage&#10;Web check-in opens 48 hrs before departure"></textarea></div>
+        <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;">
+          <button class="btn btn-red" type="submit">Save booking</button>
+          <button class="btn btn-line" type="button" id="delBtn">Delete</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- list + email -->
+    <div>
+      <div class="card panel">
+        <div class="toolbar"><h3>Bookings</h3><div style="display:flex;gap:6px;flex-wrap:wrap;"><input id="q" placeholder="Search name, PNR, flight…"><button class="btn btn-line btn-sm" id="csv">Export CSV</button></div></div>
+        <div style="overflow-x:auto;"><table><thead><tr><th>Ref</th><th>Passenger</th><th>Journey</th><th>Chamber</th><th>Status</th><th style="text-align:right;">₹</th></tr></thead><tbody id="list"></tbody></table></div>
+        <div class="empty" id="empty">No bookings yet. Add one with the form.</div>
+      </div>
+      <div class="card preview hide" id="pv">
+        <div class="bar"><span style="font-weight:600;font-size:.88rem;">Customer email</span>
+          <span style="display:flex;gap:6px;flex-wrap:wrap;">
+            <select id="tpl"><option value="paid">Payment received</option><option value="hold">Booking on hold</option><option value="tkt">E-ticket issued</option></select>
+            <button class="btn btn-red btn-sm" id="copyMail">① Copy email</button>
+            <button class="btn btn-sm" style="background:#fff;color:var(--navy);" id="openGmail">② Open Gmail</button>
+          </span></div>
+        <iframe id="mailFrame" title="Email preview"></iframe>
+      </div>
+      <p class="hint">To send: <b>① Copy email</b>, then <b>② Open Gmail</b> (opens a new message to the customer with the subject filled). Choose <b>dispatch@nextasy.biz</b> in "From", paste (Ctrl/⌘+V) into the body and send. Bookings are saved in this browser only – use <b>Export CSV</b> for a backup.</p>
+    </div>
+  </div>
+</main>
+
+<!-- settings -->
+<section class="login hide" id="vSet" style="min-height:auto;position:fixed;inset:0;background:rgba(6,22,51,.55);z-index:50;">
+  <form class="card" id="setForm" style="max-width:440px;">
+    <h3>Settings</h3>
+    <div class="f"><label>IATA TIDS agent code</label><input name="tids" placeholder="e.g. 96-0 0000 0"></div>
+    <div class="f"><label>Add a chamber</label><input name="chamber" placeholder="e.g. Mr. Kumar's chamber"></div>
+    <div class="f"><label>Next receipt number</label><input name="rno" type="number" min="1"></div>
+    <div style="display:flex;gap:8px;margin-top:14px;"><button class="btn btn-red" type="submit">Save</button><button class="btn btn-line" type="button" id="setClose">Close</button></div>
+  </form>
+</section>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var LOGIN_EMAIL = 'dispatch@nextasy.biz';
+  var TEMP_HASH = '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5'; /* SHA-256 of the temporary password */
+  var K = { pw: 'nx-desk-pw', data: 'nx-desk-data', sess: 'nx-desk-sess' };
+  var db = { tids: '', rno: 2, chambers: ["Mr. Emmanuvel's chamber", 'K chamber', 'P chamber', 'PT chamber'], bookings: [] };
+  var cur = null, filter = 'All';
+  function toast(t){ var e = $('toast'); e.textContent = t; e.classList.add('show'); setTimeout(function(){ e.classList.remove('show'); }, 2600); }
+  function sha(t){ return crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)).then(function(b){ return Array.from(new Uint8Array(b)).map(function(x){ return ('0' + x.toString(16)).slice(-2); }).join(''); }); }
+  function load(){ try { var d = JSON.parse(localStorage.getItem(K.data) || 'null'); if (d) db = d; } catch(e){} }
+  function save(){ try { localStorage.setItem(K.data, JSON.stringify(db)); } catch(e){ toast('Could not save in this browser'); } }
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function inr(n){ n = +n || 0; return '₹' + n.toLocaleString('en-IN'); }
+  function fmtDate(d){ if (!d) return ''; var x = new Date(d + 'T00:00:00'); return x.toLocaleDateString('en-GB', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }); }
+  function shortDate(d){ if (!d) return ''; var x = new Date(d + 'T00:00:00'); return x.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); }
+
+  /* ---------- login ---------- */
+  $('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var em = this.email.value.trim().toLowerCase(), pw = this.password.value;
+    sha(pw).then(function(h){
+      var stored = null; try { stored = localStorage.getItem(K.pw); } catch(err){}
+      var ok = em === LOGIN_EMAIL && (stored ? h === stored : h === TEMP_HASH);
+      if (!ok){ $('loginErr').textContent = 'Incorrect email or password.'; return; }
+      if (!stored){ $('vLogin').classList.add('hide'); $('vPw').classList.remove('hide'); return; }
+      start();
+    });
+  });
+  $('pwForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var a = this.p1.value, b = this.p2.value;
+    if (a.length < 8){ $('pwErr').textContent = 'Use at least 8 characters.'; return; }
+    if (a !== b){ $('pwErr').textContent = 'Passwords do not match.'; return; }
+    sha(a).then(function(h){ try { localStorage.setItem(K.pw, h); } catch(err){} $('vPw').classList.add('hide'); start(); toast('Password updated'); });
+  });
+  $('logout').addEventListener('click', function(){ try { sessionStorage.removeItem(K.sess); } catch(e){} location.reload(); });
+  function start(){
+    try { sessionStorage.setItem(K.sess, '1'); } catch(e){}
+    load();
+    ['vLogin', 'vPw'].forEach(function(v){ $(v).classList.add('hide'); });
+    $('vDash').classList.remove('hide'); ['who', 'logout', 'settingsBtn'].forEach(function(v){ $(v).classList.remove('hide'); });
+    $('who').textContent = LOGIN_EMAIL;
+    renderAll(); newBooking();
+  }
+
+  /* ---------- settings ---------- */
+  $('settingsBtn').addEventListener('click', function(){ var f = $('setForm'); f.tids.value = db.tids || ''; f.chamber.value = ''; f.rno.value = db.rno; $('vSet').classList.remove('hide'); });
+  $('setClose').addEventListener('click', function(){ $('vSet').classList.add('hide'); });
+  $('setForm').addEventListener('submit', function(e){
+    e.preventDefault(); db.tids = this.tids.value.trim(); var c = this.chamber.value.trim();
+    if (c && db.chambers.indexOf(c) < 0) db.chambers.push(c);
+    db.rno = Math.max(1, parseInt(this.rno.value, 10) || db.rno);
+    save(); renderAll(); $('vSet').classList.add('hide'); toast('Settings saved');
+  });
+
+  /* ---------- segments ---------- */
+  function segHTML(i, s){
+    s = s || {};
+    return '<div class="seg" data-i="' + i + '"><h5><span>FLIGHT ' + (i + 1) + '</span><a href="#" data-rm="' + i + '" style="color:var(--muted);font-weight:500;">remove</a></h5>' +
+      '<div class="row4"><div class="f"><label>Flight no.</label><input data-k="fn" value="' + esc(s.fn) + '" placeholder="6E 1412"></div>' +
+      '<div class="f"><label>From</label><input data-k="from" value="' + esc(s.from) + '" placeholder="AUH"></div>' +
+      '<div class="f"><label>To</label><input data-k="to" value="' + esc(s.to) + '" placeholder="MAA"></div>' +
+      '<div class="f"><label>Date</label><input data-k="date" type="date" value="' + esc(s.date) + '"></div></div>' +
+      '<div class="row4"><div class="f"><label>Departs</label><input data-k="dep" type="time" value="' + esc(s.dep) + '"></div>' +
+      '<div class="f"><label>Arrives</label><input data-k="arr" type="time" value="' + esc(s.arr) + '"></div>' +
+      '<div class="f"><label>Duration</label><input data-k="dur" value="' + esc(s.dur) + '" placeholder="4h 15m"></div>' +
+      '<div class="f"><label>Terminals</label><input data-k="term" value="' + esc(s.term) + '" placeholder="T-A → T2"></div></div></div>';
+  }
+  function readSegs(){ return Array.prototype.map.call(document.querySelectorAll('#segs .seg'), function(el){ var o = {}; el.querySelectorAll('[data-k]').forEach(function(i){ o[i.dataset.k] = i.value.trim(); }); return o; }); }
+  function drawSegs(list){ $('segs').innerHTML = list.map(function(s, i){ return segHTML(i, s); }).join(''); }
+  $('addSeg').addEventListener('click', function(){ var l = readSegs(); l.push({}); drawSegs(l); });
+  $('segs').addEventListener('click', function(e){ var r = e.target.getAttribute('data-rm'); if (r == null) return; e.preventDefault(); var l = readSegs(); l.splice(+r, 1); drawSegs(l.length ? l : [{}]); });
+
+  /* ---------- booking form ---------- */
+  var F = $('bk');
+  function fillChamberSelect(){ F.chamber.innerHTML = db.chambers.map(function(c){ return '<option>' + esc(c) + '</option>'; }).join(''); }
+  function newBooking(){ cur = null; F.reset(); fillChamberSelect(); if (filter !== 'All') F.chamber.value = filter; drawSegs([{}, {}]); $('formTitle').textContent = 'New booking'; $('pv').classList.add('hide'); renderList(); }
+  $('newBtn').addEventListener('click', newBooking);
+  function openBooking(id){
+    var b = db.bookings.filter(function(x){ return x.id === id; })[0]; if (!b) return;
+    cur = b; fillChamberSelect();
+    ['name', 'chamber', 'email', 'phone', 'trip', 'pax', 'airline', 'amount', 'payref', 'status', 'pnr', 'tktTime', 'notes'].forEach(function(k){ if (F[k]) F[k].value = b[k] == null ? '' : b[k]; });
+    drawSegs(b.segs && b.segs.length ? b.segs : [{}]);
+    $('formTitle').textContent = 'Booking ' + b.ref;
+    $('tpl').value = b.status === 'Ticketed' ? 'tkt' : (b.status === 'Payment received' ? 'paid' : 'hold');
+    renderList(); showMail();
+  }
+  F.addEventListener('submit', function(e){
+    e.preventDefault();
+    var b = cur || { id: Date.now().toString(36), created: new Date().toISOString(), ref: 'NXT/RCPT/2026-27/' + ('00' + db.rno).slice(-3) };
+    if (!cur){ db.rno++; db.bookings.unshift(b); }
+    ['name', 'chamber', 'email', 'phone', 'trip', 'pax', 'airline', 'amount', 'payref', 'status', 'pnr', 'tktTime', 'notes'].forEach(function(k){ b[k] = F[k].value.trim ? F[k].value.trim() : F[k].value; });
+    b.segs = readSegs().filter(function(s){ return s.fn || s.from || s.to || s.date; });
+    b.updated = new Date().toISOString();
+    save(); cur = b; renderAll(); openBooking(b.id); toast('Booking saved');
+  });
+  $('delBtn').addEventListener('click', function(){
+    if (!cur) return newBooking();
+    if (!confirm('Delete booking ' + cur.ref + '?')) return;
+    db.bookings = db.bookings.filter(function(x){ return x !== cur; }); save(); newBooking(); renderAll(); toast('Booking deleted');
+  });
+
+  /* ---------- list, chambers, stats ---------- */
+  function statusClass(s){ return { 'Enquiry': 's-enq', 'On hold': 's-hold', 'Payment received': 's-paid', 'Ticketed': 's-tkt', 'Cancelled': 's-cxl' }[s] || 's-enq'; }
+  function visible(){ var q = $('q').value.trim().toLowerCase(); return db.bookings.filter(function(b){
+    if (filter !== 'All' && b.chamber !== filter) return false;
+    if (!q) return true;
+    return [b.name, b.email, b.pnr, b.ref].concat((b.segs || []).map(function(s){ return s.fn + ' ' + s.from + ' ' + s.to; })).join(' ').toLowerCase().indexOf(q) >= 0; }); }
+  function renderList(){
+    var rows = visible();
+    $('list').innerHTML = rows.map(function(b){
+      var j = (b.segs || []).map(function(s){ return esc(s.from) + '→' + esc(s.to) + ' <span style="color:var(--muted)">' + esc(shortDate(s.date)) + '</span>'; }).join('<br>');
+      return '<tr data-id="' + b.id + '"' + (cur && cur.id === b.id ? ' class="sel"' : '') + '><td style="white-space:nowrap;font-size:.74rem;color:var(--muted);">' + esc(b.ref.split('/').pop()) + '</td><td><b>' + esc(b.name) + '</b><br><span style="font-size:.74rem;color:var(--muted);">' + esc(b.pax) + ' pax' + (b.pnr ? ' · PNR ' + esc(b.pnr) : '') + '</span></td><td style="font-size:.78rem;">' + j + '</td><td style="font-size:.78rem;">' + esc(b.chamber) + '</td><td><span class="pill ' + statusClass(b.status) + '">' + esc(b.status) + '</span></td><td style="text-align:right;white-space:nowrap;">' + (b.amount ? inr(b.amount) : '—') + '</td></tr>';
+    }).join('');
+    $('empty').classList.toggle('hide', rows.length > 0);
+  }
+  $('list').addEventListener('click', function(e){ var tr = e.target.closest('tr'); if (tr) openBooking(tr.dataset.id); });
+  $('q').addEventListener('input', renderList);
+  function renderAll(){
+    $('tidsShow').textContent = db.tids || 'add in Settings';
+    var all = db.bookings.filter(function(b){ return filter === 'All' || b.chamber === filter; });
+    $('stAll').textContent = all.length;
+    $('stOpen').textContent = all.filter(function(b){ return b.status === 'Enquiry' || b.status === 'On hold'; }).length;
+    $('stPaid').textContent = all.filter(function(b){ return b.status === 'Payment received'; }).length;
+    $('stTkt').textContent = all.filter(function(b){ return b.status === 'Ticketed'; }).length;
+    $('stAmt').textContent = inr(all.filter(function(b){ return b.status !== 'Cancelled'; }).reduce(function(a, b){ return a + (+b.amount || 0); }, 0));
+    var ch = $('chambers'); ch.innerHTML = '<span class="eyebrow" style="margin-right:4px;">Chambers</span>';
+    ['All'].concat(db.chambers).forEach(function(c){
+      var n = c === 'All' ? db.bookings.length : db.bookings.filter(function(b){ return b.chamber === c; }).length;
+      var el = document.createElement('button'); el.type = 'button'; el.className = 'chip' + (filter === c ? ' on' : ''); el.innerHTML = esc(c) + '<i>' + n + '</i>';
+      el.addEventListener('click', function(){ filter = c; renderAll(); if (!cur) { fillChamberSelect(); if (c !== 'All') F.chamber.value = c; } });
+      ch.appendChild(el);
+    });
+    renderList();
+  }
+  $('csv').addEventListener('click', function(){
+    var cols = ['ref', 'created', 'name', 'email', 'phone', 'chamber', 'trip', 'pax', 'airline', 'status', 'amount', 'payref', 'pnr'];
+    var lines = [cols.concat(['flights']).join(',')].concat(db.bookings.map(function(b){
+      return cols.map(function(k){ return '"' + String(b[k] == null ? '' : b[k]).replace(/"/g, '""') + '"'; }).concat(['"' + (b.segs || []).map(function(s){ return s.fn + ' ' + s.from + '-' + s.to + ' ' + s.date + ' ' + s.dep; }).join(' | ') + '"']).join(',');
+    }));
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'text/csv' })); a.download = 'nextasy-bookings.csv'; a.click();
+  });
+
+  /* ---------- customer email ---------- */
+  function mailHTML(b, t){
+    var heads = { paid: ['PAYMENT RECEIPT', 'Payment received – <span style="color:#ffc857;">' + inr(b.amount) + '</span>', '✓ PAYMENT RECEIVED', '#1f9d55'],
+      hold: ['FLIGHT RESERVATION', 'Your booking is <span style="color:#ffc857;">On Hold</span>', '⏳ ON HOLD', '#b7791f'],
+      tkt: ['E-TICKET CONFIRMATION', 'Your ticket is <span style="color:#ffc857;">Confirmed</span>', '✓ TICKETED', '#1f9d55'] }[t];
+    var route = (b.segs || []).map(function(s){ return s.from; }).concat((b.segs || []).length ? [b.segs[b.segs.length - 1].to] : []).join(' → ');
+    var intro = { paid: 'Greetings from Nextasy! We confirm that we have <b>received your payment of ' + inr(b.amount) + '</b> for your upcoming journey. Thank you for your registration under <b>' + esc(b.chamber) + '</b>.<br><br>Your <b>ticket booking has been initiated</b>. Your confirmed e-ticket will be issued and emailed to you <b>within ' + esc(b.tktTime || '6–8 hours') + '</b>.',
+      hold: 'Greetings from Nextasy! Your flight booking under <b>' + esc(b.chamber) + '</b> has been <b>reserved and is currently on hold</b>. Please review the itinerary below and let us know if anything needs to change.',
+      tkt: 'Greetings from Nextasy! Your ticket has been <b>issued and confirmed</b>' + (b.pnr ? ' – your PNR is <b>' + esc(b.pnr) + '</b>' : '') + '. Thank you for booking with us under <b>' + esc(b.chamber) + '</b>. Please find your journey details below.' }[t];
+    var rec = '<tr><td width="42%">Reference</td><td style="font-weight:bold;color:#0b1f3a;">' + esc(b.ref) + '</td></tr>' +
+      '<tr><td>Passenger</td><td style="font-weight:bold;color:#0b1f3a;">' + esc(b.name) + ' (' + esc(b.pax) + ' pax)</td></tr>' +
+      '<tr><td>Chamber</td><td style="font-weight:bold;color:#0b1f3a;">' + esc(b.chamber) + '</td></tr>' +
+      (b.pnr ? '<tr><td>PNR</td><td style="font-weight:bold;color:#0b1f3a;letter-spacing:2px;">' + esc(b.pnr) + '</td></tr>' : '') +
+      (b.amount ? '<tr><td style="border-top:1px solid #dde5ef;padding-top:6px;"><b style="color:#0b2a5b;">Amount received</b></td><td style="border-top:1px solid #dde5ef;padding-top:6px;font-size:18px;font-weight:bold;color:#1f9d55;">' + inr(b.amount) + '</td></tr>' : '') +
+      (b.payref ? '<tr><td>Payment reference</td><td style="font-weight:bold;color:#0b1f3a;">' + esc(b.payref) + '</td></tr>' : '') +
+      '<tr><td>Status</td><td style="font-weight:bold;color:' + heads[3] + ';">' + esc(t === 'paid' ? 'Ticketing initiated – e-ticket within ' + (b.tktTime || '6–8 hours') : b.status) + '</td></tr>';
+    var segs = (b.segs || []).map(function(s, i){
+      var lbl = (b.segs.length === 2 && b.trip === 'Round trip') ? (i ? 'RETURN' : 'ONWARD') : 'FLIGHT ' + (i + 1);
+      var tm = (s.term || '').split('→');
+      return '<tr><td style="padding:16px 36px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="font-size:11px;letter-spacing:2px;color:#c8102e;font-weight:bold;">' + lbl + ' · ' + esc(s.from) + ' → ' + esc(s.to) + '</td><td align="right" style="font-size:12px;color:#33425a;font-weight:bold;">' + esc(fmtDate(s.date)) + '</td></tr></table>' +
+        '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #dde5ef;border-radius:8px;margin-top:8px;"><tr><td style="padding:14px 16px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>' +
+        '<td width="34%"><div style="font-size:22px;font-weight:bold;color:#0b2a5b;">' + esc(s.dep) + '</div><div style="font-size:12px;color:#33425a;font-weight:bold;">' + esc(s.from) + (tm[0] ? ' (' + esc(tm[0].trim()) + ')' : '') + '</div></td>' +
+        '<td width="32%" align="center" style="font-size:11px;color:#6b7a90;">' + esc(s.fn) + '<br><span style="color:#c8102e;">———— ✈ ————</span><br>' + esc(s.dur) + '</td>' +
+        '<td width="34%" align="right"><div style="font-size:22px;font-weight:bold;color:#0b2a5b;">' + esc(s.arr) + '</div><div style="font-size:12px;color:#33425a;font-weight:bold;">' + esc(s.to) + (tm[1] ? ' (' + esc(tm[1].trim()) + ')' : '') + '</div></td></tr></table></td></tr></table></td></tr>';
+    }).join('');
+    var notes = (b.notes || '').split('\n').map(function(x){ return x.trim(); }).filter(Boolean);
+    var std = ['Please carry a valid passport / government photo ID and all travel documents.', 'Flight timings are as per the airline schedule and may change; we will inform you of any update.'];
+    var nhtml = notes.concat(std).map(function(x){ return '• ' + esc(x); }).join('<br>');
+    return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#e9eef5;"><tr><td align="center" style="padding:20px 8px;">' +
+      '<table role="presentation" width="794" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:794px;background:#ffffff;font-family:Arial,Helvetica,sans-serif;color:#0b1f3a;">' +
+      '<tr><td style="background:#0b2a5b;padding:16px 36px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="font-size:22px;font-weight:bold;letter-spacing:4px;color:#ffffff;line-height:22px;">NEXTASY<br><span style="font-size:9px;letter-spacing:3px;color:#9cc3ff;font-weight:normal;line-height:14px;">AVIATION CONSULTING PVT. LTD.</span></td><td align="right" style="font-size:11px;line-height:17px;color:#c9d6ea;">dispatch@nextasy.biz<br>nextasy.biz' + (db.tids ? ' · IATA TIDS ' + esc(db.tids) : ' · Chennai, India') + '</td></tr></table></td></tr>' +
+      '<tr><td style="height:4px;background:#c8102e;line-height:4px;font-size:0;">&nbsp;</td></tr>' +
+      '<tr><td style="background:#061633;padding:24px 36px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td valign="middle"><div style="font-size:10px;letter-spacing:3px;color:#ff8a9a;font-weight:bold;">✈ ' + heads[0] + '</div><div style="font-size:26px;line-height:32px;font-weight:bold;color:#ffffff;margin-top:6px;">' + heads[1] + '</div><div style="font-size:13px;color:#c9d6ea;margin-top:8px;">' + esc(route) + ' · ' + esc(b.airline || '') + ' · ' + esc(b.pax) + ' passenger' + (+b.pax > 1 ? 's' : '') + '</div></td>' +
+      '<td valign="middle" align="right" width="190"><div style="display:inline-block;background:' + heads[3] + ';color:#ffffff;font-weight:bold;font-size:12px;letter-spacing:2px;padding:10px 14px;border-radius:6px;white-space:nowrap;">' + heads[2] + '</div></td></tr></table></td></tr>' +
+      '<tr><td style="padding:24px 36px 4px;font-size:14px;line-height:22px;color:#33425a;">Dear <b>' + esc(b.name) + '</b>,<br><br>' + intro + '</td></tr>' +
+      '<tr><td style="padding:16px 36px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:2px solid #0b2a5b;border-radius:10px;"><tr><td style="background:#0b2a5b;padding:10px 18px;font-size:11px;letter-spacing:2px;color:#ffffff;font-weight:bold;">🧾 BOOKING DETAILS</td></tr><tr><td style="padding:12px 18px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size:13px;line-height:24px;color:#33425a;">' + rec + '</table></td></tr></table></td></tr>' +
+      '<tr><td style="padding:22px 36px 0;"><div style="font-size:11px;letter-spacing:2px;color:#0b2a5b;font-weight:bold;">YOUR JOURNEY PLAN</div></td></tr>' + segs +
+      '<tr><td style="padding:20px 36px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px dashed #e8a3ae;background:#fff6f7;border-radius:8px;"><tr><td style="padding:12px 16px;font-size:12.5px;line-height:20px;color:#33425a;"><b style="color:#0b2a5b;">Please note</b><br>' + nhtml + '</td></tr></table></td></tr>' +
+      '<tr><td style="padding:22px 36px 30px;font-size:14px;line-height:21px;color:#33425a;">For any questions, simply reply to this email.<br><br>Warm regards,<br><b style="color:#0b2a5b;font-size:15px;">Team Nextasy</b><br><span style="font-size:12px;color:#6b7a90;">Nextasy Aviation Consulting Pvt. Ltd.</span></td></tr>' +
+      '<tr><td style="height:4px;background:#c8102e;line-height:4px;font-size:0;">&nbsp;</td></tr><tr><td align="center" style="background:#0b2a5b;padding:14px 36px;font-size:11px;line-height:18px;color:#c9d6ea;">dispatch@nextasy.biz &nbsp;|&nbsp; nextasy.biz</td></tr></table></td></tr></table>';
+  }
+  function subject(b, t){
+    var route = (b.segs || []).length ? b.segs[0].from + ' – ' + b.segs[0].to + (b.trip === 'Round trip' ? ' (Round trip)' : '') : 'Your journey';
+    return { paid: 'Payment Received – ' + inr(b.amount) + ' | ' + route + ' | Nextasy', hold: 'Flight Reservation On Hold – ' + route + ' | Nextasy', tkt: 'E-Ticket Confirmed' + (b.pnr ? ' – PNR ' + b.pnr : '') + ' | ' + route + ' | Nextasy' }[t];
+  }
+  function showMail(){
+    if (!cur) return; $('pv').classList.remove('hide');
+    var d = $('mailFrame').contentDocument; d.open(); d.write('<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0">' + mailHTML(cur, $('tpl').value) + '</body></html>'); d.close();
+  }
+  $('tpl').addEventListener('change', showMail);
+  $('copyMail').addEventListener('click', function(){
+    if (!cur) return; var html = mailHTML(cur, $('tpl').value);
+    var plain = $('mailFrame').contentDocument.body.innerText;
+    var done = function(){ toast('Email copied – now Open Gmail and paste'); };
+    if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
+      navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }), 'text/plain': new Blob([plain], { type: 'text/plain' }) })]).then(done, fallback);
+    } else fallback();
+    function fallback(){
+      var fd = $('mailFrame').contentDocument, r = fd.createRange(); r.selectNodeContents(fd.body);
+      var s = $('mailFrame').contentWindow.getSelection(); s.removeAllRanges(); s.addRange(r);
+      try { fd.execCommand('copy'); done(); } catch(e){ toast('Select the email preview and copy it manually'); }
+      s.removeAllRanges();
+    }
+  });
+  $('openGmail').addEventListener('click', function(){
+    if (!cur) return;
+    window.open('https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(cur.email) + '&su=' + encodeURIComponent(subject(cur, $('tpl').value)), '_blank');
+  });
+
+  try { if (sessionStorage.getItem(K.sess) === '1') start(); } catch(e){}
+  try { if (!localStorage.getItem(K.pw)) document.querySelector('#loginForm [name=email]').value = LOGIN_EMAIL; } catch(e){}
+})();
+</script>
+</body>
+</html>
