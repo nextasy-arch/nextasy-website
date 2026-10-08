@@ -157,6 +157,16 @@ nav.primary a:hover::after{ transform:scaleX(1); }
   transform:translateY(-100%); transition:transform .5s cubic-bezier(.2,.8,.2,1);
 }
 #mobile-menu.open{ transform:translateY(0); }
+/* Dashboard / TIDS login button */
+.tids-btn{ display:inline-flex; align-items:center; gap:8px; margin-left:26px; padding:9px 15px; border:1.5px solid var(--red); border-radius:6px; color:var(--red); font-size:0.8rem; font-weight:600; white-space:nowrap; transition:background .3s, color .3s; }
+.tids-btn:hover{ background:var(--red); color:#ffffff; }
+.tids-btn small{ font-size:0.62rem; letter-spacing:0.12em; font-weight:600; opacity:.85; border-left:1px solid currentColor; padding-left:8px; }
+nav.primary a{ white-space:nowrap; }
+@media (max-width:1240px){ nav.primary{ gap:18px; } .tids-btn{ margin-left:16px; } }
+@media (max-width:1140px) and (min-width:961px){ .tids-btn small{ display:none; } }
+@media (max-width:960px){ .tids-btn{ margin-left:auto; margin-right:16px; padding:7px 11px; font-size:0.74rem; } }
+@media (max-width:350px){ .tids-btn small{ display:none; } }
+
 #mobile-menu a{ font-family:var(--serif); font-size:1.7rem; color:var(--ivory); }
 
 /* ============ HERO ============ */
@@ -775,6 +785,7 @@ header{ background:#ffffff !important; }
       <a href="#insights">Insights</a>
       <a href="#projects">Projects</a>
     </nav>
+    <a href="booking-desk.html" class="tids-btn" title="Staff dashboard – IATA TIDS login">&#9992; Dashboard <small>TIDS LOGIN</small></a>
     <button class="burger" id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
   </div>
   <div class="nav-cta">
@@ -792,6 +803,7 @@ header{ background:#ffffff !important; }
   <a href="#insights">Industry Insights</a>
   <a href="#projects">Projects</a>
   <a href="#contact">Contact Us</a>
+  <a href="booking-desk.html" style="color:var(--red);">Dashboard · TIDS Login</a>
 </div>
 
 <!-- ============ HERO ============ -->
