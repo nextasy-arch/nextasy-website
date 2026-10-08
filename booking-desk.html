@@ -22,6 +22,10 @@ header{ background:#fff; border-bottom:3px solid var(--red); position:sticky; to
 .logo span{ font-size:.56rem; letter-spacing:.24em; color:var(--blue); }
 .tids{ font-size:.78rem; color:var(--muted); background:var(--soft); border:1px solid var(--line); border-radius:999px; padding:5px 12px; }
 .tids b{ color:var(--navy); }
+.fare{ margin-top:14px; border:1.5px solid #f0c3cb; background:#fff8f9; border-radius:10px; padding:10px 14px 14px; }
+.fare h5{ display:flex; justify-content:space-between; font-size:.7rem; letter-spacing:.14em; color:var(--red); margin:4px 0 2px; }
+.fare-out{ font-size:.86rem; color:var(--muted); background:#fff; border:1px dashed var(--line); border-radius:8px; padding:10px 12px; }
+.fare-out b.nx{ color:#1f9d55; font-size:1.15rem; } .fare-out s{ color:#8a96a8; } .fare-out .sv{ display:inline-block; background:#c8102e; color:#fff; font-weight:700; border-radius:6px; padding:2px 8px; margin-left:6px; font-size:.8rem; }
 .btn{ display:inline-flex; align-items:center; justify-content:center; gap:6px; border:2px solid transparent; border-radius:8px; padding:9px 16px; font-weight:600; font-size:.86rem; cursor:pointer; }
 .btn-red{ background:var(--red); color:#fff; } .btn-red:hover{ background:var(--red-dark); }
 .btn-navy{ background:var(--navy); color:#fff; } .btn-navy:hover{ background:var(--blue); }
@@ -146,6 +150,18 @@ tbody tr:hover td{ background:var(--soft); }
         </div>
         <div id="segs"></div>
         <button class="btn btn-line btn-sm" type="button" id="addSeg" style="margin-top:8px;">+ Add flight</button>
+        <div class="fare">
+          <h5><span>FARE COMPARISON</span><span style="color:var(--muted);font-weight:500;">shown in the customer email</span></h5>
+          <div class="row3">
+            <div class="f"><label>Airline / market fare (₹, all pax)</label><input name="mkt" type="number" min="0" step="1" placeholder="e.g. 54280"></div>
+            <div class="f"><label>Fare checked on</label><select name="mktSrc"><option>Airline website</option><option>IndiGo website</option><option>Air India website</option><option>Air India Express website</option><option>Emirates website</option><option>Etihad website</option><option>MakeMyTrip</option><option>Google Flights</option><option>Other</option></select></div>
+            <div class="f"><label>Date checked</label><input name="mktDate" type="date"></div>
+          </div>
+          <div class="row3" style="align-items:end;">
+            <div class="f"><label>Nextasy discount (%)</label><input name="disc" type="number" min="0" max="90" step="1" value="40"></div>
+            <div class="fare-out" id="fareOut" style="grid-column:span 2;">Enter the market fare to see the Nextasy price.</div>
+          </div>
+        </div>
         <div class="row3">
           <div class="f"><label>Amount received (₹)</label><input name="amount" type="number" min="0" step="1"></div>
           <div class="f"><label>Payment ref. (UTR / UPI)</label><input name="payref"></div>
@@ -191,6 +207,7 @@ tbody tr:hover td{ background:var(--soft); }
     <div class="f"><label>IATA TIDS agent code</label><input name="tids" placeholder="e.g. 96-0 0000 0"></div>
     <div class="f"><label>Add a chamber</label><input name="chamber" placeholder="e.g. Mr. Kumar's chamber"></div>
     <div class="f"><label>Next receipt number</label><input name="rno" type="number" min="1"></div>
+    <div class="f"><label>Default Nextasy discount (%)</label><input name="disc" type="number" min="0" max="90" step="1"></div>
     <div style="display:flex;gap:8px;margin-top:14px;"><button class="btn btn-red" type="submit">Save</button><button class="btn btn-line" type="button" id="setClose">Close</button></div>
   </form>
 </section>
@@ -243,12 +260,13 @@ tbody tr:hover td{ background:var(--soft); }
   }
 
   /* ---------- settings ---------- */
-  $('settingsBtn').addEventListener('click', function(){ var f = $('setForm'); f.tids.value = db.tids || ''; f.chamber.value = ''; f.rno.value = db.rno; $('vSet').classList.remove('hide'); });
+  $('settingsBtn').addEventListener('click', function(){ var f = $('setForm'); f.tids.value = db.tids || ''; f.chamber.value = ''; f.rno.value = db.rno; f.disc.value = db.disc == null ? 40 : db.disc; $('vSet').classList.remove('hide'); });
   $('setClose').addEventListener('click', function(){ $('vSet').classList.add('hide'); });
   $('setForm').addEventListener('submit', function(e){
     e.preventDefault(); db.tids = this.tids.value.trim(); var c = this.chamber.value.trim();
     if (c && db.chambers.indexOf(c) < 0) db.chambers.push(c);
     db.rno = Math.max(1, parseInt(this.rno.value, 10) || db.rno);
+    var dv = parseFloat(this.disc.value); if (!isNaN(dv) && dv >= 0 && dv <= 90) db.disc = dv;
     save(); renderAll(); $('vSet').classList.add('hide'); toast('Settings saved');
   });
 
@@ -272,14 +290,26 @@ tbody tr:hover td{ background:var(--soft); }
 
   /* ---------- booking form ---------- */
   var F = $('bk');
+  function fare(b){ var m = Math.round(+b.mkt || 0), d = b.disc === '' || b.disc == null ? (db.disc == null ? 40 : db.disc) : +b.disc; if (!(m > 0)) return null; var nx = Math.round(m * (100 - d) / 100); return { mkt: m, disc: d, nx: nx, save: m - nx }; }
+  var lastNx = null;
+  function fareLive(){
+    var f = fare({ mkt: F.mkt.value, disc: F.disc.value });
+    if (!f){ $('fareOut').innerHTML = 'Enter the market fare to see the Nextasy price.'; return; }
+    $('fareOut').innerHTML = 'Market <s>' + inr(f.mkt) + '</s> → Nextasy <b class="nx">' + inr(f.nx) + '</b><span class="sv">SAVES ' + inr(f.save) + ' · ' + f.disc + '% OFF</span>';
+    if (!F.amount.value || +F.amount.value === lastNx) F.amount.value = f.nx;
+    lastNx = f.nx;
+  }
+  F.mkt.addEventListener('input', fareLive); F.disc.addEventListener('input', fareLive);
   function fillChamberSelect(){ F.chamber.innerHTML = db.chambers.map(function(c){ return '<option>' + esc(c) + '</option>'; }).join(''); }
-  function newBooking(){ cur = null; F.reset(); fillChamberSelect(); if (filter !== 'All') F.chamber.value = filter; drawSegs([{}, {}]); $('formTitle').textContent = 'New booking'; $('pv').classList.add('hide'); renderList(); }
+  function newBooking(){ cur = null; F.reset(); fillChamberSelect(); if (filter !== 'All') F.chamber.value = filter; drawSegs([{}, {}]); F.disc.value = db.disc == null ? 40 : db.disc; lastNx = null; fareLive(); $('formTitle').textContent = 'New booking'; $('pv').classList.add('hide'); renderList(); }
   $('newBtn').addEventListener('click', newBooking);
   function openBooking(id){
     var b = db.bookings.filter(function(x){ return x.id === id; })[0]; if (!b) return;
     cur = b; fillChamberSelect();
-    ['name', 'chamber', 'email', 'phone', 'trip', 'pax', 'airline', 'amount', 'payref', 'status', 'pnr', 'tktTime', 'notes'].forEach(function(k){ if (F[k]) F[k].value = b[k] == null ? '' : b[k]; });
+    ['name', 'chamber', 'email', 'phone', 'trip', 'pax', 'airline', 'mkt', 'mktSrc', 'mktDate', 'disc', 'amount', 'payref', 'status', 'pnr', 'tktTime', 'notes'].forEach(function(k){ if (F[k]) F[k].value = b[k] == null ? '' : b[k]; });
     drawSegs(b.segs && b.segs.length ? b.segs : [{}]);
+    if (b.disc == null || b.disc === '') F.disc.value = db.disc == null ? 40 : db.disc;
+    lastNx = (fare(b) || {}).nx; fareLive();
     $('formTitle').textContent = 'Booking ' + b.ref;
     $('tpl').value = b.status === 'Ticketed' ? 'tkt' : (b.status === 'Payment received' ? 'paid' : 'hold');
     renderList(); showMail();
@@ -288,8 +318,9 @@ tbody tr:hover td{ background:var(--soft); }
     e.preventDefault();
     var b = cur || { id: Date.now().toString(36), created: new Date().toISOString(), ref: 'NXT/RCPT/2026-27/' + ('00' + db.rno).slice(-3) };
     if (!cur){ db.rno++; db.bookings.unshift(b); }
-    ['name', 'chamber', 'email', 'phone', 'trip', 'pax', 'airline', 'amount', 'payref', 'status', 'pnr', 'tktTime', 'notes'].forEach(function(k){ b[k] = F[k].value.trim ? F[k].value.trim() : F[k].value; });
+    ['name', 'chamber', 'email', 'phone', 'trip', 'pax', 'airline', 'mkt', 'mktSrc', 'mktDate', 'disc', 'amount', 'payref', 'status', 'pnr', 'tktTime', 'notes'].forEach(function(k){ b[k] = F[k].value.trim ? F[k].value.trim() : F[k].value; });
     b.segs = readSegs().filter(function(s){ return s.fn || s.from || s.to || s.date; });
+    var fc = fare(b); b.nxFare = fc ? fc.nx : ''; b.saving = fc ? fc.save : '';
     b.updated = new Date().toISOString();
     save(); cur = b; renderAll(); openBooking(b.id); toast('Booking saved');
   });
@@ -333,7 +364,7 @@ tbody tr:hover td{ background:var(--soft); }
     renderList();
   }
   $('csv').addEventListener('click', function(){
-    var cols = ['ref', 'created', 'name', 'email', 'phone', 'chamber', 'trip', 'pax', 'airline', 'status', 'amount', 'payref', 'pnr'];
+    var cols = ['ref', 'created', 'name', 'email', 'phone', 'chamber', 'trip', 'pax', 'airline', 'mkt', 'mktSrc', 'mktDate', 'disc', 'nxFare', 'saving', 'status', 'amount', 'payref', 'pnr'];
     var lines = [cols.concat(['flights']).join(',')].concat(db.bookings.map(function(b){
       return cols.map(function(k){ return '"' + String(b[k] == null ? '' : b[k]).replace(/"/g, '""') + '"'; }).concat(['"' + (b.segs || []).map(function(s){ return s.fn + ' ' + s.from + '-' + s.to + ' ' + s.date + ' ' + s.dep; }).join(' | ') + '"']).join(',');
     }));
@@ -365,6 +396,21 @@ tbody tr:hover td{ background:var(--soft); }
         '<td width="32%" align="center" style="font-size:11px;color:#6b7a90;">' + esc(s.fn) + '<br><span style="color:#c8102e;">———— ✈ ————</span><br>' + esc(s.dur) + '</td>' +
         '<td width="34%" align="right"><div style="font-size:22px;font-weight:bold;color:#0b2a5b;">' + esc(s.arr) + '</div><div style="font-size:12px;color:#33425a;font-weight:bold;">' + esc(s.to) + (tm[1] ? ' (' + esc(tm[1].trim()) + ')' : '') + '</div></td></tr></table></td></tr></table></td></tr>';
     }).join('');
+    var fc = fare(b), cmp = '';
+    if (fc){
+      var w = Math.max(8, Math.min(100, 100 - fc.disc));
+      cmp = '<tr><td style="padding:18px 36px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:2px solid #1f9d55;border-radius:10px;">' +
+        '<tr><td style="background:#1f9d55;padding:10px 18px;font-size:11px;letter-spacing:2px;color:#ffffff;font-weight:bold;">💰 FARE COMPARISON – YOUR SAVINGS</td></tr>' +
+        '<tr><td style="padding:16px 18px 6px;">' +
+          '<div style="font-size:12px;color:#6b7a90;font-weight:bold;letter-spacing:1px;">AIRLINE / MARKET FARE</div>' +
+          '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:6px;"><tr><td bgcolor="#c4ccd8" style="background:#c4ccd8;border-radius:6px;padding:12px 14px;text-align:right;font-size:20px;font-weight:bold;color:#33425a;"><s>' + inr(fc.mkt) + '</s></td></tr></table>' +
+          '<div style="font-size:12px;color:#1f9d55;font-weight:bold;letter-spacing:1px;margin-top:14px;">NEXTASY FARE</div>' +
+          '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:6px;"><tr><td width="' + w + '%" bgcolor="#1f9d55" style="background:#1f9d55;border-radius:6px 0 0 6px;padding:12px 14px;text-align:right;font-size:22px;font-weight:bold;color:#ffffff;white-space:nowrap;">' + inr(fc.nx) + '</td><td style="border:2px dashed #1f9d55;border-left:0;border-radius:0 6px 6px 0;padding:10px 14px;font-size:12px;font-weight:bold;color:#1f9d55;text-align:center;">− ' + inr(fc.save) + '</td></tr></table>' +
+        '</td></tr>' +
+        '<tr><td align="center" style="padding:14px 18px 6px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="background:#c8102e;border-radius:8px;padding:12px 26px;text-align:center;color:#ffffff;"><div style="font-size:11px;letter-spacing:3px;font-weight:bold;color:#ffd5dc;">YOU SAVE</div><div style="font-size:30px;line-height:36px;font-weight:bold;">' + inr(fc.save) + '</div><div style="font-size:13px;font-weight:bold;color:#ffc857;">' + fc.disc + '% OFF THE MARKET FARE</div></td></tr></table></td></tr>' +
+        '<tr><td style="padding:6px 18px 14px;font-size:11px;line-height:16px;color:#6b7a90;text-align:center;">Market fare as checked on ' + esc(b.mktSrc || 'the airline website') + (b.mktDate ? ' on ' + esc(shortDate(b.mktDate)) : '') + ' for the same flights, dates and number of passengers.</td></tr>' +
+        '</table></td></tr>';
+    }
     var notes = (b.notes || '').split('\n').map(function(x){ return x.trim(); }).filter(Boolean);
     var std = ['Please carry a valid passport / government photo ID and all travel documents.', 'Flight timings are as per the airline schedule and may change; we will inform you of any update.'];
     var nhtml = notes.concat(std).map(function(x){ return '• ' + esc(x); }).join('<br>');
@@ -372,10 +418,10 @@ tbody tr:hover td{ background:var(--soft); }
       '<table role="presentation" width="794" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:794px;background:#ffffff;font-family:Arial,Helvetica,sans-serif;color:#0b1f3a;">' +
       '<tr><td style="background:#0b2a5b;padding:16px 36px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="font-size:22px;font-weight:bold;letter-spacing:4px;color:#ffffff;line-height:22px;">NEXTASY<br><span style="font-size:9px;letter-spacing:3px;color:#9cc3ff;font-weight:normal;line-height:14px;">AVIATION CONSULTING PVT. LTD.</span></td><td align="right" style="font-size:11px;line-height:17px;color:#c9d6ea;">dispatch@nextasy.biz<br>nextasy.biz' + (db.tids ? ' · IATA TIDS ' + esc(db.tids) : ' · Chennai, India') + '</td></tr></table></td></tr>' +
       '<tr><td style="height:4px;background:#c8102e;line-height:4px;font-size:0;">&nbsp;</td></tr>' +
-      '<tr><td style="background:#061633;padding:24px 36px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td valign="middle"><div style="font-size:10px;letter-spacing:3px;color:#ff8a9a;font-weight:bold;">✈ ' + heads[0] + '</div><div style="font-size:26px;line-height:32px;font-weight:bold;color:#ffffff;margin-top:6px;">' + heads[1] + '</div><div style="font-size:13px;color:#c9d6ea;margin-top:8px;">' + esc(route) + ' · ' + esc(b.airline || '') + ' · ' + esc(b.pax) + ' passenger' + (+b.pax > 1 ? 's' : '') + '</div></td>' +
+      '<tr><td style="background:#061633;padding:24px 36px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td valign="middle"><div style="font-size:10px;letter-spacing:3px;color:#ff8a9a;font-weight:bold;">✈ ' + heads[0] + '</div><div style="font-size:26px;line-height:32px;font-weight:bold;color:#ffffff;margin-top:6px;">' + heads[1] + '</div><div style="font-size:13px;color:#c9d6ea;margin-top:8px;">' + esc(route) + (b.airline ? ' · ' + esc(b.airline) : '') + ' · ' + esc(b.pax) + ' passenger' + (+b.pax > 1 ? 's' : '') + '</div></td>' +
       '<td valign="middle" align="right" width="190"><div style="display:inline-block;background:' + heads[3] + ';color:#ffffff;font-weight:bold;font-size:12px;letter-spacing:2px;padding:10px 14px;border-radius:6px;white-space:nowrap;">' + heads[2] + '</div></td></tr></table></td></tr>' +
       '<tr><td style="padding:24px 36px 4px;font-size:14px;line-height:22px;color:#33425a;">Dear <b>' + esc(b.name) + '</b>,<br><br>' + intro + '</td></tr>' +
-      '<tr><td style="padding:16px 36px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:2px solid #0b2a5b;border-radius:10px;"><tr><td style="background:#0b2a5b;padding:10px 18px;font-size:11px;letter-spacing:2px;color:#ffffff;font-weight:bold;">🧾 BOOKING DETAILS</td></tr><tr><td style="padding:12px 18px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size:13px;line-height:24px;color:#33425a;">' + rec + '</table></td></tr></table></td></tr>' +
+      cmp + '<tr><td style="padding:16px 36px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:2px solid #0b2a5b;border-radius:10px;"><tr><td style="background:#0b2a5b;padding:10px 18px;font-size:11px;letter-spacing:2px;color:#ffffff;font-weight:bold;">🧾 BOOKING DETAILS</td></tr><tr><td style="padding:12px 18px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size:13px;line-height:24px;color:#33425a;">' + rec + '</table></td></tr></table></td></tr>' +
       '<tr><td style="padding:22px 36px 0;"><div style="font-size:11px;letter-spacing:2px;color:#0b2a5b;font-weight:bold;">YOUR JOURNEY PLAN</div></td></tr>' + segs +
       '<tr><td style="padding:20px 36px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px dashed #e8a3ae;background:#fff6f7;border-radius:8px;"><tr><td style="padding:12px 16px;font-size:12.5px;line-height:20px;color:#33425a;"><b style="color:#0b2a5b;">Please note</b><br>' + nhtml + '</td></tr></table></td></tr>' +
       '<tr><td style="padding:22px 36px 30px;font-size:14px;line-height:21px;color:#33425a;">For any questions, simply reply to this email.<br><br>Warm regards,<br><b style="color:#0b2a5b;font-size:15px;">Team Nextasy</b><br><span style="font-size:12px;color:#6b7a90;">Nextasy Aviation Consulting Pvt. Ltd.</span></td></tr>' +
