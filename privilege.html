@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privilege Member Login | Nextasy</title>
+<meta name="description" content="Nextasy Privilege Members — log in with mobile OTP, submit travel requests and get your travel token.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   NEXTASY PRIVILEGE MEMBER PORTAL
+   ---------------------------------------------------------------------
+   EDIT ONLY THE CONFIG BLOCK IN THE <script> AT THE BOTTOM:
+     1. CHAMBERS  -> put each chamber person's WhatsApp number
+     2. FIREBASE  -> paste your Firebase config for real SMS OTP
+   ===================================================================== */
+:root{
+  --navy:#0b1f3a; --navy2:#13325c; --gold:#d4a73c; --gold2:#f3d27a;
+  --bg:#f4f6fb; --card:#ffffff; --ink:#14213d; --muted:#6b7590;
+  --line:#dde3ef; --ok:#1f9d55; --err:#c0392b; --wa:#25d366;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Poppins,system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+a{color:inherit;text-decoration:none}
+header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand .logo{width:38px;height:38px;border-radius:50%;background:var(--gold);color:var(--navy);display:grid;place-items:center;font-weight:700}
+.brand b{font-size:18px;letter-spacing:1px}
+.brand small{display:block;font-size:11px;color:var(--gold2);letter-spacing:2px}
+header .right{display:flex;gap:10px;align-items:center;font-size:13px}
+.btn{border:0;border-radius:10px;padding:12px 18px;font:600 14px Poppins,sans-serif;cursor:pointer;transition:.15s}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.btn-gold:hover:not(:disabled){background:var(--gold2)}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4);padding:8px 14px}
+.btn-wa{background:var(--wa);color:#fff}
+.btn-line{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.wrap{max-width:1000px;margin:0 auto;padding:24px 16px 60px}
+.hidden{display:none!important}
+
+/* login */
+.login{display:grid;grid-template-columns:1.1fr 1fr;background:var(--card);border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(11,31,58,.12);margin-top:20px}
+.login .hero{background:linear-gradient(160deg,var(--navy),#1d4d8a);color:#fff;padding:40px 32px;position:relative}
+.login .hero h1{font-size:28px;margin:0 0 8px;line-height:1.25}
+.login .hero h1 span{color:var(--gold2)}
+.login .hero p{color:#cfd9ec;font-size:14px;line-height:1.6}
+.login .hero ul{padding:0;list-style:none;margin:22px 0 0;font-size:14px}
+.login .hero li{margin:10px 0;display:flex;gap:10px}
+.login .hero li:before{content:"✈";color:var(--gold2)}
+.login .form{padding:36px 30px}
+.login h2{margin:0 0 4px;font-size:22px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 22px}
+label{display:block;font-size:13px;font-weight:500;margin:14px 0 6px}
+input,select,textarea{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font:14px Poppins,sans-serif;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+.phone{display:flex;gap:8px}
+.phone .cc{width:78px;text-align:center;background:#f0f3f9}
+.otp-boxes{display:flex;gap:8px;justify-content:space-between}
+.otp-boxes input{text-align:center;font-size:20px;font-weight:600;padding:12px 0}
+.msg{font-size:13px;margin-top:12px;min-height:18px}
+.msg.err{color:var(--err)} .msg.ok{color:var(--ok)}
+.full{width:100%;margin-top:18px}
+.link{background:none;border:0;color:var(--navy2);text-decoration:underline;cursor:pointer;font:500 13px Poppins;padding:0;margin-top:12px}
+.demo{background:#fff7e0;border:1px dashed var(--gold);color:#7a5a00;font-size:12px;padding:10px 12px;border-radius:10px;margin-top:14px}
+
+/* dashboard */
+.welcome{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;border-radius:18px;padding:24px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.welcome h2{margin:0;font-size:22px}
+.welcome p{margin:4px 0 0;color:#cfd9ec;font-size:13px}
+.mcard{background:linear-gradient(135deg,#c9972e,#f3d27a 55%,#c9972e);color:var(--navy);border-radius:14px;padding:14px 18px;min-width:240px}
+.mcard small{font-size:10px;letter-spacing:2px;font-weight:600}
+.mcard b{display:block;font-size:16px;margin:4px 0}
+.mcard span{font-size:12px;font-weight:500}
+.grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-top:20px}
+.panel{background:var(--card);border-radius:16px;padding:22px;box-shadow:0 4px 18px rgba(11,31,58,.07)}
+.panel h3{margin:0 0 4px;font-size:17px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{margin:0}
+.chips input{display:none}
+.chips span{display:inline-block;padding:9px 16px;border:1px solid var(--line);border-radius:30px;font-size:13px;font-weight:600;cursor:pointer;background:#fff}
+.chips input:checked+span{background:var(--navy);color:#fff;border-color:var(--navy)}
+.hist{list-style:none;padding:0;margin:12px 0 0;max-height:420px;overflow:auto}
+.hist li{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;font-size:13px}
+.hist li b{color:var(--navy2)}
+.hist .t{display:flex;justify-content:space-between;gap:8px}
+.hist .actions{display:flex;gap:6px;margin-top:8px}
+.hist .actions button{padding:6px 10px;font-size:12px;border-radius:8px}
+.empty{color:var(--muted);font-size:13px;text-align:center;padding:30px 0}
+
+/* token modal */
+.modal{position:fixed;inset:0;background:rgba(11,31,58,.6);display:grid;place-items:center;padding:16px;z-index:50}
+.modal .box{background:#fff;border-radius:18px;padding:20px;max-width:520px;width:100%;max-height:94vh;overflow:auto}
+.modal canvas{width:100%;height:auto;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+.modal .acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.modal .note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5}
+
+@media (max-width:820px){
+  .login{grid-template-columns:1fr}
+  .login .hero{padding:28px 22px}
+  .grid{grid-template-columns:1fr}
+}
+@media (max-width:480px){
+  .row{grid-template-columns:1fr}
+  .modal .acts{grid-template-columns:1fr}
+  header .right span{display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="/">
+    <div class="logo">N</div>
+    <div><b>NEXTASY</b><small>PRIVILEGE MEMBER</small></div>
+  </a>
+  <div class="right">
+    <span id="hdrUser"></span>
+    <a href="/" class="btn btn-ghost" id="homeBtn">Home</a>
+    <button class="btn btn-ghost hidden" id="logoutBtn">Logout</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ================= LOGIN ================= -->
+  <section id="loginView" class="login">
+    <div class="hero">
+      <h1>Nextasy <span>Privilege</span><br>Member Lounge</h1>
+      <p>Exclusive travel desk for Nextasy members. Log in with your mobile number — no password needed.</p>
+      <ul>
+        <li>Mobile number + OTP secure login</li>
+        <li>Submit your flight requirement in one go</li>
+        <li>Instant travel token — download &amp; send on WhatsApp</li>
+        <li>Your chamber contact gets it directly</li>
+      </ul>
+    </div>
+    <div class="form">
+
+      <!-- step 1: mobile -->
+      <div id="stepMobile">
+        <h2>Member Login</h2>
+        <p class="sub">New or existing member — enter your mobile number to get an OTP.</p>
+        <label for="mobile">Mobile Number</label>
+        <div class="phone">
+          <input class="cc" value="+91" readonly>
+          <input id="mobile" type="tel" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number" autocomplete="tel-national">
+        </div>
+        <div id="recaptcha"></div>
+        <button class="btn btn-gold full" id="sendOtpBtn">Send OTP</button>
+        <div class="msg" id="mobileMsg"></div>
+      </div>
+
+      <!-- step 2: otp -->
+      <div id="stepOtp" class="hidden">
+        <h2>Verify OTP</h2>
+        <p class="sub">Enter the 6-digit OTP sent to <b id="otpTo"></b></p>
+        <div class="otp-boxes" id="otpBoxes">
+          <input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric">
+          <input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric">
+        </div>
+        <button class="btn btn-gold full" id="verifyBtn">Verify &amp; Login</button>
+        <div class="msg" id="otpMsg"></div>
+        <button class="link" id="changeNo">← Change number</button>
+        <button class="link" id="resendBtn" style="float:right" disabled>Resend OTP</button>
+        <div class="demo hidden" id="demoBox"></div>
+      </div>
+
+      <!-- step 3: create membership (first time only) -->
+      <div id="stepProfile" class="hidden">
+        <h2>Create Your Membership</h2>
+        <p class="sub">First time here — tell us who you are. This is saved for every future login.</p>
+        <label for="pName">Full Name</label>
+        <input id="pName" placeholder="As per ID proof">
+        <label for="pEmail">Email</label>
+        <input id="pEmail" type="email" placeholder="you@example.com">
+        <label>Your Chamber</label>
+        <select id="pChamber"></select>
+        <button class="btn btn-gold full" id="saveProfileBtn">Activate Membership</button>
+        <div class="msg" id="profileMsg"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= DASHBOARD ================= -->
+  <section id="dashView" class="hidden">
+    <div class="welcome">
+      <div>
+        <h2 id="welcomeName">Welcome</h2>
+        <p>Privilege Member Dashboard · Submit a travel request and get your token instantly.</p>
+      </div>
+      <div class="mcard">
+        <small>NEXTASY PRIVILEGE MEMBER</small>
+        <b id="mcName">—</b>
+        <span id="mcId">—</span>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <h3>✈ New Travel Request</h3>
+        <p class="sub">Fill your travel details. A token will be generated for your chamber contact.</p>
+        <form id="travelForm" autocomplete="on">
+          <div class="row">
+            <div><label for="tFrom">From (Departure City)</label><input id="tFrom" required placeholder="e.g. Chennai (MAA)"></div>
+            <div><label for="tTo">To (Destination City)</label><input id="tTo" required placeholder="e.g. Delhi (DEL)"></div>
+          </div>
+          <div class="row">
+            <div><label for="tDate">Departure Date</label><input id="tDate" type="date" required></div>
+            <div><label for="tTime">Preferred Time</label>
+              <select id="tTime"><option>Any time</option><option>Early Morning (before 8 AM)</option><option>Morning (8 AM – 12 PM)</option><option>Afternoon (12 – 5 PM)</option><option>Evening (5 – 9 PM)</option><option>Night (after 9 PM)</option></select></div>
+          </div>
+          <label for="tNeed">Flight Need</label>
+          <div class="row">
+            <select id="tTrip"><option>One Way</option><option>Round Trip</option></select>
+            <select id="tClass"><option>Economy</option><option>Premium Economy</option><option>Business</option></select>
+          </div>
+          <input id="tNeed" style="margin-top:10px" placeholder="Any special need (airline, return date, baggage, meal…)">
+          <div class="row">
+            <div><label for="tPax">Passenger Name</label><input id="tPax" required placeholder="As per ID"></div>
+            <div><label for="tPaxCount">No. of Passengers</label><input id="tPaxCount" type="number" min="1" max="9" value="1"></div>
+          </div>
+          <div class="row">
+            <div><label for="tMobile">Passenger Mobile</label><input id="tMobile" type="tel" inputmode="numeric" maxlength="10" required></div>
+            <div><label for="tEmail">Passenger Email</label><input id="tEmail" type="email" required></div>
+          </div>
+          <label>Send to Chamber</label>
+          <div class="chips" id="chamberChips"></div>
+          <button class="btn btn-gold full" type="submit">Generate Token</button>
+          <div class="msg" id="travelMsg"></div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h3>🎫 My Tokens</h3>
+        <p class="sub">Your recent travel requests on this device.</p>
+        <ul class="hist" id="hist"></ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- token modal -->
+<div class="modal hidden" id="tokenModal">
+  <div class="box">
+    <canvas id="tokenCanvas" width="1000" height="1400"></canvas>
+    <div class="acts">
+      <button class="btn btn-navy" id="dlBtn">⬇ Download Token</button>
+      <button class="btn btn-wa" id="waBtn">Send on WhatsApp</button>
+    </div>
+    <button class="btn btn-line full" id="closeModal" style="margin-top:10px">Close</button>
+    <p class="note" id="waNote"></p>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   CONFIG — EDIT HERE
+   ===================================================================== */
+
+/* 1) Chamber contacts. Put WhatsApp numbers with country code, digits only
+      (e.g. "919876543210"). Leave "" to let the member pick the contact
+      inside WhatsApp. Add / remove chambers freely. */
+const CHAMBERS = [
+  { code: "E",  name: "Chamber E",  whatsapp: "" },
+  { code: "P",  name: "Chamber P",  whatsapp: "" },
+  { code: "PR", name: "Chamber PR", whatsapp: "" },
+  { code: "KR", name: "Chamber KR", whatsapp: "" },
+  { code: "SJ", name: "Chamber SJ", whatsapp: "" },
+  { code: "AK", name: "Chamber AK", whatsapp: "" },
+];
+
+/* 2) Firebase (for REAL SMS OTP). Create a free project at
+      console.firebase.google.com → Authentication → Sign-in method → enable
+      "Phone" → Settings → Authorized domains → add nextasy.biz.
+      Then Project settings → Your apps → Web app → paste the config here.
+      While apiKey is empty the page runs in TEST MODE (OTP shown on screen). */
+const FIREBASE = {
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  appId: ""
+};
+
+/* ===================================================================== */
+
+const LIVE = !!FIREBASE.apiKey;
+const $ = id => document.getElementById(id);
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+const show = (el, on=true) => el.classList.toggle("hidden", !on);
+const msg = (el, text, type="") => { el.textContent = text; el.className = "msg " + type; };
+
+let mobile = "", confirmation = null, demoOtp = "", member = null, currentToken = null, resendTimer = null;
+
+/* ---------- Firebase loader ---------- */
+let auth = null;
+async function loadFirebase(){
+  if (!LIVE || auth) return;
+  const v = "10.12.2";
+  await new Promise((res, rej) => { const s = document.createElement("script"); s.src = `https://www.gstatic.com/firebasejs/${v}/firebase-app-compat.js`; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+  await new Promise((res, rej) => { const s = document.createElement("script"); s.src = `https://www.gstatic.com/firebasejs/${v}/firebase-auth-compat.js`; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+  firebase.initializeApp(FIREBASE);
+  auth = firebase.auth();
+  window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha", { size: "invisible" });
+}
+
+/* ---------- chamber UI ---------- */
+function fillChambers(){
+  $("pChamber").innerHTML = CHAMBERS.map(c => `<option value="${c.code}">${c.code} — ${c.name}</option>`).join("");
+  $("chamberChips").innerHTML = CHAMBERS.map(c =>
+    `<label><input type="radio" name="chamber" value="${c.code}"><span>${c.code}</span></label>`).join("");
+}
+
+/* ---------- login flow ---------- */
+$("mobile").addEventListener("input", e => e.target.value = e.target.value.replace(/\D/g, ""));
+$("sendOtpBtn").onclick = sendOtp;
+$("mobile").addEventListener("keydown", e => { if (e.key === "Enter") sendOtp(); });
+
+async function sendOtp(){
+  const m = $("mobile").value.trim();
+  if (!/^[6-9]\d{9}$/.test(m)) return msg($("mobileMsg"), "Enter a valid 10-digit Indian mobile number.", "err");
+  mobile = m;
+  $("sendOtpBtn").disabled = true; msg($("mobileMsg"), "Sending OTP…");
+  try{
+    if (LIVE){
+      await loadFirebase();
+      confirmation = await auth.signInWithPhoneNumber("+91" + m, window.recaptchaVerifier);
+      show($("demoBox"), false);
+    } else {
+      demoOtp = String(Math.floor(100000 + Math.random() * 900000));
+      $("demoBox").innerHTML = `<b>TEST MODE</b> — SMS is not connected yet. Your OTP is <b>${demoOtp}</b>.<br>Add your Firebase config to send real SMS OTP.`;
+      show($("demoBox"), true);
+    }
+    $("otpTo").textContent = "+91 " + m;
+    show($("stepMobile"), false); show($("stepOtp"), true);
+    $("otpBoxes").querySelector("input").focus();
+    startResend();
+  }catch(err){
+    console.error(err);
+    msg($("mobileMsg"), "Could not send OTP. " + (err.message || "Try again."), "err");
+  }finally{ $("sendOtpBtn").disabled = false; }
+}
+
+function startResend(){
+  let s = 30; const b = $("resendBtn"); b.disabled = true;
+  clearInterval(resendTimer);
+  resendTimer = setInterval(() => { s--; b.textContent = s > 0 ? `Resend in ${s}s` : "Resend OTP"; if (s <= 0){ clearInterval(resendTimer); b.disabled = false; } }, 1000);
+}
+$("resendBtn").onclick = () => { show($("stepOtp"), false); show($("stepMobile"), true); sendOtp(); };
+$("changeNo").onclick = () => { show($("stepOtp"), false); show($("stepMobile"), true); };
+
+/* otp boxes behaviour */
+const boxes = [...$("otpBoxes").querySelectorAll("input")];
+boxes.forEach((b, i) => {
+  b.addEventListener("input", () => { b.value = b.value.replace(/\D/g, ""); if (b.value && boxes[i+1]) boxes[i+1].focus(); });
+  b.addEventListener("keydown", e => { if (e.key === "Backspace" && !b.value && boxes[i-1]) boxes[i-1].focus(); if (e.key === "Enter") verifyOtp(); });
+  b.addEventListener("paste", e => { const t = (e.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0, 6); if (t.length){ e.preventDefault(); t.split("").forEach((c, j) => boxes[j] && (boxes[j].value = c)); boxes[Math.min(t.length, 5)].focus(); } });
+});
+$("verifyBtn").onclick = verifyOtp;
+
+async function verifyOtp(){
+  const code = boxes.map(b => b.value).join("");
+  if (code.length !== 6) return msg($("otpMsg"), "Enter all 6 digits.", "err");
+  $("verifyBtn").disabled = true; msg($("otpMsg"), "Verifying…");
+  try{
+    if (LIVE) await confirmation.confirm(code);
+    else if (code !== demoOtp) throw new Error("Incorrect OTP.");
+    store.set("nx_session", { mobile, at: Date.now() });
+    const members = store.get("nx_members", {});
+    if (members[mobile]){ member = members[mobile]; openDashboard(); }
+    else { show($("stepOtp"), false); show($("stepProfile"), true); }
+  }catch(err){
+    msg($("otpMsg"), err.code === "auth/invalid-verification-code" ? "Incorrect OTP." : (err.message || "Verification failed."), "err");
+  }finally{ $("verifyBtn").disabled = false; }
+}
+
+$("saveProfileBtn").onclick = () => {
+  const name = $("pName").value.trim(), email = $("pEmail").value.trim();
+  if (name.length < 3) return msg($("profileMsg"), "Enter your full name.", "err");
+  if (!/^\S+@\S+\.\S+$/.test(email)) return msg($("profileMsg"), "Enter a valid email.", "err");
+  const members = store.get("nx_members", {});
+  member = {
+    mobile, name, email, chamber: $("pChamber").value,
+    memberId: "NXP-" + mobile.slice(-4) + "-" + Date.now().toString(36).slice(-4).toUpperCase(),
+    since: new Date().toISOString()
+  };
+  members[mobile] = member; store.set("nx_members", members);
+  openDashboard();
+};
+
+/* ---------- dashboard ---------- */
+function openDashboard(){
+  show($("loginView"), false); show($("dashView"), true);
+  show($("logoutBtn"), true); show($("homeBtn"), true);
+  $("hdrUser").textContent = member.name;
+  $("welcomeName").textContent = "Welcome, " + member.name.split(" ")[0];
+  $("mcName").textContent = member.name;
+  $("mcId").textContent = member.memberId + " · Chamber " + member.chamber;
+  // prefill passenger with member
+  $("tPax").value = member.name; $("tMobile").value = member.mobile; $("tEmail").value = member.email;
+  const r = document.querySelector(`input[name=chamber][value="${member.chamber}"]`); if (r) r.checked = true;
+  const t = new Date(); t.setMinutes(t.getMinutes() - t.getTimezoneOffset());
+  $("tDate").min = t.toISOString().slice(0, 10);
+  renderHistory();
+}
+
+$("logoutBtn").onclick = async () => {
+  try{ if (LIVE && auth) await auth.signOut(); }catch(e){}
+  localStorage.removeItem("nx_session"); location.reload();
+};
+
+$("tMobile").addEventListener("input", e => e.target.value = e.target.value.replace(/\D/g, ""));
+
+$("travelForm").onsubmit = e => {
+  e.preventDefault();
+  const ch = document.querySelector("input[name=chamber]:checked");
+  if (!ch) return msg($("travelMsg"), "Select the chamber to send to.", "err");
+  if (!/^\d{10}$/.test($("tMobile").value)) return msg($("travelMsg"), "Passenger mobile must be 10 digits.", "err");
+  const d = new Date();
+  const tok = {
+    id: "NXT-" + ch.value + "-" + d.toISOString().slice(2, 10).replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 6).toUpperCase(),
+    created: d.toISOString(),
+    member: member.name, memberId: member.memberId, memberMobile: member.mobile,
+    from: $("tFrom").value.trim(), to: $("tTo").value.trim(),
+    date: $("tDate").value, time: $("tTime").value,
+    trip: $("tTrip").value, cls: $("tClass").value, need: $("tNeed").value.trim(),
+    pax: $("tPax").value.trim(), paxCount: $("tPaxCount").value || "1",
+    mobile: $("tMobile").value, email: $("tEmail").value.trim(),
+    chamber: ch.value
+  };
+  const all = store.get("nx_tokens_" + member.mobile, []);
+  all.unshift(tok); store.set("nx_tokens_" + member.mobile, all.slice(0, 50));
+  msg($("travelMsg"), "Token " + tok.id + " generated.", "ok");
+  renderHistory(); openToken(tok);
+};
+
+function renderHistory(){
+  const all = store.get("nx_tokens_" + member.mobile, []);
+  if (!all.length){ $("hist").innerHTML = `<div class="empty">No tokens yet.<br>Your travel requests will appear here.</div>`; return; }
+  $("hist").innerHTML = all.map((t, i) => `
+    <li><div class="t"><b>${esc(t.id)}</b><span>${fmtDate(t.date)}</span></div>
+    ${esc(t.from)} → ${esc(t.to)} · ${esc(t.pax)}<br><small>Chamber ${esc(t.chamber)} · ${esc(t.trip)} · ${esc(t.cls)}</small>
+    <div class="actions"><button class="btn btn-line" data-i="${i}">View / Resend</button></div></li>`).join("");
+  $("hist").querySelectorAll("button[data-i]").forEach(b => b.onclick = () => openToken(all[+b.dataset.i]));
+}
+
+function esc(s){ return String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
+function fmtDate(iso){ if (!iso) return "-"; const [y, m, d] = iso.split("-"); return `${d}-${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m-1]}-${y}`; }
+
+/* ---------- token image ---------- */
+function drawToken(t){
+  const c = $("tokenCanvas"), x = c.getContext("2d"), W = c.width, H = c.height;
+  x.clearRect(0, 0, W, H);
+  // background
+  const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, "#0b1f3a"); g.addColorStop(1, "#1d4d8a");
+  x.fillStyle = g; roundRect(x, 0, 0, W, H, 40); x.fill();
+  // header
+  x.fillStyle = "#d4a73c"; x.beginPath(); x.arc(110, 120, 52, 0, 7); x.fill();
+  x.fillStyle = "#0b1f3a"; x.font = "700 56px Poppins, sans-serif"; x.textAlign = "center"; x.fillText("N", 110, 140);
+  x.textAlign = "left"; x.fillStyle = "#fff"; x.font = "700 52px Poppins, sans-serif"; x.fillText("NEXTASY", 190, 118);
+  x.fillStyle = "#f3d27a"; x.font = "600 24px Poppins, sans-serif"; x.fillText("PRIVILEGE MEMBER · TRAVEL TOKEN", 192, 158);
+  // white ticket
+  x.fillStyle = "#fff"; roundRect(x, 50, 220, W - 100, H - 300, 30); x.fill();
+  // notches
+  x.fillStyle = "#14366a"; x.beginPath(); x.arc(50, 560, 30, 0, 7); x.arc(W - 50, 560, 30, 0, 7); x.fill();
+  x.setLineDash([14, 12]); x.strokeStyle = "#cfd6e4"; x.lineWidth = 3; x.beginPath(); x.moveTo(100, 560); x.lineTo(W - 100, 560); x.stroke(); x.setLineDash([]);
+  // token id
+  x.fillStyle = "#6b7590"; x.font = "500 24px Poppins, sans-serif"; x.fillText("TOKEN NO.", 100, 290);
+  x.fillStyle = "#0b1f3a"; x.font = "700 46px Poppins, sans-serif"; x.fillText(t.id, 100, 345);
+  // chamber badge
+  x.fillStyle = "#d4a73c"; roundRect(x, W - 300, 260, 200, 100, 20); x.fill();
+  x.fillStyle = "#0b1f3a"; x.textAlign = "center"; x.font = "600 20px Poppins, sans-serif"; x.fillText("CHAMBER", W - 200, 295);
+  x.font = "700 44px Poppins, sans-serif"; x.fillText(t.chamber, W - 200, 343); x.textAlign = "left";
+  // route
+  x.fillStyle = "#0b1f3a";
+  const longest = Math.max(t.from.length, t.to.length);
+  x.font = `700 ${longest > 14 ? 34 : longest > 10 ? 40 : 50}px Poppins, sans-serif`;
+  fitText(x, t.from, 100, 450, 360); x.textAlign = "right"; fitText(x, t.to, W - 100, 450, 360); x.textAlign = "left";
+  x.fillStyle = "#d4a73c"; x.font = "48px sans-serif"; x.textAlign = "center"; x.fillText("✈", W / 2, 448); x.textAlign = "left";
+  x.fillStyle = "#6b7590"; x.font = "500 22px Poppins, sans-serif"; x.fillText("FROM", 100, 495); x.textAlign = "right"; x.fillText("TO", W - 100, 495); x.textAlign = "left";
+  // details
+  const rows = [
+    ["Departure Date", fmtDate(t.date)], ["Preferred Time", t.time],
+    ["Flight Need", `${t.trip} · ${t.cls}`], ["Special Need", t.need || "—"],
+    ["Passenger Name", t.pax], ["No. of Passengers", t.paxCount],
+    ["Mobile", "+91 " + t.mobile], ["Email", t.email],
+    ["Requested By", `${t.member} (${t.memberId})`]
+  ];
+  let y = 630;
+  rows.forEach(([k, v]) => {
+    x.fillStyle = "#6b7590"; x.font = "500 22px Poppins, sans-serif"; x.fillText(k.toUpperCase(), 100, y);
+    x.fillStyle = "#14213d"; x.font = "600 30px Poppins, sans-serif"; fitText(x, v, 100, y + 38, W - 200);
+    y += 74;
+  });
+  // footer
+  x.fillStyle = "#f3d27a"; x.font = "500 22px Poppins, sans-serif"; x.textAlign = "center";
+  x.fillText("Issued " + new Date(t.created).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }) + " · nextasy.biz", W / 2, H - 40);
+  x.textAlign = "left";
+}
+function roundRect(x, a, b, w, h, r){ x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }
+function fitText(x, s, px, py, max){ s = String(s); while (x.measureText(s).width > max && s.length > 4) s = s.slice(0, -2) + "…"; x.fillText(s, px, py); }
+
+function tokenText(t){
+  return `*NEXTASY PRIVILEGE TRAVEL TOKEN*
+Token: *${t.id}*
+Chamber: ${t.chamber}
+
+From: ${t.from}
+To: ${t.to}
+Dep Date: ${fmtDate(t.date)} (${t.time})
+Flight Need: ${t.trip} · ${t.cls}${t.need ? "\nSpecial: " + t.need : ""}
+
+Pax Name: ${t.pax} (${t.paxCount} pax)
+Mobile: +91 ${t.mobile}
+Email: ${t.email}
+
+Member: ${t.member} · ${t.memberId}`;
+}
+
+function openToken(t){
+  currentToken = t;
+  drawToken(t);
+  const ch = CHAMBERS.find(c => c.code === t.chamber);
+  $("waBtn").textContent = "Send to " + (ch ? ch.name : "Chamber") + " on WhatsApp";
+  $("waNote").textContent = (navigator.canShare ? "On mobile, the token image is shared straight to WhatsApp. " : "On desktop, the token is downloaded and WhatsApp opens with the details typed in — attach the downloaded image there. ")
+    + (ch && ch.whatsapp ? "" : "Choose the chamber contact inside WhatsApp.");
+  show($("tokenModal"), true);
+}
+$("closeModal").onclick = () => show($("tokenModal"), false);
+$("tokenModal").onclick = e => { if (e.target.id === "tokenModal") show($("tokenModal"), false); };
+
+function tokenBlob(){ return new Promise(r => $("tokenCanvas").toBlob(r, "image/png")); }
+async function download(){
+  const b = await tokenBlob(), a = document.createElement("a");
+  a.href = URL.createObjectURL(b); a.download = currentToken.id + ".png"; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+$("dlBtn").onclick = download;
+
+$("waBtn").onclick = async () => {
+  const t = currentToken, ch = CHAMBERS.find(c => c.code === t.chamber), text = tokenText(t);
+  // Mobile: share the image file directly (user picks WhatsApp / contact)
+  try{
+    const file = new File([await tokenBlob()], t.id + ".png", { type: "image/png" });
+    if (navigator.canShare && navigator.canShare({ files: [file] }) && /Android|iPhone|iPad/i.test(navigator.userAgent)){
+      await navigator.share({ files: [file], text, title: "Nextasy Travel Token " + t.id });
+      return;
+    }
+  }catch(e){ if (e.name === "AbortError") return; }
+  // Desktop / fallback: download image + open WhatsApp chat with text
+  await download();
+  const num = ch && ch.whatsapp ? ch.whatsapp.replace(/\D/g, "") : "";
+  window.open(`https://wa.me/${num}?text=${encodeURIComponent(text)}`, "_blank");
+};
+
+/* ---------- boot ---------- */
+fillChambers();
+(function(){
+  const s = store.get("nx_session", null);
+  const members = store.get("nx_members", {});
+  if (s && members[s.mobile] && Date.now() - s.at < 30 * 24 * 3600e3){ mobile = s.mobile; member = members[s.mobile]; openDashboard(); }
+})();
+</script>
+</body>
+</html>
